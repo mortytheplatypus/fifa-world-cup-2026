@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
+import { useTimezone } from '../context/TimezoneContext';
 import { fixtureShape, teamShape } from '../propTypes';
 import {
-  DISPLAY_TIMEZONE,
   formatFixtureDate,
   formatFixtureTime,
   parseFixtureInstant,
 } from '../utils/timezone';
 
 function FixtureCard({ fixture, homeTeam, awayTeam, showGroup, showDate }) {
+  const { timeZone } = useTimezone();
   const instant = parseFixtureInstant(fixture);
   const isoDateTime = instant.toISOString();
 
@@ -22,11 +23,11 @@ function FixtureCard({ fixture, homeTeam, awayTeam, showGroup, showDate }) {
         <time dateTime={isoDateTime}>
           {showDate && (
             <>
-              {formatFixtureDate(fixture, DISPLAY_TIMEZONE)}
+              {formatFixtureDate(fixture, timeZone)}
               {' · '}
             </>
           )}
-          {formatFixtureTime(fixture, DISPLAY_TIMEZONE)}
+          {formatFixtureTime(fixture, timeZone)}
         </time>
       </div>
 

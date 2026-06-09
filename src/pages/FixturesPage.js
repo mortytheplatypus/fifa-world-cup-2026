@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import DateNavigator from '../components/DateNavigator';
 import FixtureCard from '../components/FixtureCard';
+import { useTimezone } from '../context/TimezoneContext';
 import { useGroupsData } from '../hooks/useGroupsData';
 import { getTeamById, GROUP_LETTERS } from '../utils/data';
 import {
@@ -9,12 +10,10 @@ import {
   getDateKeys,
   groupFixturesByDate,
 } from '../utils/fixtures';
-import {
-  DISPLAY_TIMEZONE,
-  getDisplayTimezoneLabel,
-} from '../utils/timezone';
+import { getDisplayTimezoneLabel } from '../utils/timezone';
 
 function FixturesPage() {
+  const { timeZone } = useTimezone();
   const { teams, fixtures, loading, error } = useGroupsData();
   const [showAllDates, setShowAllDates] = useState(false);
   const [activeDateIndex, setActiveDateIndex] = useState(0);
@@ -26,12 +25,12 @@ function FixturesPage() {
   );
 
   const fixturesByDate = useMemo(
-    () => groupFixturesByDate(filteredFixtures, DISPLAY_TIMEZONE),
-    [filteredFixtures]
+    () => groupFixturesByDate(filteredFixtures, timeZone),
+    [filteredFixtures, timeZone]
   );
 
   const dates = useMemo(() => getDateKeys(fixturesByDate), [fixturesByDate]);
-  const timezoneLabel = getDisplayTimezoneLabel(DISPLAY_TIMEZONE);
+  const timezoneLabel = getDisplayTimezoneLabel(timeZone);
 
   if (loading) {
     return <p className="status-message fixtures-status">Loading fixtures…</p>;

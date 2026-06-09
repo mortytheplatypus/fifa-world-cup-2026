@@ -1,4 +1,63 @@
 export const DISPLAY_TIMEZONE = 'America/New_York';
+export const TIMEZONE_STORAGE_KEY = 'fifa-wc-2026-timezone';
+
+export const TIMEZONE_OPTIONS = [
+  { value: 'Pacific/Honolulu', label: 'Hawaii' },
+  { value: 'America/Anchorage', label: 'Alaska' },
+  { value: 'America/Los_Angeles', label: 'Pacific Time (US)' },
+  { value: 'America/Vancouver', label: 'Vancouver' },
+  { value: 'America/Denver', label: 'Mountain Time (US)' },
+  { value: 'America/Chicago', label: 'Central Time (US)' },
+  { value: 'America/Mexico_City', label: 'Mexico City' },
+  { value: 'America/Monterrey', label: 'Monterrey' },
+  { value: 'America/New_York', label: 'Eastern Time (US)' },
+  { value: 'America/Toronto', label: 'Toronto' },
+  { value: 'America/Sao_Paulo', label: 'São Paulo' },
+  { value: 'Europe/London', label: 'London' },
+  { value: 'Europe/Paris', label: 'Paris' },
+  { value: 'Europe/Berlin', label: 'Berlin' },
+  { value: 'Europe/Moscow', label: 'Moscow' },
+  { value: 'Africa/Cairo', label: 'Cairo' },
+  { value: 'Asia/Dubai', label: 'Dubai' },
+  { value: 'Asia/Kolkata', label: 'India' },
+  { value: 'Asia/Shanghai', label: 'China' },
+  { value: 'Asia/Tokyo', label: 'Tokyo' },
+  { value: 'Asia/Seoul', label: 'Seoul' },
+  { value: 'Australia/Sydney', label: 'Sydney' },
+  { value: 'Pacific/Auckland', label: 'Auckland' },
+  { value: 'UTC', label: 'UTC' },
+];
+
+export function getBrowserTimezone() {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || null;
+  } catch {
+    return null;
+  }
+}
+
+export function getTimezoneSelectOptions(preferredTimeZone) {
+  const known = new Set(TIMEZONE_OPTIONS.map((option) => option.value));
+  const options = [...TIMEZONE_OPTIONS];
+
+  if (preferredTimeZone && !known.has(preferredTimeZone)) {
+    options.unshift({
+      value: preferredTimeZone,
+      label: formatTimezoneOptionLabel(preferredTimeZone),
+    });
+  }
+
+  return options;
+}
+
+export function formatTimezoneOptionLabel(timeZone) {
+  const shortName = getDisplayTimezoneLabel(timeZone);
+  const match = TIMEZONE_OPTIONS.find((option) => option.value === timeZone);
+  if (match) {
+    return `${match.label} (${shortName})`;
+  }
+  return `${timeZone.replace(/_/g, ' ')} (${shortName})`;
+}
 
 const CITY_TIMEZONES = {
   'Mexico City': 'America/Mexico_City',
