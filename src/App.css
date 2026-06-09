@@ -103,12 +103,6 @@
   font-weight: 500;
 }
 
-.fixtures-page-placeholder {
-  flex: 1;
-  min-height: 0;
-  background: #000;
-}
-
 .site-main {
   display: flex;
   flex: 1;
@@ -125,9 +119,8 @@
   padding: 1.5rem 2.5rem 2.5rem;
 }
 
-.site-main:has(.fixtures-page-placeholder) {
-  max-width: none;
-  padding: 0;
+.site-main:has(.fixtures-page) {
+  max-width: 800px;
 }
 
 .page h1 {
@@ -390,16 +383,169 @@
   background: var(--surface);
 }
 
+.fixtures-status {
+  padding: 2rem 1.5rem;
+}
+
+.fixtures-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.fixtures-header h1 {
+  margin-bottom: 0.35rem;
+}
+
+.fixtures-timezone {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.fixtures-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fixtures-group-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fixtures-group-filter-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.fixtures-group-select {
+  padding: 0.55rem 2rem 0.55rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238b9cb3' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.65rem center;
+  transition: border-color 0.15s;
+}
+
+.fixtures-group-select:hover,
+.fixtures-group-select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.fixtures-empty {
+  margin-top: 1.5rem;
+}
+
+.fixtures-view-toggle {
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.fixtures-view-toggle:hover {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+}
+
+.date-navigator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.date-nav-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.date-nav-button:hover:not(:disabled) {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+}
+
+.date-nav-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.date-nav-label {
+  min-width: 10rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.fixtures-by-date {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.fixtures-date-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.fixtures-date-title {
+  margin: 0;
+  font-size: 1.15rem;
+  color: var(--accent);
+}
+
+.fixtures-date-section .fixture-list {
+  margin-top: 1rem;
+}
+
 .fixture-meta {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
   margin-bottom: 1rem;
   font-size: 0.8rem;
   color: var(--text-muted);
 }
 
-.fixture-matchday {
+.fixture-meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.fixture-group {
   font-weight: 600;
   color: var(--accent);
 }

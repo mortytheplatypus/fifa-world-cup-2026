@@ -17,6 +17,7 @@ export const fixtureShape = PropTypes.shape({
   time: PropTypes.string.isRequired,
   venue: PropTypes.string.isRequired,
   city: PropTypes.string.isRequired,
+  group: PropTypes.oneOf(GROUP_LETTERS),
 });
 
 export const groupIdType = PropTypes.oneOf(GROUP_LETTERS).isRequired;

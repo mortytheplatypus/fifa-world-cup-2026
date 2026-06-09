@@ -1,20 +1,32 @@
+import PropTypes from 'prop-types';
 import { fixtureShape, teamShape } from '../propTypes';
+import {
+  DISPLAY_TIMEZONE,
+  formatFixtureDate,
+  formatFixtureTime,
+  parseFixtureInstant,
+} from '../utils/timezone';
 
-function FixtureCard({ fixture, homeTeam, awayTeam }) {
-  const date = new Date(`${fixture.date}T${fixture.time}`);
+function FixtureCard({ fixture, homeTeam, awayTeam, showGroup, showDate }) {
+  const instant = parseFixtureInstant(fixture);
+  const isoDateTime = instant.toISOString();
 
   return (
     <article className="fixture-card">
       <div className="fixture-meta">
-        <span className="fixture-matchday">Matchday {fixture.matchday}</span>
-        <time dateTime={fixture.date}>
-          {date.toLocaleDateString('en-US', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-          })}
-          {' · '}
-          {fixture.time}
+        <div className="fixture-meta-tags">
+          {showGroup && fixture.group && (
+            <span className="fixture-group">Group {fixture.group}</span>
+          )}
+        </div>
+        <time dateTime={isoDateTime}>
+          {showDate && (
+            <>
+              {formatFixtureDate(fixture, DISPLAY_TIMEZONE)}
+              {' · '}
+            </>
+          )}
+          {formatFixtureTime(fixture, DISPLAY_TIMEZONE)}
         </time>
       </div>
 
@@ -51,6 +63,13 @@ FixtureCard.propTypes = {
   fixture: fixtureShape.isRequired,
   homeTeam: teamShape.isRequired,
   awayTeam: teamShape.isRequired,
+  showGroup: PropTypes.bool,
+  showDate: PropTypes.bool,
+};
+
+FixtureCard.defaultProps = {
+  showGroup: false,
+  showDate: true,
 };
 
 export default FixtureCard;
