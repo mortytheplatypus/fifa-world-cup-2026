@@ -1,6 +1,5 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import TimezoneSelector from './TimezoneSelector';
-import VisitorCounter from './VisitorCounter';
 
 function Layout() {
   return (
@@ -31,7 +30,7 @@ function Layout() {
         </div>
         <div className="site-header-right">
           <TimezoneSelector />
-          <VisitorCounter />
+          {/* <VisitorCounter /> */}
         </div>
       </header>
       <main className="site-main">

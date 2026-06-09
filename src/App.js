@@ -19,7 +19,11 @@ function App() {
             <Route path="fixtures" element={<FixturesPage />} />
             <Route path="points" element={<PointsTablesPage />} />
             <Route path="groups/:groupId" element={<GroupPage />} />
-            <Route path="groups/:groupId/fixtures" element={<GroupFixturesPage />} />
+            <Route
+              path="groups/:groupId/fixtures"
+              element={<Navigate to="upcoming" replace />}
+            />
+            <Route path="groups/:groupId/fixtures/:view" element={<GroupFixturesPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

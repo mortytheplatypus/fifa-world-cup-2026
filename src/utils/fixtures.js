@@ -59,3 +59,25 @@ export function filterFixturesByGroup(fixturesByGroup, groupId) {
     [groupId]: fixturesByGroup[groupId] ?? [],
   };
 }
+
+export function isFixturePast(fixture, now = new Date()) {
+  return parseFixtureInstant(fixture) < now;
+}
+
+export function splitFixturesByDate(fixtures, now = new Date()) {
+  const upcoming = [];
+  const past = [];
+
+  for (const fixture of fixtures) {
+    if (isFixturePast(fixture, now)) {
+      past.push(fixture);
+    } else {
+      upcoming.push(fixture);
+    }
+  }
+
+  return {
+    upcoming: sortFixtures(upcoming),
+    past: sortFixtures(past).reverse(),
+  };
+}

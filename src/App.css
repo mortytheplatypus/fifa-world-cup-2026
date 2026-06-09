@@ -417,6 +417,139 @@
   background: var(--surface-hover);
 }
 
+.group-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.group-page-header h1 {
+  margin: 0;
+}
+
+.group-page-select .fixtures-group-select {
+  min-width: 7rem;
+}
+
+.group-overview-card {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.group-overview-teams {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  border-right: 1px solid var(--border);
+}
+
+.group-overview-standings {
+  flex: 1;
+  min-width: 0;
+}
+
+.group-team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 1.25rem;
+}
+
+.group-team-grid-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  width: 5.5rem;
+}
+
+.group-team-grid-flag {
+  width: 56px;
+  height: 42px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.group-team-grid-name {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.standings-embedded {
+  height: 100%;
+}
+
+.standings-embedded .standings-table-wrap {
+  padding: 0.25rem 0;
+}
+
+.group-recent-results {
+  margin-top: 1.5rem;
+}
+
+.group-section-title {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.group-recent-results-empty {
+  margin: 0;
+}
+
+.group-recent-results-list {
+  margin-top: 0;
+}
+
+.group-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.group-fixtures-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.group-fixtures-tab {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.group-fixtures-tab:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.group-fixtures-tab.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+
 .fixture-list {
   display: flex;
   flex-direction: column;
@@ -752,5 +885,14 @@
 @media (max-width: 700px) {
   .points-tables-grid {
     grid-template-columns: 1fr;
+  }
+
+  .group-overview-card {
+    flex-direction: column;
+  }
+
+  .group-overview-teams {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
   }
 }

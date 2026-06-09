@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 import { groupIdType } from '../propTypes';
 
-function StandingsTable({ groupId, standings }) {
+function StandingsTable({ groupId, standings, title, embedded }) {
+  const heading = title ?? `Group ${groupId}`;
+
   return (
-    <section className="standings-card">
-      <h2 className="standings-group-title">Group {groupId}</h2>
+    <section className={embedded ? 'standings-embedded' : 'standings-card'}>
+      {!embedded && <h2 className="standings-group-title">{heading}</h2>}
       <div className="standings-table-wrap">
         <table className="standings-table">
           <thead>
@@ -58,6 +60,8 @@ function StandingsTable({ groupId, standings }) {
 
 StandingsTable.propTypes = {
   groupId: groupIdType,
+  title: PropTypes.string,
+  embedded: PropTypes.bool,
   standings: PropTypes.arrayOf(
     PropTypes.shape({
       team: PropTypes.shape({
