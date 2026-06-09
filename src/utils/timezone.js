@@ -73,6 +73,7 @@ const CITY_TIMEZONES = {
   Seattle: 'America/Los_Angeles',
   Arlington: 'America/Chicago',
   Houston: 'America/Chicago',
+  'Kansas City': 'America/Chicago',
   Atlanta: 'America/New_York',
   'Miami Gardens': 'America/New_York',
 };
