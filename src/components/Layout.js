@@ -1,15 +1,31 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet } from 'react-router-dom';
+import VisitorCounter from './VisitorCounter';
 
 function Layout() {
   return (
     <div className="layout">
       <header className="site-header">
-        <Link to="/groups" className="site-title">
-          FIFA WC 2026
-        </Link>
-        <nav className="site-nav">
-          <Link to="/groups">Groups</Link>
-        </nav>
+        <div className="site-header-left">
+          <Link to="/groups" className="site-brand">
+            <img
+              src="/fifawc2026logo.png"
+              alt=""
+              className="site-logo"
+              width={36}
+              height={36}
+            />
+            <span className="site-title">FIFA World Cup 2026</span>
+          </Link>
+          <nav className="site-nav">
+            <NavLink to="/groups" className="site-nav-link">
+              Groups
+            </NavLink>
+            <NavLink to="/fixtures" className="site-nav-link">
+              Fixtures
+            </NavLink>
+          </nav>
+        </div>
+        <VisitorCounter />
       </header>
       <main className="site-main">
         <Outlet />
