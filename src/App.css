@@ -339,14 +339,14 @@
 @media (max-width: 900px) {
   .group-grid {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-rows: auto;
   }
 }
 
 @media (max-width: 480px) {
   .group-grid {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(12, 1fr);
+    grid-template-rows: auto;
   }
 }
 
@@ -742,7 +742,13 @@
   flex: 1;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0;
   font-weight: 600;
+}
+
+.fixture-team span {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .fixture-team.away {
@@ -805,6 +811,7 @@
 
 .standings-table-wrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .standings-table {
@@ -894,5 +901,303 @@
   .group-overview-teams {
     border-right: none;
     border-bottom: 1px solid var(--border);
+  }
+}
+
+/* ── Mobile & tablet ── */
+
+@media (max-width: 768px) {
+  .site-header {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+  }
+
+  .site-header-left {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    gap: 0.65rem 1rem;
+  }
+
+  .site-header-right {
+    flex: 1 1 100%;
+  }
+
+  .site-title {
+    font-size: 1.05rem;
+  }
+
+  .site-nav {
+    gap: 0.85rem;
+  }
+
+  .site-nav-link {
+    font-size: 0.875rem;
+  }
+
+  .site-main,
+  .site-main:has(.groups-page),
+  .site-main:has(.points-tables-page) {
+    padding: 1.25rem 1rem 2rem;
+  }
+
+  .page h1 {
+    font-size: 1.5rem;
+  }
+
+  .groups-page h1 {
+    font-size: 1.35rem;
+  }
+
+  .groups-page {
+    flex: none;
+  }
+
+  .group-grid {
+    flex: none;
+    min-height: auto;
+    grid-template-rows: auto;
+    gap: 1rem;
+  }
+
+  .group-grid-card {
+    gap: 1.5rem;
+    min-height: auto;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .group-grid-letter {
+    font-size: clamp(3rem, 14vw, 5.5rem);
+  }
+
+  .group-flags-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: clamp(0.65rem, 3.5vw, 1rem);
+  }
+
+  .group-flag {
+    width: clamp(32px, 8vw, 44px);
+  }
+
+  .group-team-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: clamp(0.65rem, 3.5vw, 1rem);
+  }
+
+  .group-team-grid-cell {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 4.5rem;
+  }
+
+  .group-team-grid-flag {
+    width: 100%;
+    height: auto;
+    max-width: 44px;
+  }
+
+  .fixtures-header,
+  .points-tables-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fixtures-controls {
+    width: 100%;
+  }
+
+  .fixtures-group-filter {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .fixtures-group-select {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .fixtures-view-toggle {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+
+  .points-tables-header .fixtures-group-filter {
+    width: 100%;
+  }
+
+  .group-page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .group-page-select {
+    width: 100%;
+  }
+
+  .group-page-select .fixtures-group-select {
+    width: 100%;
+  }
+
+  .group-overview-teams {
+    padding: 1rem;
+  }
+
+  .group-team-grid-name {
+    font-size: 0.65rem;
+    word-break: break-word;
+  }
+
+  .standings-table {
+    font-size: 0.75rem;
+  }
+
+  .standings-table th,
+  .standings-table td {
+    padding: 0.45rem 0.35rem;
+  }
+
+  .standings-col-team {
+    min-width: 5.5rem;
+  }
+}
+
+@media (max-width: 540px) {
+  .timezone-selector-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .timezone-selector {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .timezone-select {
+    max-width: none;
+    width: 100%;
+    font-size: 0.75rem;
+  }
+
+  .fixture-card {
+    padding: 1rem;
+  }
+
+  .fixture-teams {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+  }
+
+  .fixture-team,
+  .fixture-team.away {
+    flex-direction: row;
+    text-align: left;
+    justify-content: flex-start;
+  }
+
+  .fixture-team span {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .fixture-vs {
+    align-self: center;
+    padding: 0.15rem 0;
+  }
+
+  .fixture-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .date-navigator {
+    gap: 0.75rem;
+  }
+
+  .date-nav-label {
+    min-width: 0;
+    flex: 1;
+    font-size: 0.9rem;
+  }
+
+  .group-fixtures-tabs {
+    flex-direction: column;
+  }
+
+  .group-fixtures-tab {
+    text-align: center;
+  }
+
+  .group-page-header h1 {
+    font-size: 1.2rem;
+    line-height: 1.35;
+  }
+
+  .link-button {
+    flex: 1 1 calc(50% - 0.375rem);
+    min-width: 0;
+    text-align: center;
+  }
+
+  .group-page-actions {
+    justify-content: stretch;
+  }
+
+  .group-grid-card {
+    gap: 1rem;
+    flex-direction: column;
+  }
+
+  .group-name-block {
+    order: -1;
+  }
+
+  .group-grid-letter {
+    font-size: 2.5rem;
+  }
+
+  .breadcrumb {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .site-brand {
+    gap: 0.5rem;
+  }
+
+  .site-logo {
+    width: 30px;
+    height: 30px;
+  }
+
+  .site-title {
+    font-size: 0.95rem;
+  }
+
+  .standings-col-pos {
+    padding-left: 0.4rem !important;
+  }
+
+  .standings-col-pts {
+    padding-right: 0.4rem !important;
+  }
+
+  .standings-team-name {
+    font-size: 0.75rem;
   }
 }
