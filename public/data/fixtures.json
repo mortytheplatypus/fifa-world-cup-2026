@@ -1,0 +1,746 @@
+{
+  "A": [
+    {
+      "id": "A-1",
+      "matchday": 1,
+      "homeTeam": "MEX",
+      "awayTeam": "RSA",
+      "date": "2026-06-11",
+      "time": "15:00",
+      "venue": "Estadio Azteca",
+      "city": "Mexico City"
+    },
+    {
+      "id": "A-2",
+      "matchday": 1,
+      "homeTeam": "KOR",
+      "awayTeam": "CZE",
+      "date": "2026-06-11",
+      "time": "21:00",
+      "venue": "Estadio Akron",
+      "city": "Guadalajara"
+    },
+    {
+      "id": "A-3",
+      "matchday": 2,
+      "homeTeam": "MEX",
+      "awayTeam": "KOR",
+      "date": "2026-06-17",
+      "time": "18:00",
+      "venue": "Estadio Azteca",
+      "city": "Mexico City"
+    },
+    {
+      "id": "A-4",
+      "matchday": 2,
+      "homeTeam": "RSA",
+      "awayTeam": "CZE",
+      "date": "2026-06-17",
+      "time": "21:00",
+      "venue": "Estadio BBVA",
+      "city": "Monterrey"
+    },
+    {
+      "id": "A-5",
+      "matchday": 3,
+      "homeTeam": "MEX",
+      "awayTeam": "CZE",
+      "date": "2026-06-23",
+      "time": "20:00",
+      "venue": "Estadio Akron",
+      "city": "Guadalajara"
+    },
+    {
+      "id": "A-6",
+      "matchday": 3,
+      "homeTeam": "RSA",
+      "awayTeam": "KOR",
+      "date": "2026-06-23",
+      "time": "20:00",
+      "venue": "Estadio BBVA",
+      "city": "Monterrey"
+    }
+  ],
+  "B": [
+    {
+      "id": "B-1",
+      "matchday": 1,
+      "homeTeam": "CAN",
+      "awayTeam": "BIH",
+      "date": "2026-06-12",
+      "time": "15:00",
+      "venue": "BMO Field",
+      "city": "Toronto"
+    },
+    {
+      "id": "B-2",
+      "matchday": 1,
+      "homeTeam": "QAT",
+      "awayTeam": "SUI",
+      "date": "2026-06-12",
+      "time": "21:00",
+      "venue": "BC Place",
+      "city": "Vancouver"
+    },
+    {
+      "id": "B-3",
+      "matchday": 2,
+      "homeTeam": "CAN",
+      "awayTeam": "QAT",
+      "date": "2026-06-18",
+      "time": "18:00",
+      "venue": "BMO Field",
+      "city": "Toronto"
+    },
+    {
+      "id": "B-4",
+      "matchday": 2,
+      "homeTeam": "BIH",
+      "awayTeam": "SUI",
+      "date": "2026-06-18",
+      "time": "21:00",
+      "venue": "BC Place",
+      "city": "Vancouver"
+    },
+    {
+      "id": "B-5",
+      "matchday": 3,
+      "homeTeam": "CAN",
+      "awayTeam": "SUI",
+      "date": "2026-06-24",
+      "time": "20:00",
+      "venue": "BMO Field",
+      "city": "Toronto"
+    },
+    {
+      "id": "B-6",
+      "matchday": 3,
+      "homeTeam": "BIH",
+      "awayTeam": "QAT",
+      "date": "2026-06-24",
+      "time": "20:00",
+      "venue": "BC Place",
+      "city": "Vancouver"
+    }
+  ],
+  "C": [
+    {
+      "id": "C-1",
+      "matchday": 1,
+      "homeTeam": "BRA",
+      "awayTeam": "MAR",
+      "date": "2026-06-13",
+      "time": "15:00",
+      "venue": "MetLife Stadium",
+      "city": "East Rutherford"
+    },
+    {
+      "id": "C-2",
+      "matchday": 1,
+      "homeTeam": "HAI",
+      "awayTeam": "SCO",
+      "date": "2026-06-13",
+      "time": "21:00",
+      "venue": "Gillette Stadium",
+      "city": "Foxborough"
+    },
+    {
+      "id": "C-3",
+      "matchday": 2,
+      "homeTeam": "BRA",
+      "awayTeam": "HAI",
+      "date": "2026-06-19",
+      "time": "18:00",
+      "venue": "MetLife Stadium",
+      "city": "East Rutherford"
+    },
+    {
+      "id": "C-4",
+      "matchday": 2,
+      "homeTeam": "MAR",
+      "awayTeam": "SCO",
+      "date": "2026-06-19",
+      "time": "21:00",
+      "venue": "Lincoln Financial Field",
+      "city": "Philadelphia"
+    },
+    {
+      "id": "C-5",
+      "matchday": 3,
+      "homeTeam": "BRA",
+      "awayTeam": "SCO",
+      "date": "2026-06-25",
+      "time": "20:00",
+      "venue": "MetLife Stadium",
+      "city": "East Rutherford"
+    },
+    {
+      "id": "C-6",
+      "matchday": 3,
+      "homeTeam": "MAR",
+      "awayTeam": "HAI",
+      "date": "2026-06-25",
+      "time": "20:00",
+      "venue": "Gillette Stadium",
+      "city": "Foxborough"
+    }
+  ],
+  "D": [
+    {
+      "id": "D-1",
+      "matchday": 1,
+      "homeTeam": "USA",
+      "awayTeam": "PAR",
+      "date": "2026-06-14",
+      "time": "15:00",
+      "venue": "SoFi Stadium",
+      "city": "Los Angeles"
+    },
+    {
+      "id": "D-2",
+      "matchday": 1,
+      "homeTeam": "AUS",
+      "awayTeam": "TUR",
+      "date": "2026-06-14",
+      "time": "21:00",
+      "venue": "Levi's Stadium",
+      "city": "Santa Clara"
+    },
+    {
+      "id": "D-3",
+      "matchday": 2,
+      "homeTeam": "USA",
+      "awayTeam": "AUS",
+      "date": "2026-06-20",
+      "time": "18:00",
+      "venue": "SoFi Stadium",
+      "city": "Los Angeles"
+    },
+    {
+      "id": "D-4",
+      "matchday": 2,
+      "homeTeam": "PAR",
+      "awayTeam": "TUR",
+      "date": "2026-06-20",
+      "time": "21:00",
+      "venue": "Lumen Field",
+      "city": "Seattle"
+    },
+    {
+      "id": "D-5",
+      "matchday": 3,
+      "homeTeam": "USA",
+      "awayTeam": "TUR",
+      "date": "2026-06-26",
+      "time": "20:00",
+      "venue": "SoFi Stadium",
+      "city": "Los Angeles"
+    },
+    {
+      "id": "D-6",
+      "matchday": 3,
+      "homeTeam": "PAR",
+      "awayTeam": "AUS",
+      "date": "2026-06-26",
+      "time": "20:00",
+      "venue": "Levi's Stadium",
+      "city": "Santa Clara"
+    }
+  ],
+  "E": [
+    {
+      "id": "E-1",
+      "matchday": 1,
+      "homeTeam": "GER",
+      "awayTeam": "CUW",
+      "date": "2026-06-15",
+      "time": "15:00",
+      "venue": "AT&T Stadium",
+      "city": "Arlington"
+    },
+    {
+      "id": "E-2",
+      "matchday": 1,
+      "homeTeam": "CIV",
+      "awayTeam": "ECU",
+      "date": "2026-06-15",
+      "time": "21:00",
+      "venue": "NRG Stadium",
+      "city": "Houston"
+    },
+    {
+      "id": "E-3",
+      "matchday": 2,
+      "homeTeam": "GER",
+      "awayTeam": "CIV",
+      "date": "2026-06-21",
+      "time": "18:00",
+      "venue": "AT&T Stadium",
+      "city": "Arlington"
+    },
+    {
+      "id": "E-4",
+      "matchday": 2,
+      "homeTeam": "CUW",
+      "awayTeam": "ECU",
+      "date": "2026-06-21",
+      "time": "21:00",
+      "venue": "NRG Stadium",
+      "city": "Houston"
+    },
+    {
+      "id": "E-5",
+      "matchday": 3,
+      "homeTeam": "GER",
+      "awayTeam": "ECU",
+      "date": "2026-06-27",
+      "time": "20:00",
+      "venue": "AT&T Stadium",
+      "city": "Arlington"
+    },
+    {
+      "id": "E-6",
+      "matchday": 3,
+      "homeTeam": "CUW",
+      "awayTeam": "CIV",
+      "date": "2026-06-27",
+      "time": "20:00",
+      "venue": "NRG Stadium",
+      "city": "Houston"
+    }
+  ],
+  "F": [
+    {
+      "id": "F-1",
+      "matchday": 1,
+      "homeTeam": "NED",
+      "awayTeam": "JPN",
+      "date": "2026-06-16",
+      "time": "15:00",
+      "venue": "Mercedes-Benz Stadium",
+      "city": "Atlanta"
+    },
+    {
+      "id": "F-2",
+      "matchday": 1,
+      "homeTeam": "SWE",
+      "awayTeam": "TUN",
+      "date": "2026-06-16",
+      "time": "21:00",
+      "venue": "Hard Rock Stadium",
+      "city": "Miami Gardens"
+    },
+    {
+      "id": "F-3",
+      "matchday": 2,
+      "homeTeam": "NED",
+      "awayTeam": "SWE",
+      "date": "2026-06-22",
+      "time": "18:00",
+      "venue": "Mercedes-Benz Stadium",
+      "city": "Atlanta"
+    },
+    {
+      "id": "F-4",
+      "matchday": 2,
+      "homeTeam": "JPN",
+      "awayTeam": "TUN",
+      "date": "2026-06-22",
+      "time": "21:00",
+      "venue": "Hard Rock Stadium",
+      "city": "Miami Gardens"
+    },
+    {
+      "id": "F-5",
+      "matchday": 3,
+      "homeTeam": "NED",
+      "awayTeam": "TUN",
+      "date": "2026-06-28",
+      "time": "20:00",
+      "venue": "Mercedes-Benz Stadium",
+      "city": "Atlanta"
+    },
+    {
+      "id": "F-6",
+      "matchday": 3,
+      "homeTeam": "JPN",
+      "awayTeam": "SWE",
+      "date": "2026-06-28",
+      "time": "20:00",
+      "venue": "Hard Rock Stadium",
+      "city": "Miami Gardens"
+    }
+  ],
+  "G": [
+    {
+      "id": "G-1",
+      "matchday": 1,
+      "homeTeam": "BEL",
+      "awayTeam": "EGY",
+      "date": "2026-06-11",
+      "time": "18:00",
+      "venue": "Estadio BBVA",
+      "city": "Monterrey"
+    },
+    {
+      "id": "G-2",
+      "matchday": 1,
+      "homeTeam": "IRN",
+      "awayTeam": "NZL",
+      "date": "2026-06-11",
+      "time": "12:00",
+      "venue": "Estadio Akron",
+      "city": "Guadalajara"
+    },
+    {
+      "id": "G-3",
+      "matchday": 2,
+      "homeTeam": "BEL",
+      "awayTeam": "IRN",
+      "date": "2026-06-17",
+      "time": "15:00",
+      "venue": "Estadio BBVA",
+      "city": "Monterrey"
+    },
+    {
+      "id": "G-4",
+      "matchday": 2,
+      "homeTeam": "EGY",
+      "awayTeam": "NZL",
+      "date": "2026-06-17",
+      "time": "18:00",
+      "venue": "Estadio Akron",
+      "city": "Guadalajara"
+    },
+    {
+      "id": "G-5",
+      "matchday": 3,
+      "homeTeam": "BEL",
+      "awayTeam": "NZL",
+      "date": "2026-06-23",
+      "time": "17:00",
+      "venue": "Estadio BBVA",
+      "city": "Monterrey"
+    },
+    {
+      "id": "G-6",
+      "matchday": 3,
+      "homeTeam": "EGY",
+      "awayTeam": "IRN",
+      "date": "2026-06-23",
+      "time": "17:00",
+      "venue": "Estadio Akron",
+      "city": "Guadalajara"
+    }
+  ],
+  "H": [
+    {
+      "id": "H-1",
+      "matchday": 1,
+      "homeTeam": "ESP",
+      "awayTeam": "CPV",
+      "date": "2026-06-12",
+      "time": "18:00",
+      "venue": "BMO Field",
+      "city": "Toronto"
+    },
+    {
+      "id": "H-2",
+      "matchday": 1,
+      "homeTeam": "KSA",
+      "awayTeam": "URU",
+      "date": "2026-06-12",
+      "time": "12:00",
+      "venue": "BC Place",
+      "city": "Vancouver"
+    },
+    {
+      "id": "H-3",
+      "matchday": 2,
+      "homeTeam": "ESP",
+      "awayTeam": "KSA",
+      "date": "2026-06-18",
+      "time": "15:00",
+      "venue": "BMO Field",
+      "city": "Toronto"
+    },
+    {
+      "id": "H-4",
+      "matchday": 2,
+      "homeTeam": "CPV",
+      "awayTeam": "URU",
+      "date": "2026-06-18",
+      "time": "18:00",
+      "venue": "BC Place",
+      "city": "Vancouver"
+    },
+    {
+      "id": "H-5",
+      "matchday": 3,
+      "homeTeam": "ESP",
+      "awayTeam": "URU",
+      "date": "2026-06-24",
+      "time": "17:00",
+      "venue": "BMO Field",
+      "city": "Toronto"
+    },
+    {
+      "id": "H-6",
+      "matchday": 3,
+      "homeTeam": "CPV",
+      "awayTeam": "KSA",
+      "date": "2026-06-24",
+      "time": "17:00",
+      "venue": "BC Place",
+      "city": "Vancouver"
+    }
+  ],
+  "I": [
+    {
+      "id": "I-1",
+      "matchday": 1,
+      "homeTeam": "FRA",
+      "awayTeam": "SEN",
+      "date": "2026-06-13",
+      "time": "18:00",
+      "venue": "MetLife Stadium",
+      "city": "East Rutherford"
+    },
+    {
+      "id": "I-2",
+      "matchday": 1,
+      "homeTeam": "IRQ",
+      "awayTeam": "NOR",
+      "date": "2026-06-13",
+      "time": "12:00",
+      "venue": "Gillette Stadium",
+      "city": "Foxborough"
+    },
+    {
+      "id": "I-3",
+      "matchday": 2,
+      "homeTeam": "FRA",
+      "awayTeam": "IRQ",
+      "date": "2026-06-19",
+      "time": "15:00",
+      "venue": "MetLife Stadium",
+      "city": "East Rutherford"
+    },
+    {
+      "id": "I-4",
+      "matchday": 2,
+      "homeTeam": "SEN",
+      "awayTeam": "NOR",
+      "date": "2026-06-19",
+      "time": "18:00",
+      "venue": "Lincoln Financial Field",
+      "city": "Philadelphia"
+    },
+    {
+      "id": "I-5",
+      "matchday": 3,
+      "homeTeam": "FRA",
+      "awayTeam": "NOR",
+      "date": "2026-06-25",
+      "time": "17:00",
+      "venue": "MetLife Stadium",
+      "city": "East Rutherford"
+    },
+    {
+      "id": "I-6",
+      "matchday": 3,
+      "homeTeam": "SEN",
+      "awayTeam": "IRQ",
+      "date": "2026-06-25",
+      "time": "17:00",
+      "venue": "Gillette Stadium",
+      "city": "Foxborough"
+    }
+  ],
+  "J": [
+    {
+      "id": "J-1",
+      "matchday": 1,
+      "homeTeam": "ARG",
+      "awayTeam": "ALG",
+      "date": "2026-06-14",
+      "time": "18:00",
+      "venue": "SoFi Stadium",
+      "city": "Los Angeles"
+    },
+    {
+      "id": "J-2",
+      "matchday": 1,
+      "homeTeam": "AUT",
+      "awayTeam": "JOR",
+      "date": "2026-06-14",
+      "time": "12:00",
+      "venue": "Levi's Stadium",
+      "city": "Santa Clara"
+    },
+    {
+      "id": "J-3",
+      "matchday": 2,
+      "homeTeam": "ARG",
+      "awayTeam": "AUT",
+      "date": "2026-06-20",
+      "time": "15:00",
+      "venue": "SoFi Stadium",
+      "city": "Los Angeles"
+    },
+    {
+      "id": "J-4",
+      "matchday": 2,
+      "homeTeam": "ALG",
+      "awayTeam": "JOR",
+      "date": "2026-06-20",
+      "time": "18:00",
+      "venue": "Lumen Field",
+      "city": "Seattle"
+    },
+    {
+      "id": "J-5",
+      "matchday": 3,
+      "homeTeam": "ARG",
+      "awayTeam": "JOR",
+      "date": "2026-06-26",
+      "time": "17:00",
+      "venue": "SoFi Stadium",
+      "city": "Los Angeles"
+    },
+    {
+      "id": "J-6",
+      "matchday": 3,
+      "homeTeam": "ALG",
+      "awayTeam": "AUT",
+      "date": "2026-06-26",
+      "time": "17:00",
+      "venue": "Levi's Stadium",
+      "city": "Santa Clara"
+    }
+  ],
+  "K": [
+    {
+      "id": "K-1",
+      "matchday": 1,
+      "homeTeam": "POR",
+      "awayTeam": "COD",
+      "date": "2026-06-15",
+      "time": "18:00",
+      "venue": "AT&T Stadium",
+      "city": "Arlington"
+    },
+    {
+      "id": "K-2",
+      "matchday": 1,
+      "homeTeam": "UZB",
+      "awayTeam": "COL",
+      "date": "2026-06-15",
+      "time": "12:00",
+      "venue": "NRG Stadium",
+      "city": "Houston"
+    },
+    {
+      "id": "K-3",
+      "matchday": 2,
+      "homeTeam": "POR",
+      "awayTeam": "UZB",
+      "date": "2026-06-21",
+      "time": "15:00",
+      "venue": "AT&T Stadium",
+      "city": "Arlington"
+    },
+    {
+      "id": "K-4",
+      "matchday": 2,
+      "homeTeam": "COD",
+      "awayTeam": "COL",
+      "date": "2026-06-21",
+      "time": "18:00",
+      "venue": "NRG Stadium",
+      "city": "Houston"
+    },
+    {
+      "id": "K-5",
+      "matchday": 3,
+      "homeTeam": "POR",
+      "awayTeam": "COL",
+      "date": "2026-06-27",
+      "time": "17:00",
+      "venue": "AT&T Stadium",
+      "city": "Arlington"
+    },
+    {
+      "id": "K-6",
+      "matchday": 3,
+      "homeTeam": "COD",
+      "awayTeam": "UZB",
+      "date": "2026-06-27",
+      "time": "17:00",
+      "venue": "NRG Stadium",
+      "city": "Houston"
+    }
+  ],
+  "L": [
+    {
+      "id": "L-1",
+      "matchday": 1,
+      "homeTeam": "ENG",
+      "awayTeam": "CRO",
+      "date": "2026-06-16",
+      "time": "18:00",
+      "venue": "Mercedes-Benz Stadium",
+      "city": "Atlanta"
+    },
+    {
+      "id": "L-2",
+      "matchday": 1,
+      "homeTeam": "GHA",
+      "awayTeam": "PAN",
+      "date": "2026-06-16",
+      "time": "12:00",
+      "venue": "Hard Rock Stadium",
+      "city": "Miami Gardens"
+    },
+    {
+      "id": "L-3",
+      "matchday": 2,
+      "homeTeam": "ENG",
+      "awayTeam": "GHA",
+      "date": "2026-06-22",
+      "time": "15:00",
+      "venue": "Mercedes-Benz Stadium",
+      "city": "Atlanta"
+    },
+    {
+      "id": "L-4",
+      "matchday": 2,
+      "homeTeam": "CRO",
+      "awayTeam": "PAN",
+      "date": "2026-06-22",
+      "time": "18:00",
+      "venue": "Hard Rock Stadium",
+      "city": "Miami Gardens"
+    },
+    {
+      "id": "L-5",
+      "matchday": 3,
+      "homeTeam": "ENG",
+      "awayTeam": "PAN",
+      "date": "2026-06-28",
+      "time": "17:00",
+      "venue": "Mercedes-Benz Stadium",
+      "city": "Atlanta"
+    },
+    {
+      "id": "L-6",
+      "matchday": 3,
+      "homeTeam": "CRO",
+      "awayTeam": "GHA",
+      "date": "2026-06-28",
+      "time": "17:00",
+      "venue": "Hard Rock Stadium",
+      "city": "Miami Gardens"
+    }
+  ]
+}
