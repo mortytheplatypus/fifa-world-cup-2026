@@ -1,3 +1,5 @@
+import { fixtureShape, teamShape } from '../propTypes';
+
 function FixtureCard({ fixture, homeTeam, awayTeam }) {
   const date = new Date(`${fixture.date}T${fixture.time}`);
 
@@ -44,5 +46,11 @@ function FixtureCard({ fixture, homeTeam, awayTeam }) {
     </article>
   );
 }
+
+FixtureCard.propTypes = {
+  fixture: fixtureShape.isRequired,
+  homeTeam: teamShape.isRequired,
+  awayTeam: teamShape.isRequired,
+};
 
 export default FixtureCard;

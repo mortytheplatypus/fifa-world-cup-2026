@@ -15,6 +15,8 @@
 }
 
 .layout {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
@@ -48,9 +50,19 @@
 }
 
 .site-main {
-  max-width: 720px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 2rem 1.5rem 3rem;
+  width: 100%;
+}
+
+.site-main:has(.groups-page) {
+  max-width: none;
+  padding: 1.5rem 2.5rem 2.5rem;
 }
 
 .page h1 {
@@ -90,64 +102,146 @@
   color: #f87171;
 }
 
-.group-accordion {
+.groups-page {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: 0.5rem;
+  min-height: 0;
 }
 
-.group-accordion-item {
+.groups-page h1 {
+  flex-shrink: 0;
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
+}
+
+.group-grid {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2rem;
+  min-height: 0;
+  overflow: visible;
+}
+
+.group-grid-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  height: 100%;
+  min-height: 0;
+  padding: 0.75rem 1rem;
+  overflow: visible;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface);
-  overflow: hidden;
-}
-
-.group-accordion-header {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 1rem 1.25rem;
-  border: none;
-  background: transparent;
   color: var(--text);
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.15s;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
 }
 
-.group-accordion-header:hover {
+.group-grid-card:hover {
   background: var(--surface-hover);
+  border-color: var(--accent);
 }
 
-.group-letter {
-  flex: 1;
+.group-flags-block {
+  flex-shrink: 0;
 }
 
-.group-team-count {
-  margin-right: 1rem;
-  font-size: 0.875rem;
-  font-weight: 400;
+.group-flags-grid {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 0.8rem;
+}
+
+.group-name-block {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.group-team-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.group-team-cell::after {
+  content: attr(data-name);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  z-index: 10;
+  padding: 0.3rem 0.55rem;
+  border-radius: 4px;
+  background: #0a0e14;
+  color: var(--text);
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(4px);
+  transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.group-team-cell:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.group-flag {
+  display: block;
+  width: clamp(40px, 5vw, 52px);
+  height: auto;
+  aspect-ratio: 4 / 3;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.group-team-id {
+  font-size: clamp(0.55rem, 1.2vh, 0.7rem);
+  font-weight: 600;
   color: var(--text-muted);
+  letter-spacing: 0.03em;
+  text-align: center;
+  line-height: 1.1;
 }
 
-.group-chevron {
-  font-size: 1.25rem;
+.group-grid-letter {
+  font-size: clamp(4.5rem, 12vh, 8rem);
+  font-weight: 700;
   line-height: 1;
+  color: var(--text-muted);
+  transition: color 0.15s;
+}
+
+.group-grid-card:hover .group-grid-letter {
   color: var(--accent);
 }
 
-.group-accordion-body {
-  padding: 0 1.25rem 1.25rem;
-  border-top: 1px solid var(--border);
+@media (max-width: 900px) {
+  .group-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+  }
 }
 
-.group-accordion-actions {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 1rem;
+@media (max-width: 480px) {
+  .group-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(12, 1fr);
+  }
 }
 
 .team-list {

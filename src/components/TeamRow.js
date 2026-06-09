@@ -1,3 +1,5 @@
+import { teamShape } from '../propTypes';
+
 function TeamRow({ team }) {
   return (
     <div className="team-row">
@@ -13,5 +15,9 @@ function TeamRow({ team }) {
     </div>
   );
 }
+
+TeamRow.propTypes = {
+  team: teamShape.isRequired,
+};
 
 export default TeamRow;
