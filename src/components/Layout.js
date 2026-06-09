@@ -24,6 +24,9 @@ function Layout() {
             <NavLink to="/fixtures" className="site-nav-link">
               Fixtures
             </NavLink>
+            <NavLink to="/points" className="site-nav-link">
+              Tables
+            </NavLink>
           </nav>
         </div>
         <div className="site-header-right">

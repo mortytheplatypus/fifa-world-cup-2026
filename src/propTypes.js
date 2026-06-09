@@ -18,6 +18,8 @@ export const fixtureShape = PropTypes.shape({
   venue: PropTypes.string.isRequired,
   city: PropTypes.string.isRequired,
   group: PropTypes.oneOf(GROUP_LETTERS),
+  homeScore: PropTypes.number,
+  awayScore: PropTypes.number,
 });
 
 export const groupIdType = PropTypes.oneOf(GROUP_LETTERS).isRequired;
