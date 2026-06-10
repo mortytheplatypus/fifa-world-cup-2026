@@ -7,7 +7,13 @@ import {
   parseFixtureInstant,
 } from '../utils/timezone';
 
-function FixtureCard({ fixture, homeTeam, awayTeam, showGroup, showDate }) {
+function FixtureCard({
+  fixture,
+  homeTeam,
+  awayTeam,
+  showGroup = false,
+  showDate = true,
+}) {
   const { timeZone } = useTimezone();
   const instant = parseFixtureInstant(fixture);
   const isoDateTime = instant.toISOString();
@@ -66,11 +72,6 @@ FixtureCard.propTypes = {
   awayTeam: teamShape.isRequired,
   showGroup: PropTypes.bool,
   showDate: PropTypes.bool,
-};
-
-FixtureCard.defaultProps = {
-  showGroup: false,
-  showDate: true,
 };
 
 export default FixtureCard;

@@ -430,6 +430,13 @@
   margin: 0;
 }
 
+.group-page-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .group-page-select .fixtures-group-select {
   min-width: 7rem;
 }
@@ -1034,6 +1041,11 @@
   .group-page-header {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .group-page-controls {
+    width: 100%;
+    justify-content: flex-end;
   }
 
   .group-page-select {
