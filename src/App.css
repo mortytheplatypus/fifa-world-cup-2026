@@ -987,9 +987,14 @@ textarea {
   border-radius: 6px;
   background: var(--surface);
   color: var(--text);
-  font-size: 1.1rem;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.date-nav-icon {
+  display: block;
+  width: 1rem;
+  height: 1rem;
 }
 
 .date-nav-button:hover:not(:disabled) {
