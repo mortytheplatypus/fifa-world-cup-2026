@@ -47,7 +47,13 @@ function FixtureCard({
           />
           <span>{homeTeam.name}</span>
         </div>
-        <span className="fixture-vs">vs</span>
+        {fixture.homeScore != null && fixture.awayScore != null ? (
+          <span className="fixture-score">
+            {fixture.homeScore} – {fixture.awayScore}
+          </span>
+        ) : (
+          <span className="fixture-vs">vs</span>
+        )}
         <div className="fixture-team away">
           <img
             src={`https://flagcdn.com/w40/${awayTeam.flagCode}.png`}

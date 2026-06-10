@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Layout from './components/Layout';
 import { TimezoneProvider } from './context/TimezoneContext';
+import HomePage from './pages/HomePage';
 import FixturesPage from './pages/FixturesPage';
 import PointsTablesPage from './pages/PointsTablesPage';
 import GroupFixturesPage from './pages/GroupFixturesPage';
@@ -14,7 +15,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Navigate to="/groups" replace />} />
+            <Route index element={<HomePage />} />
             <Route path="groups" element={<GroupsPage />} />
             <Route path="fixtures" element={<FixturesPage />} />
             <Route path="points" element={<PointsTablesPage />} />

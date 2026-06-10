@@ -47,7 +47,7 @@ export function groupFixturesByDate(fixturesByGroup, timeZone = DISPLAY_TIMEZONE
 }
 
 export function getDateKeys(fixturesByDate) {
-  return Object.keys(fixturesByDate).sort();
+  return Object.keys(fixturesByDate).sort((a, b) => a.localeCompare(b));
 }
 
 export function filterFixturesByGroup(fixturesByGroup, groupId) {
@@ -80,4 +80,69 @@ export function splitFixturesByDate(fixtures, now = new Date()) {
     upcoming: sortFixtures(upcoming),
     past: sortFixtures(past).reverse(),
   };
+}
+
+export function getTodayDateKey(timeZone = DISPLAY_TIMEZONE, now = new Date()) {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(now);
+}
+
+export function getFixturesOnDate(
+  fixturesByGroup,
+  dateKey,
+  timeZone = DISPLAY_TIMEZONE
+) {
+  return sortFixtures(
+    flattenFixtures(fixturesByGroup).filter(
+      (fixture) => getFixtureDateKey(fixture, timeZone) === dateKey
+    )
+  );
+}
+
+export function isFixtureComplete(fixture) {
+  return fixture.homeScore != null && fixture.awayScore != null;
+}
+
+export function getFirstFixture(fixturesByGroup) {
+  const sorted = sortFixtures(flattenFixtures(fixturesByGroup));
+  return sorted[0] ?? null;
+}
+
+export function isTournamentStarted(fixturesByGroup, now = new Date()) {
+  const first = getFirstFixture(fixturesByGroup);
+  if (!first) {
+    return true;
+  }
+  return parseFixtureInstant(first) <= now;
+}
+
+export function getLatestResults(
+  fixturesByGroup,
+  timeZone = DISPLAY_TIMEZONE,
+  now = new Date()
+) {
+  const fixturesByDate = groupFixturesByDate(fixturesByGroup, timeZone);
+  const dates = getDateKeys(fixturesByDate).reverse();
+
+  for (const dateKey of dates) {
+    const dayFixtures = fixturesByDate[dateKey];
+    const completed = dayFixtures.filter(
+      (fixture) => isFixturePast(fixture, now) && isFixtureComplete(fixture)
+    );
+
+    if (completed.length > 0) {
+      return { dateKey, fixtures: completed };
+    }
+
+    const past = dayFixtures.filter((fixture) => isFixturePast(fixture, now));
+    if (past.length > 0) {
+      return { dateKey, fixtures: past };
+    }
+  }
+
+  return null;
 }
