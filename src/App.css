@@ -1025,14 +1025,14 @@ textarea {
   height: 1rem;
 }
 
-.date-nav-button:hover:not(:disabled) {
+.date-nav-button:hover:not(.date-nav-button--inactive) {
   background: var(--surface-hover);
   border-color: var(--accent);
 }
 
-.date-nav-button:disabled {
+.date-nav-button--inactive {
   opacity: 0.35;
-  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .date-nav-label {

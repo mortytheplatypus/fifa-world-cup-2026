@@ -33,10 +33,10 @@ function DateNavigator({ dateLabel, onPrevious, onNext, canGoPrevious, canGoNext
     <div className="date-navigator">
       <button
         type="button"
-        className="date-nav-button"
+        className={`date-nav-button${canGoPrevious ? '' : ' date-nav-button--inactive'}`}
         onClick={onPrevious}
-        disabled={!canGoPrevious}
         aria-label="Previous day"
+        aria-disabled={!canGoPrevious}
       >
         <ChevronIcon direction="left" />
       </button>
@@ -45,10 +45,10 @@ function DateNavigator({ dateLabel, onPrevious, onNext, canGoPrevious, canGoNext
 
       <button
         type="button"
-        className="date-nav-button"
+        className={`date-nav-button${canGoNext ? '' : ' date-nav-button--inactive'}`}
         onClick={onNext}
-        disabled={!canGoNext}
         aria-label="Next day"
+        aria-disabled={!canGoNext}
       >
         <ChevronIcon direction="right" />
       </button>
