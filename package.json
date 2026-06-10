@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fontsource/montserrat": "^5.2.8",
+    "@fontsource/raleway": "^5.2.8",
+    "@fontsource/roboto-mono": "^5.2.9",
     "prop-types": "^15.8.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
