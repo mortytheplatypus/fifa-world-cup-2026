@@ -2,16 +2,22 @@
   --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-display: 'Raleway', 'Montserrat', sans-serif;
   --font-mono: 'Roboto Mono', ui-monospace, 'Cascadia Code', monospace;
-  --bg: #0f1419;
-  --bg-deep: #0a0e14;
-  --bg-elevated: #141c28;
-  --surface: #1a2332;
-  --surface-hover: #243044;
-  --border: #2d3a4f;
-  --text: #e8edf4;
-  --text-muted: #8b9cb3;
-  --accent: #00a651;
-  --accent-hover: #00c060;
+  --bg: #12171e;
+  --bg-deep: #0d1117;
+  --bg-elevated: #171e28;
+  --surface: #1e2732;
+  --surface-hover: #283342;
+  --border: #3a4656;
+  --text: #eef1f5;
+  --text-muted: #9aa8ba;
+  /* Pitch green — links, buttons, subtle brand */
+  --accent: #5d9a82;
+  --accent-hover: #6faf96;
+  /* Warm gold — selected nav, tabs, hover highlights */
+  --highlight: #c8ad72;
+  --highlight-hover: #d9be86;
+  --highlight-text: #ede4d4;
+  --group-letter: color-mix(in srgb, var(--highlight) 50%, var(--text));
   --radius: 10px;
 }
 
@@ -45,12 +51,12 @@ textarea {
   background:
     radial-gradient(
       ellipse 85% 55% at 50% -12%,
-      color-mix(in srgb, var(--accent) 16%, transparent),
+      color-mix(in srgb, var(--highlight) 9%, transparent),
       transparent 58%
     ),
     radial-gradient(
       ellipse 45% 35% at 100% 20%,
-      color-mix(in srgb, var(--accent) 7%, transparent),
+      color-mix(in srgb, var(--accent) 5%, transparent),
       transparent 55%
     ),
     radial-gradient(
@@ -141,8 +147,8 @@ textarea {
 }
 
 .site-nav:hover {
-  border-color: color-mix(in srgb, var(--accent) 25%, var(--border));
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 8%, transparent);
+  border-color: color-mix(in srgb, var(--highlight) 22%, var(--border));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--highlight) 6%, transparent);
 }
 
 .site-nav-link {
@@ -161,14 +167,14 @@ textarea {
 }
 
 .site-nav-link.active {
-  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
-  color: var(--accent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+  background: color-mix(in srgb, var(--highlight) 16%, var(--surface));
+  color: var(--highlight-text);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--highlight) 38%, transparent);
 }
 
 .site-nav-link.active:hover {
-  background: color-mix(in srgb, var(--accent) 20%, var(--surface));
-  color: var(--accent);
+  background: color-mix(in srgb, var(--highlight) 22%, var(--surface));
+  color: var(--highlight-text);
 }
 
 .site-header-right {
@@ -358,9 +364,9 @@ textarea {
   display: inline-block;
   padding: 0.2rem 0.55rem;
   border-radius: 5px;
-  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
-  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
-  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--highlight) 28%, var(--border));
+  background: color-mix(in srgb, var(--highlight) 10%, var(--surface));
+  color: var(--highlight);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 600;
@@ -374,7 +380,7 @@ textarea {
   border-radius: var(--radius);
   background: linear-gradient(
     135deg,
-    color-mix(in srgb, var(--accent) 10%, var(--surface)),
+    color-mix(in srgb, var(--highlight) 8%, var(--surface)),
     var(--surface)
   );
   text-align: center;
@@ -387,7 +393,7 @@ textarea {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--highlight);
 }
 
 .home-countdown-match {
@@ -495,7 +501,7 @@ textarea {
   font-family: var(--font-mono);
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--highlight);
 }
 
 .home-empty {
@@ -552,7 +558,7 @@ textarea {
 
 .group-grid-card:hover {
   background: var(--surface-hover);
-  border-color: var(--accent);
+  border-color: color-mix(in srgb, var(--highlight) 55%, var(--border));
 }
 
 .group-flags-block {
@@ -632,12 +638,14 @@ textarea {
   font-size: clamp(4.5rem, 12vh, 8rem);
   font-weight: 800;
   line-height: 1;
-  color: var(--text-muted);
-  transition: color 0.15s;
+  color: var(--group-letter);
+  text-shadow: 0 2px 18px color-mix(in srgb, var(--highlight) 12%, transparent);
+  transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 
 .group-grid-card:hover .group-grid-letter {
-  color: var(--accent);
+  color: var(--highlight);
+  text-shadow: 0 0 28px color-mix(in srgb, var(--highlight) 38%, transparent);
 }
 
 @media (max-width: 900px) {
@@ -858,9 +866,9 @@ textarea {
 }
 
 .group-fixtures-tab.active {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-  color: var(--accent);
+  border-color: color-mix(in srgb, var(--highlight) 50%, var(--border));
+  background: color-mix(in srgb, var(--highlight) 14%, var(--surface));
+  color: var(--highlight-text);
 }
 
 .fixture-list {
@@ -1018,7 +1026,7 @@ textarea {
   font-family: var(--font-display);
   font-size: 1.15rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--highlight);
 }
 
 .fixtures-date-section .fixture-list {
@@ -1136,7 +1144,7 @@ textarea {
   font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--highlight);
   border-bottom: 1px solid var(--border);
 }
 
