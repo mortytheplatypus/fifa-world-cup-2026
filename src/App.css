@@ -17,6 +17,9 @@
   --highlight: #c8ad72;
   --highlight-hover: #d9be86;
   --highlight-text: #ede4d4;
+  /* Live match indicator */
+  --live: #e07a5f;
+  --live-text: #f4c4b8;
   --group-letter: color-mix(in srgb, var(--highlight) 50%, var(--text));
   --radius: 10px;
 }
@@ -882,8 +885,32 @@ textarea {
 .fixture-card {
   padding: 1.25rem;
   border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-left-color: var(--border);
   border-radius: var(--radius);
   background: var(--surface);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.fixture-card--upcoming {
+  border-left-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+}
+
+.fixture-card--ongoing {
+  border-left-color: var(--live);
+  background: color-mix(in srgb, var(--live) 9%, var(--surface));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--live) 18%, transparent);
+}
+
+.fixture-card--completed {
+  border-left-color: color-mix(in srgb, var(--highlight) 75%, var(--border));
+  background: color-mix(in srgb, var(--bg-deep) 30%, var(--surface));
+}
+
+.fixture-card--past {
+  border-left-color: color-mix(in srgb, var(--text-muted) 50%, var(--border));
+  background: color-mix(in srgb, var(--bg-deep) 18%, var(--surface));
 }
 
 .fixtures-status {
@@ -1066,6 +1093,60 @@ textarea {
   color: var(--accent);
 }
 
+.fixture-status {
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.fixture-status--upcoming {
+  color: var(--accent-hover);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.fixture-status--ongoing {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--live-text);
+  background: color-mix(in srgb, var(--live) 28%, transparent);
+}
+
+.fixture-status--ongoing::before {
+  content: '';
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--live);
+  animation: fixture-live-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes fixture-live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}
+
+.fixture-status--completed {
+  color: var(--highlight-text);
+  background: color-mix(in srgb, var(--highlight) 22%, transparent);
+}
+
+.fixture-status--past {
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--text-muted) 14%, transparent);
+}
+
 .fixture-teams {
   display: flex;
   align-items: center;
@@ -1099,6 +1180,15 @@ textarea {
   text-transform: uppercase;
 }
 
+.fixture-card--upcoming .fixture-vs {
+  color: var(--accent-hover);
+}
+
+.fixture-card--ongoing .fixture-vs {
+  color: var(--live-text);
+  font-weight: 800;
+}
+
 .fixture-score {
   flex-shrink: 0;
   font-family: var(--font-mono);
@@ -1106,6 +1196,23 @@ textarea {
   font-weight: 700;
   color: var(--text);
   font-variant-numeric: tabular-nums;
+}
+
+.fixture-card--completed .fixture-score {
+  color: var(--highlight-text);
+}
+
+.fixture-card--completed .fixture-meta,
+.fixture-card--completed .fixture-venue,
+.fixture-card--past .fixture-meta,
+.fixture-card--past .fixture-venue {
+  opacity: 0.88;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fixture-status--ongoing::before {
+    animation: none;
+  }
 }
 
 .fixture-venue {

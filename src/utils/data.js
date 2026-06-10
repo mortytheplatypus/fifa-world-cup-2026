@@ -12,6 +12,12 @@ export async function fetchFixtures() {
   return response.json();
 }
 
+export async function fetchResults() {
+  const response = await fetch('/data/results.json');
+  if (!response.ok) throw new Error('Failed to load match results');
+  return response.json();
+}
+
 export function groupTeamsByLetter(teams) {
   return GROUP_LETTERS.reduce((acc, letter) => {
     acc[letter] = teams.filter((team) => team.group === letter);
