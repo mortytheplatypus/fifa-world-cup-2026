@@ -1,4 +1,5 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
+import SettingsButton from './SettingsButton';
 import TimezoneSelector from './TimezoneSelector';
 
 function Layout() {
@@ -33,7 +34,7 @@ function Layout() {
 
         <div className="site-header-right">
           <TimezoneSelector />
-          {/* <VisitorCounter /> */}
+          <SettingsButton />
         </div>
       </header>
       <main className="site-main">

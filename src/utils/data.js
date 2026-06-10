@@ -12,6 +12,12 @@ export async function fetchFixtures() {
   return response.json();
 }
 
+export async function fetchTeamColors() {
+  const response = await fetch('/data/team-colors.json');
+  if (!response.ok) throw new Error('Failed to load team colors');
+  return response.json();
+}
+
 export function groupTeamsByLetter(teams) {
   return GROUP_LETTERS.reduce((acc, letter) => {
     acc[letter] = teams.filter((team) => team.group === letter);
