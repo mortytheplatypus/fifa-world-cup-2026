@@ -127,6 +127,7 @@ textarea {
   font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: 0.02em;
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1254,7 +1255,7 @@ textarea {
 
 @media (max-width: 768px) {
   .site-header {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
       'brand actions'
       'nav nav';
@@ -1264,6 +1265,8 @@ textarea {
 
   .site-brand {
     grid-area: brand;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .site-nav {
@@ -1276,6 +1279,18 @@ textarea {
 
   .site-header-right {
     grid-area: actions;
+    flex-shrink: 0;
+    max-width: 46%;
+  }
+
+  .timezone-selector {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .timezone-select {
+    max-width: 100%;
+    font-size: 0.75rem;
   }
 
   .site-title {
@@ -1450,6 +1465,32 @@ textarea {
   }
 }
 
+@media (max-width: 560px) {
+  .site-header {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'brand'
+      'actions'
+      'nav';
+    gap: 0.5rem;
+  }
+
+  .site-header-right {
+    max-width: none;
+    width: 100%;
+    justify-self: stretch;
+  }
+
+  .timezone-selector {
+    width: 100%;
+  }
+
+  .timezone-select {
+    width: 100%;
+    max-width: none;
+  }
+}
+
 @media (max-width: 540px) {
   .site-nav {
     gap: 0.2rem;
@@ -1503,14 +1544,7 @@ textarea {
   }
 
   .timezone-selector {
-    flex: 1;
     min-width: 0;
-  }
-
-  .timezone-select {
-    max-width: none;
-    width: 100%;
-    font-size: 0.75rem;
   }
 
   .fixture-card {
