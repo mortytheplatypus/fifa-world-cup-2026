@@ -89,16 +89,49 @@ function HomePage() {
         <p className="home-subtitle">
           USA · Canada · Mexico
         </p>
-        <p className="fixtures-timezone">
-          Times shown in {timezoneLabel}
-        </p>
+        <div className="home-meta">
+          <p className="home-timezone">
+            Times shown in{' '}
+            <span className="home-timezone-label">{timezoneLabel}</span>
+          </p>
+          <div className="home-today">
+            <span className="home-today-label">Today</span>
+            <time className="home-today-date" dateTime={todayKey}>
+              {formatDateHeading(todayKey)}
+            </time>
+          </div>
+        </div>
       </header>
 
-      {!tournamentStarted && firstFixture && firstKickoff && (
+      {!tournamentStarted &&
+        firstFixture &&
+        firstKickoff &&
+        firstHomeTeam &&
+        firstAwayTeam && (
         <section className="home-countdown-card">
           <p className="home-countdown-eyebrow">Countdown to kickoff</p>
           <h2 className="home-countdown-match">
-            {firstHomeTeam.name} vs {firstAwayTeam.name}
+            <span className="home-countdown-team">
+              <img
+                className="home-countdown-flag"
+                src={`https://flagcdn.com/w40/${firstHomeTeam.flagCode}.png`}
+                alt=""
+                width={36}
+                height={27}
+              />
+              <span>{firstHomeTeam.name}</span>
+            </span>
+            <span className="home-countdown-vs">vs</span>
+            <span className="home-countdown-team">
+              <img
+                className="home-countdown-flag"
+                src={`https://flagcdn.com/w40/${firstAwayTeam.flagCode}.png`}
+                alt=""
+                width={36}
+                height={27}
+              />
+              <span>{firstAwayTeam.name}</span>
+            </span>
           </h2>
           <p className="home-countdown-meta">
             {formatFixtureDate(firstFixture, timeZone)}
@@ -112,10 +145,7 @@ function HomePage() {
       )}
 
       <section className="home-section">
-        <div className="home-section-header">
-          <h2 className="home-section-title">Today&apos;s matches</h2>
-          <span className="home-section-date">{formatDateHeading(todayKey)}</span>
-        </div>
+        <h2 className="home-section-title">Today&apos;s matches</h2>
 
         {todayFixtures.length === 0 ? (
           <p className="status-message home-empty">
