@@ -5,32 +5,32 @@ function Layout() {
   return (
     <div className="layout">
       <header className="site-header">
-        <div className="site-header-left">
-          <Link to="/" className="site-brand">
-            <img
-              src="/fifawc2026logo.png"
-              alt=""
-              className="site-logo"
-              width={36}
-              height={36}
-            />
-            <span className="site-title">FIFA World Cup 2026</span>
-          </Link>
-          <nav className="site-nav">
-            <NavLink to="/" end className="site-nav-link">
-              Home
-            </NavLink>
-            <NavLink to="/groups" className="site-nav-link">
-              Groups
-            </NavLink>
-            <NavLink to="/fixtures" className="site-nav-link">
-              Fixtures
-            </NavLink>
-            <NavLink to="/points" className="site-nav-link">
-              Tables
-            </NavLink>
-          </nav>
-        </div>
+        <Link to="/" className="site-brand">
+          <img
+            src="/fifawc2026logo.png"
+            alt=""
+            className="site-logo"
+            width={36}
+            height={36}
+          />
+          <span className="site-title">FIFA World Cup 2026</span>
+        </Link>
+
+        <nav className="site-nav" aria-label="Main navigation">
+          <NavLink to="/" end className="site-nav-link">
+            Home
+          </NavLink>
+          <NavLink to="/groups" className="site-nav-link">
+            Groups
+          </NavLink>
+          <NavLink to="/fixtures" className="site-nav-link">
+            Fixtures
+          </NavLink>
+          <NavLink to="/points" className="site-nav-link">
+            Tables
+          </NavLink>
+        </nav>
+
         <div className="site-header-right">
           <TimezoneSelector />
           {/* <VisitorCounter /> */}

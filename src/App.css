@@ -23,28 +23,23 @@
 }
 
 .site-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
+  gap: 1rem 1.5rem;
   padding: 0.75rem 1.5rem;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
-}
-
-.site-header-left {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  min-width: 0;
 }
 
 .site-brand {
   display: flex;
   align-items: center;
   gap: 0.65rem;
+  min-width: 0;
   color: var(--text);
   text-decoration: none;
+  justify-self: start;
 }
 
 .site-logo {
@@ -60,12 +55,17 @@
   font-weight: 700;
   letter-spacing: 0.02em;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .site-nav {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 1.25rem;
+  justify-self: center;
 }
 
 .site-nav-link {
@@ -87,8 +87,10 @@
 .site-header-right {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 1rem;
-  flex-shrink: 0;
+  min-width: 0;
+  justify-self: end;
 }
 
 .timezone-selector {
@@ -321,6 +323,7 @@
 .home-quick-links {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.75rem;
   margin-top: 0.5rem;
 }
@@ -1040,31 +1043,56 @@
 
 @media (max-width: 768px) {
   .site-header {
-    flex-wrap: wrap;
-    gap: 0.75rem;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'brand actions'
+      'nav nav';
+    gap: 0.65rem 1rem;
     padding: 0.65rem 1rem;
   }
 
-  .site-header-left {
-    flex: 1 1 100%;
-    flex-wrap: wrap;
-    gap: 0.65rem 1rem;
+  .site-brand {
+    grid-area: brand;
+  }
+
+  .site-nav {
+    grid-area: nav;
+    width: 100%;
+    gap: 0.85rem 1.25rem;
+    padding: 0.15rem 0;
   }
 
   .site-header-right {
-    flex: 1 1 100%;
+    grid-area: actions;
   }
 
   .site-title {
     font-size: 1.05rem;
   }
 
-  .site-nav {
-    gap: 0.85rem;
-  }
-
   .site-nav-link {
     font-size: 0.875rem;
+  }
+
+  .home-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .home-countdown-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .home-countdown-match {
+    font-size: 1.15rem;
+  }
+
+  .countdown-unit {
+    min-width: 3.75rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .countdown-value {
+    font-size: 1.5rem;
   }
 
   .site-main,
@@ -1169,8 +1197,14 @@
   }
 
   .group-page-controls {
+    flex-direction: column;
+    align-items: stretch;
     width: 100%;
-    justify-content: flex-end;
+  }
+
+  .group-page-controls .fixtures-view-toggle {
+    width: 100%;
+    text-align: center;
   }
 
   .group-page-select {
@@ -1205,6 +1239,42 @@
 }
 
 @media (max-width: 540px) {
+  .site-nav {
+    gap: 0.5rem 1rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .site-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .site-nav-link {
+    flex-shrink: 0;
+  }
+
+  .home-quick-links {
+    flex-direction: column;
+  }
+
+  .home-quick-links .link-button {
+    flex: none;
+    width: 100%;
+    text-align: center;
+  }
+
+  .countdown-timer {
+    gap: 0.5rem;
+  }
+
+  .countdown-unit {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 0;
+  }
+
   .timezone-selector-label {
     position: absolute;
     width: 1px;
@@ -1323,7 +1393,13 @@
   }
 
   .site-title {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+  }
+
+  .site-nav {
+    justify-content: center;
+    flex-wrap: wrap;
+    overflow-x: visible;
   }
 
   .standings-col-pos {
