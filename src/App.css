@@ -1467,12 +1467,28 @@ textarea {
   gap: 1rem;
 }
 
-.fixture-team {
+.fixture-team-block {
   display: flex;
   flex: 1;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.fixture-team-block--home {
+  align-items: flex-start;
+}
+
+.fixture-team-block--away {
+  align-items: flex-end;
+}
+
+.fixture-team {
+  display: flex;
   align-items: center;
   gap: 0.75rem;
   min-width: 0;
+  max-width: 100%;
   font-weight: 600;
 }
 
@@ -1516,21 +1532,7 @@ textarea {
   color: var(--highlight-text);
 }
 
-.fixture-scorers {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-top: 0.35rem;
-}
-
-.fixture-scorers-spacer {
-  flex-shrink: 0;
-  width: 2.75rem;
-}
-
-.fixture-scorers-side {
-  flex: 1;
-  min-width: 0;
+.fixture-team-scorers {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1539,14 +1541,18 @@ textarea {
   color: var(--text-muted);
 }
 
-.fixture-scorers-side li {
+.fixture-team-block--home .fixture-team-scorers {
+  text-align: left;
+}
+
+.fixture-team-block--away .fixture-team-scorers {
+  text-align: right;
+}
+
+.fixture-team-scorers li {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.fixture-scorers-side--away {
-  text-align: right;
 }
 
 .fixture-card--completed .fixture-meta,
@@ -2108,15 +2114,23 @@ textarea {
 
   .fixture-teams {
     flex-direction: column;
-    align-items: stretch;
-    gap: 0.35rem;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .fixture-team-block,
+  .fixture-team-block--home,
+  .fixture-team-block--away {
+    flex: none;
+    align-items: center;
+    width: 100%;
   }
 
   .fixture-team,
   .fixture-team.away {
     flex-direction: row;
-    text-align: left;
-    justify-content: flex-start;
+    justify-content: center;
+    text-align: center;
   }
 
   .fixture-team span {
@@ -2125,27 +2139,48 @@ textarea {
     text-overflow: unset;
   }
 
+  .fixture-team-scorers {
+    display: none;
+  }
+
+  .fixture-score,
   .fixture-vs {
     align-self: center;
     padding: 0.15rem 0;
   }
 
-  .fixture-scorers {
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-
-  .fixture-scorers-spacer {
-    display: none;
-  }
-
-  .fixture-scorers-side--away {
-    text-align: left;
-  }
-
   .fixture-meta {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 0.75rem;
+    width: 100%;
+  }
+
+  .fixture-meta-tags {
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
+
+  .fixture-meta time {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 0.75rem;
+    text-align: right;
+  }
+
+  .fixture-card--show-date .fixture-meta {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .fixture-card--show-date .fixture-meta time {
+    white-space: normal;
+    text-align: left;
+    font-size: 0.75rem;
+    line-height: 1.4;
   }
 
   .date-navigator {

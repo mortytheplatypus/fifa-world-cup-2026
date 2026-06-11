@@ -35,7 +35,11 @@ function FixtureCard({
     status === 'completed' && goals.length > 0;
 
   return (
-    <article className={`fixture-card fixture-card--${status}`}>
+    <article
+      className={`fixture-card fixture-card--${status}${
+        showDate ? ' fixture-card--show-date' : ''
+      }`}
+    >
       <div className="fixture-meta">
         <div className="fixture-meta-tags">
           {showGroup && fixture.group && (
@@ -57,15 +61,27 @@ function FixtureCard({
       </div>
 
       <div className="fixture-teams">
-        <div className="fixture-team home">
-          <img
-            src={`https://flagcdn.com/w40/${homeTeam.flagCode}.png`}
-            alt=""
-            width={32}
-            height={24}
-          />
-          <span>{homeTeam.name}</span>
+        <div className="fixture-team-block fixture-team-block--home">
+          <div className="fixture-team home">
+            <img
+              src={`https://flagcdn.com/w40/${homeTeam.flagCode}.png`}
+              alt=""
+              width={32}
+              height={24}
+            />
+            <span>{homeTeam.name}</span>
+          </div>
+          {showScorers && homeGoals.length > 0 && (
+            <ul className="fixture-team-scorers" aria-label={`${homeTeam.name} goals`}>
+              {homeGoals.map((goal) => (
+                <li key={`${goal.scorer}-${goal.minute}`}>
+                  {goal.scorer} {goal.minute}&apos;
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
+
         {fixture.homeScore != null && fixture.awayScore != null ? (
           <span className="fixture-score">
             {fixture.homeScore} – {fixture.awayScore}
@@ -73,36 +89,28 @@ function FixtureCard({
         ) : (
           <span className="fixture-vs">vs</span>
         )}
-        <div className="fixture-team away">
-          <img
-            src={`https://flagcdn.com/w40/${awayTeam.flagCode}.png`}
-            alt=""
-            width={32}
-            height={24}
-          />
-          <span>{awayTeam.name}</span>
+
+        <div className="fixture-team-block fixture-team-block--away">
+          <div className="fixture-team away">
+            <img
+              src={`https://flagcdn.com/w40/${awayTeam.flagCode}.png`}
+              alt=""
+              width={32}
+              height={24}
+            />
+            <span>{awayTeam.name}</span>
+          </div>
+          {showScorers && awayGoals.length > 0 && (
+            <ul className="fixture-team-scorers" aria-label={`${awayTeam.name} goals`}>
+              {awayGoals.map((goal) => (
+                <li key={`${goal.scorer}-${goal.minute}`}>
+                  {goal.scorer} {goal.minute}&apos;
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
-
-      {showScorers && (
-        <div className="fixture-scorers">
-          <ul className="fixture-scorers-side fixture-scorers-side--home">
-            {homeGoals.map((goal) => (
-              <li key={`${goal.scorer}-${goal.minute}`}>
-                {goal.scorer} {goal.minute}&apos;
-              </li>
-            ))}
-          </ul>
-          <span className="fixture-scorers-spacer" aria-hidden="true" />
-          <ul className="fixture-scorers-side fixture-scorers-side--away">
-            {awayGoals.map((goal) => (
-              <li key={`${goal.scorer}-${goal.minute}`}>
-                {goal.scorer} {goal.minute}&apos;
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       <div className="fixture-venue">
         {fixture.venue}, {fixture.city}
