@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { fetchFixtures, fetchTeams, groupTeamsByLetter } from '../utils/data';
+import { fetchFixtures, fetchResults, fetchTeams, groupTeamsByLetter } from '../utils/data';
+import { applyMatchResults } from '../utils/results';
 
 export function useGroupsData() {
   const [teams, setTeams] = useState([]);
   const [fixtures, setFixtures] = useState({});
+  const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -12,13 +14,15 @@ export function useGroupsData() {
 
     async function load() {
       try {
-        const [teamsData, fixturesData] = await Promise.all([
+        const [teamsData, fixturesData, resultsData] = await Promise.all([
           fetchTeams(),
           fetchFixtures(),
+          fetchResults(),
         ]);
         if (!cancelled) {
           setTeams(teamsData);
-          setFixtures(fixturesData);
+          setResults(resultsData);
+          setFixtures(applyMatchResults(fixturesData, resultsData));
           setLoading(false);
         }
       } catch (err) {
@@ -37,5 +41,5 @@ export function useGroupsData() {
 
   const groupedTeams = groupTeamsByLetter(teams);
 
-  return { teams, fixtures, groupedTeams, loading, error };
+  return { teams, fixtures, results, groupedTeams, loading, error };
 }

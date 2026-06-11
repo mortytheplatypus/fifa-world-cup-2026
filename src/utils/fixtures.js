@@ -107,6 +107,31 @@ export function isFixtureComplete(fixture) {
   return fixture.homeScore != null && fixture.awayScore != null;
 }
 
+export const MATCH_DURATION_MS = 2 * 60 * 60 * 1000;
+
+export function getFixtureEndInstant(fixture) {
+  return new Date(parseFixtureInstant(fixture).getTime() + MATCH_DURATION_MS);
+}
+
+export function isFixtureOngoing(fixture, now = new Date()) {
+  if (isFixtureComplete(fixture)) return false;
+
+  const kickoff = parseFixtureInstant(fixture);
+  const end = getFixtureEndInstant(fixture);
+
+  return kickoff <= now && now < end;
+}
+
+export function getFixtureStatus(fixture, now = new Date()) {
+  if (isFixtureComplete(fixture)) return 'completed';
+  if (isFixtureOngoing(fixture, now)) return 'ongoing';
+
+  const end = getFixtureEndInstant(fixture);
+  if (now >= end) return 'past';
+
+  return 'upcoming';
+}
+
 export function getFirstFixture(fixturesByGroup) {
   const sorted = sortFixtures(flattenFixtures(fixturesByGroup));
   return sorted[0] ?? null;

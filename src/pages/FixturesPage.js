@@ -108,7 +108,8 @@ function FixturesPage() {
         <div>
           <h1>Fixtures</h1>
           <p className="fixtures-timezone">
-            Times shown in {timezoneLabel}
+            Times shown in{' '}
+            <span className="home-timezone-label">{timezoneLabel}</span>
           </p>
         </div>
 

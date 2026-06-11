@@ -12,6 +12,12 @@ export async function fetchFixtures() {
   return response.json();
 }
 
+export async function fetchResults() {
+  const response = await fetch('/data/results.json');
+  if (!response.ok) throw new Error('Failed to load match results');
+  return response.json();
+}
+
 export async function fetchTeamColors() {
   const response = await fetch('/data/team-colors.json');
   if (!response.ok) throw new Error('Failed to load team colors');
