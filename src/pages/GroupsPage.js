@@ -1,12 +1,13 @@
 import { GROUP_LETTERS } from '../utils/data';
 import { useGroupsData } from '../hooks/useGroupsData';
 import GroupGridCard from '../components/GroupGridCard';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 function GroupsPage() {
   const { groupedTeams, loading, error } = useGroupsData();
 
   if (loading) {
-    return <p className="status-message">Loading groups…</p>;
+    return <LoadingSpinner />;
   }
 
   if (error) {

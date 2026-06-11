@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import DateNavigator from '../components/DateNavigator';
+import LoadingSpinner from '../components/LoadingSpinner';
 import FixtureCard from '../components/FixtureCard';
 import { useTimezone } from '../context/TimezoneContext';
 import { useGroupsData } from '../hooks/useGroupsData';
@@ -65,7 +66,7 @@ function GroupFixturesPage() {
   }
 
   if (loading) {
-    return <p className="status-message">Loading fixtures…</p>;
+    return <LoadingSpinner />;
   }
 
   if (error) {

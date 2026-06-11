@@ -405,6 +405,10 @@ textarea {
   width: 100%;
 }
 
+.site-main:has(> .page-loading) {
+  padding: 0;
+}
+
 .site-main:has(.groups-page) {
   max-width: none;
   padding: 1.5rem 2.5rem 2.5rem;
@@ -449,6 +453,45 @@ textarea {
 
 .breadcrumb a:hover {
   text-decoration: underline;
+}
+
+.page-loading {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: min(55vh, 100%);
+  padding: 2rem;
+}
+
+.loading-spinner {
+  animation: loading-spin 0.85s linear infinite;
+  filter: drop-shadow(
+    0 0 10px color-mix(in srgb, var(--accent) 20%, var(--surface))
+  );
+}
+
+.loading-spinner-track {
+  stroke: color-mix(in srgb, var(--text-muted) 28%, var(--border));
+}
+
+.loading-spinner-gradient-start {
+  stop-color: var(--accent);
+}
+
+.loading-spinner-gradient-end {
+  stop-color: var(--highlight);
+}
+
+.loading-spinner-arc {
+  transform-origin: center;
+}
+
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .status-message {
@@ -1514,6 +1557,10 @@ textarea {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .loading-spinner {
+    animation: none;
+  }
+
   .fixture-status--ongoing::before {
     animation: none;
   }

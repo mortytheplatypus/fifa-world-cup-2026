@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import LoadingSpinner from '../components/LoadingSpinner';
 import StandingsTable from '../components/StandingsTable';
 import { useGroupsData } from '../hooks/useGroupsData';
 import { GROUP_LETTERS } from '../utils/data';
@@ -26,7 +27,7 @@ function PointsTablesPage() {
   );
 
   if (loading) {
-    return <p className="status-message">Loading points tables…</p>;
+    return <LoadingSpinner />;
   }
 
   if (error) {

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import FixtureCard from '../components/FixtureCard';
 import GroupTeamGrid from '../components/GroupTeamGrid';
+import LoadingSpinner from '../components/LoadingSpinner';
 import StandingsTable from '../components/StandingsTable';
 import { useGroupsData } from '../hooks/useGroupsData';
 import { getTeamById, GROUP_LETTERS, isValidGroup } from '../utils/data';
@@ -33,7 +34,7 @@ function GroupPage() {
   }
 
   if (loading) {
-    return <p className="status-message">Loading group…</p>;
+    return <LoadingSpinner />;
   }
 
   if (error) {

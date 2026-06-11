@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import FixtureCard from '../components/FixtureCard';
+import LoadingSpinner from '../components/LoadingSpinner';
 import HomeMatchHero from '../components/HomeMatchHero';
 import { useTimezone } from '../context/TimezoneContext';
 import { useGroupsData } from '../hooks/useGroupsData';
@@ -59,7 +60,7 @@ function HomePage() {
   const timezoneLabel = getDisplayTimezoneLabel(timeZone);
 
   if (loading) {
-    return <p className="status-message">Loading…</p>;
+    return <LoadingSpinner />;
   }
 
   if (error) {
