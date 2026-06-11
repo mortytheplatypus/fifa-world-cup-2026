@@ -137,12 +137,60 @@ export function getFirstFixture(fixturesByGroup) {
   return sorted[0] ?? null;
 }
 
+export function getOngoingFixtures(fixturesByGroup, now = new Date()) {
+  return sortFixtures(flattenFixtures(fixturesByGroup)).filter((fixture) =>
+    isFixtureOngoing(fixture, now)
+  );
+}
+
+export function getNextUpcomingFixture(fixturesByGroup, now = new Date()) {
+  return (
+    sortFixtures(flattenFixtures(fixturesByGroup)).find(
+      (fixture) => getFixtureStatus(fixture, now) === 'upcoming'
+    ) ?? null
+  );
+}
+
 export function isTournamentStarted(fixturesByGroup, now = new Date()) {
   const first = getFirstFixture(fixturesByGroup);
   if (!first) {
     return true;
   }
   return parseFixtureInstant(first) <= now;
+}
+
+export function getUpcomingMatchesDay(
+  fixturesByGroup,
+  timeZone = DISPLAY_TIMEZONE,
+  now = new Date(),
+  { excludeFixtureId = null } = {}
+) {
+  const fixturesByDate = groupFixturesByDate(fixturesByGroup, timeZone);
+  const dateKeys = getDateKeys(fixturesByDate);
+  const todayKey = getTodayDateKey(timeZone, now);
+  const eligibleDates = dateKeys.filter((dateKey) => dateKey >= todayKey);
+
+  for (const dateKey of eligibleDates) {
+    const dayUpcoming = fixturesByDate[dateKey].filter(
+      (fixture) => getFixtureStatus(fixture, now) === 'upcoming'
+    );
+
+    if (dayUpcoming.length === 0) {
+      continue;
+    }
+
+    const fixtures = dayUpcoming.filter(
+      (fixture) => !excludeFixtureId || fixture.id !== excludeFixtureId
+    );
+
+    if (fixtures.length === 0) {
+      continue;
+    }
+
+    return { dateKey, fixtures: sortFixtures(fixtures) };
+  }
+
+  return null;
 }
 
 export function getLatestResults(

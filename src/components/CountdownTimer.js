@@ -15,7 +15,7 @@ function formatCountdown(ms) {
   return { days, hours, minutes, seconds };
 }
 
-function CountdownTimer({ targetDate }) {
+function CountdownTimer({ targetDate, hideDaysWhenZero = false }) {
   const [remainingMs, setRemainingMs] = useState(() =>
     getRemainingMs(targetDate)
   );
@@ -34,13 +34,16 @@ function CountdownTimer({ targetDate }) {
   }
 
   const { days, hours, minutes, seconds } = formatCountdown(remainingMs);
+  const showDays = !(hideDaysWhenZero && days === 0);
 
   return (
     <div className="countdown-timer" role="timer" aria-live="polite">
-      <div className="countdown-unit">
-        <span className="countdown-value">{days}</span>
-        <span className="countdown-label">Days</span>
-      </div>
+      {showDays && (
+        <div className="countdown-unit">
+          <span className="countdown-value">{days}</span>
+          <span className="countdown-label">Days</span>
+        </div>
+      )}
       <div className="countdown-unit">
         <span className="countdown-value">
           {String(hours).padStart(2, '0')}
@@ -65,6 +68,7 @@ function CountdownTimer({ targetDate }) {
 
 CountdownTimer.propTypes = {
   targetDate: PropTypes.instanceOf(Date).isRequired,
+  hideDaysWhenZero: PropTypes.bool,
 };
 
 export default CountdownTimer;

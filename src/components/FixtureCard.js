@@ -3,6 +3,7 @@ import { useTimezone } from '../context/TimezoneContext';
 import { useNow } from '../hooks/useNow';
 import { fixtureShape, teamShape } from '../propTypes';
 import { getFixtureStatus } from '../utils/fixtures';
+import { getGoalsBySide } from '../utils/results';
 import {
   formatFixtureDate,
   formatFixtureTime,
@@ -28,6 +29,10 @@ function FixtureCard({
   const instant = parseFixtureInstant(fixture);
   const isoDateTime = instant.toISOString();
   const status = getFixtureStatus(fixture, now);
+  const goals = fixture.goals ?? [];
+  const { home: homeGoals, away: awayGoals } = getGoalsBySide(goals);
+  const showScorers =
+    status === 'completed' && goals.length > 0;
 
   return (
     <article className={`fixture-card fixture-card--${status}`}>
@@ -78,6 +83,26 @@ function FixtureCard({
           <span>{awayTeam.name}</span>
         </div>
       </div>
+
+      {showScorers && (
+        <div className="fixture-scorers">
+          <ul className="fixture-scorers-side fixture-scorers-side--home">
+            {homeGoals.map((goal) => (
+              <li key={`${goal.scorer}-${goal.minute}`}>
+                {goal.scorer} {goal.minute}&apos;
+              </li>
+            ))}
+          </ul>
+          <span className="fixture-scorers-spacer" aria-hidden="true" />
+          <ul className="fixture-scorers-side fixture-scorers-side--away">
+            {awayGoals.map((goal) => (
+              <li key={`${goal.scorer}-${goal.minute}`}>
+                {goal.scorer} {goal.minute}&apos;
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="fixture-venue">
         {fixture.venue}, {fixture.city}

@@ -1,5 +1,13 @@
 {
   "lastUpdated": "2026-06-11T21:00:00Z",
   "matches": {
+    "A-1": {
+      "homeScore": 2,
+      "awayScore": 0,
+      "goals": [
+        { "minute": 9, "scorer": "Julián Quiñones", "team": "home" },
+        { "minute": 67, "scorer": "Raúl Jiménez", "team": "home" }
+      ]
+    }
   }
 }

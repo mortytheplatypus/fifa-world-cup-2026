@@ -1,24 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import CountdownTimer from '../components/CountdownTimer';
 import FixtureCard from '../components/FixtureCard';
+import HomeMatchHero from '../components/HomeMatchHero';
 import { useTimezone } from '../context/TimezoneContext';
 import { useGroupsData } from '../hooks/useGroupsData';
 import { getTeamById } from '../utils/data';
 import {
   formatDateHeading,
-  getFirstFixture,
-  getFixturesOnDate,
   getLatestResults,
+  getNextUpcomingFixture,
+  getOngoingFixtures,
   getTodayDateKey,
-  isTournamentStarted,
+  getUpcomingMatchesDay,
 } from '../utils/fixtures';
-import {
-  formatFixtureDate,
-  formatFixtureTime,
-  getDisplayTimezoneLabel,
-  parseFixtureInstant,
-} from '../utils/timezone';
+import { getDisplayTimezoneLabel } from '../utils/timezone';
 
 function HomePage() {
   const { timeZone } = useTimezone();
@@ -35,20 +30,30 @@ function HomePage() {
     [timeZone, now]
   );
 
-  const todayFixtures = useMemo(
-    () => getFixturesOnDate(fixtures, todayKey, timeZone),
-    [fixtures, todayKey, timeZone]
-  );
-
   const latestResults = useMemo(
     () => getLatestResults(fixtures, timeZone, now),
     [fixtures, timeZone, now]
   );
 
-  const firstFixture = useMemo(() => getFirstFixture(fixtures), [fixtures]);
-  const tournamentStarted = useMemo(
-    () => isTournamentStarted(fixtures, now),
+  const ongoingFixtures = useMemo(
+    () => getOngoingFixtures(fixtures, now),
     [fixtures, now]
+  );
+
+  const nextUpcomingFixture = useMemo(
+    () => getNextUpcomingFixture(fixtures, now),
+    [fixtures, now]
+  );
+
+  const heroFixture = ongoingFixtures[0] ?? nextUpcomingFixture ?? null;
+  const heroVariant = ongoingFixtures.length > 0 ? 'live' : 'countdown';
+
+  const upcomingMatchesDay = useMemo(
+    () =>
+      getUpcomingMatchesDay(fixtures, timeZone, now, {
+        excludeFixtureId: heroFixture?.id ?? null,
+      }),
+    [fixtures, timeZone, now, heroFixture]
   );
 
   const timezoneLabel = getDisplayTimezoneLabel(timeZone);
@@ -61,12 +66,11 @@ function HomePage() {
     return <p className="status-message error">{error}</p>;
   }
 
-  const firstKickoff = firstFixture ? parseFixtureInstant(firstFixture) : null;
-  const firstHomeTeam = firstFixture
-    ? getTeamById(teams, firstFixture.homeTeam)
+  const heroHomeTeam = heroFixture
+    ? getTeamById(teams, heroFixture.homeTeam)
     : null;
-  const firstAwayTeam = firstFixture
-    ? getTeamById(teams, firstFixture.awayTeam)
+  const heroAwayTeam = heroFixture
+    ? getTeamById(teams, heroFixture.awayTeam)
     : null;
 
   function renderFixture(fixture, options = {}) {
@@ -91,7 +95,7 @@ function HomePage() {
         </p>
         <div className="home-meta">
           <p className="home-timezone">
-            Times shown in{' '}
+            Times in{' '}
             <span className="home-timezone-label">{timezoneLabel}</span>
           </p>
           <div className="home-today">
@@ -103,58 +107,34 @@ function HomePage() {
         </div>
       </header>
 
-      {!tournamentStarted &&
-        firstFixture &&
-        firstKickoff &&
-        firstHomeTeam &&
-        firstAwayTeam && (
-        <section className="home-countdown-card">
-          <p className="home-countdown-eyebrow">Countdown to kickoff</p>
-          <h2 className="home-countdown-match">
-            <span className="home-countdown-team">
-              <img
-                className="home-countdown-flag"
-                src={`https://flagcdn.com/w40/${firstHomeTeam.flagCode}.png`}
-                alt=""
-                width={36}
-                height={27}
-              />
-              <span>{firstHomeTeam.name}</span>
-            </span>
-            <span className="home-countdown-vs">vs</span>
-            <span className="home-countdown-team">
-              <img
-                className="home-countdown-flag"
-                src={`https://flagcdn.com/w40/${firstAwayTeam.flagCode}.png`}
-                alt=""
-                width={36}
-                height={27}
-              />
-              <span>{firstAwayTeam.name}</span>
-            </span>
-          </h2>
-          <p className="home-countdown-meta">
-            {formatFixtureDate(firstFixture, timeZone)}
-            {' · '}
-            {formatFixtureTime(firstFixture, timeZone)}
-            {' · '}
-            {firstFixture.venue}, {firstFixture.city}
-          </p>
-          <CountdownTimer targetDate={firstKickoff} />
-        </section>
-      )}
+      {heroFixture && heroHomeTeam && heroAwayTeam && (
+          <HomeMatchHero
+            fixture={heroFixture}
+            homeTeam={heroHomeTeam}
+            awayTeam={heroAwayTeam}
+            timeZone={timeZone}
+            variant={heroVariant}
+          />
+        )}
 
       <section className="home-section">
-        <h2 className="home-section-title">Today&apos;s matches</h2>
+        <div className="home-section-header">
+          <h2 className="home-section-title">Upcoming matches</h2>
+          {upcomingMatchesDay && (
+            <span className="home-section-date">
+              {formatDateHeading(upcomingMatchesDay.dateKey)}
+            </span>
+          )}
+        </div>
 
-        {todayFixtures.length === 0 ? (
-          <p className="status-message home-empty">
-            No matches scheduled for today.
-          </p>
-        ) : (
+        {upcomingMatchesDay ? (
           <div className="fixture-list">
-            {todayFixtures.map((fixture) => renderFixture(fixture))}
+            {upcomingMatchesDay.fixtures.map((fixture) =>
+              renderFixture(fixture)
+            )}
           </div>
+        ) : (
+          <p className="status-message home-empty">No upcoming matches.</p>
         )}
       </section>
 

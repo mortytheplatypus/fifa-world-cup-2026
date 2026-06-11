@@ -10,6 +10,16 @@ export const THEME_OPTIONS = {
   TEAM: 'team',
 };
 
+const LIVE_COLORS_DARK = {
+  '--live': '#e07a5f',
+  '--live-text': '#f4c4b8',
+};
+
+const LIVE_COLORS_LIGHT = {
+  '--live': '#c94e35',
+  '--live-text': '#852d1a',
+};
+
 export const DARK_THEME = {
   '--bg': '#12171e',
   '--bg-deep': '#0d1117',
@@ -24,6 +34,7 @@ export const DARK_THEME = {
   '--highlight': '#c8ad72',
   '--highlight-hover': '#d9be86',
   '--highlight-text': '#ede4d4',
+  ...LIVE_COLORS_DARK,
 };
 
 export const LIGHT_THEME = {
@@ -40,6 +51,7 @@ export const LIGHT_THEME = {
   '--highlight': '#c4a04d',
   '--highlight-hover': '#b08f3e',
   '--highlight-text': '#3d3018',
+  ...LIVE_COLORS_LIGHT,
 };
 
 const THEME_VAR_KEYS = Object.keys(DARK_THEME);
@@ -114,6 +126,8 @@ export function buildTeamTheme(colors) {
   const highlightHover = mixHex(brightest, mid, 0.25);
   const highlightText = pickTextColor(highlight);
 
+  const liveColors = luminance(bg) > 0.45 ? LIVE_COLORS_LIGHT : LIVE_COLORS_DARK;
+
   return {
     '--bg': bg,
     '--bg-deep': bgDeep,
@@ -128,6 +142,7 @@ export function buildTeamTheme(colors) {
     '--highlight': highlight,
     '--highlight-hover': highlightHover,
     '--highlight-text': highlightText,
+    ...liveColors,
   };
 }
 
