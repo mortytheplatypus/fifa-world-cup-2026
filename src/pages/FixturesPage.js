@@ -1,12 +1,15 @@
 import { useMemo, useState } from 'react';
 import DateNavigator from '../components/DateNavigator';
+import FavoriteTeamFilter from '../components/FavoriteTeamFilter';
 import LoadingSpinner from '../components/LoadingSpinner';
 import FixtureCard from '../components/FixtureCard';
+import { useSettings } from '../context/SettingsContext';
 import { useTimezone } from '../context/TimezoneContext';
 import { useGroupsData } from '../hooks/useGroupsData';
 import { getTeamById, GROUP_LETTERS } from '../utils/data';
 import {
   filterFixturesByGroup,
+  filterFixturesByTeam,
   formatDateHeading,
   getDateKeys,
   groupFixturesByDate,
@@ -15,15 +18,26 @@ import { getDisplayTimezoneLabel } from '../utils/timezone';
 
 function FixturesPage() {
   const { timeZone } = useTimezone();
+  const { favoriteTeamId } = useSettings();
   const { teams, fixtures, loading, error } = useGroupsData();
   const [showAllDates, setShowAllDates] = useState(false);
   const [activeDateIndex, setActiveDateIndex] = useState(0);
   const [selectedGroup, setSelectedGroup] = useState('all');
+  const [teamFilter, setTeamFilter] = useState('all');
 
-  const filteredFixtures = useMemo(
-    () => filterFixturesByGroup(fixtures, selectedGroup),
-    [fixtures, selectedGroup]
-  );
+  const favoriteTeamName = favoriteTeamId
+    ? getTeamById(teams, favoriteTeamId)?.name
+    : null;
+
+  const filteredFixtures = useMemo(() => {
+    let result = filterFixturesByGroup(fixtures, selectedGroup);
+
+    if (teamFilter === 'favorite' && favoriteTeamId) {
+      result = filterFixturesByTeam(result, favoriteTeamId);
+    }
+
+    return result;
+  }, [fixtures, selectedGroup, teamFilter, favoriteTeamId]);
 
   const fixturesByDate = useMemo(
     () => groupFixturesByDate(filteredFixtures, timeZone),
@@ -48,6 +62,11 @@ function FixturesPage() {
 
   function handleGroupChange(event) {
     setSelectedGroup(event.target.value);
+    setActiveDateIndex(0);
+  }
+
+  function handleTeamFilterChange(event) {
+    setTeamFilter(event.target.value);
     setActiveDateIndex(0);
   }
 
@@ -76,7 +95,7 @@ function FixturesPage() {
     if (dates.length === 0) {
       return (
         <p className="status-message fixtures-empty">
-          No fixtures found for this group.
+          No fixtures found for the selected filters.
         </p>
       );
     }
@@ -130,6 +149,12 @@ function FixturesPage() {
               ))}
             </select>
           </label>
+
+          <FavoriteTeamFilter
+            teamName={favoriteTeamName}
+            value={teamFilter}
+            onChange={handleTeamFilterChange}
+          />
 
           <button
             type="button"

@@ -1,5 +1,7 @@
 export const THEME_STORAGE_KEY = 'fifa-wc-2026-theme';
 export const FAVORITE_TEAM_STORAGE_KEY = 'fifa-wc-2026-favorite-team';
+export const FAVORITE_TEAM_PROMPT_DISMISSED_KEY =
+  'fifa-wc-2026-favorite-team-prompt-dismissed';
 export const TEAM_THEME_VARS_KEY = 'fifa-wc-2026-team-theme-vars';
 
 const VALID_THEMES = new Set(['dark', 'light', 'team']);
@@ -211,6 +213,22 @@ export function writeStoredTheme(theme) {
 export function writeStoredFavoriteTeam(teamId) {
   try {
     localStorage.setItem(FAVORITE_TEAM_STORAGE_KEY, teamId);
+  } catch {
+    // Ignore storage failures
+  }
+}
+
+export function readFavoriteTeamPromptDismissed() {
+  try {
+    return localStorage.getItem(FAVORITE_TEAM_PROMPT_DISMISSED_KEY) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+export function writeFavoriteTeamPromptDismissed() {
+  try {
+    localStorage.setItem(FAVORITE_TEAM_PROMPT_DISMISSED_KEY, 'true');
   } catch {
     // Ignore storage failures
   }

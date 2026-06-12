@@ -1,10 +1,12 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
+import FavoriteTeamBanner from './FavoriteTeamBanner';
 import SettingsButton from './SettingsButton';
 import TimezoneSelector from './TimezoneSelector';
 
 function Layout() {
   return (
     <div className="layout">
+      <FavoriteTeamBanner />
       <header className="site-header">
         <Link to="/" className="site-brand">
           <img

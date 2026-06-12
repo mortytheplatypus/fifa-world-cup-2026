@@ -126,10 +126,13 @@ function SettingsModal() {
             <span className="settings-field-label">Favorite Team</span>
             <select
               className="settings-select"
-              value={favoriteTeamId}
+              value={favoriteTeamId ?? ''}
               onChange={(event) => setFavoriteTeamId(event.target.value)}
               disabled={teams.length === 0}
             >
+              <option value="" disabled>
+                Choose a team
+              </option>
               {teams.map((team) => (
                 <option key={team.id} value={team.id}>
                   {team.name}

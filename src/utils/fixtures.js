@@ -60,6 +60,24 @@ export function filterFixturesByGroup(fixturesByGroup, groupId) {
   };
 }
 
+export function filterFixturesByTeam(fixturesByGroup, teamId) {
+  if (!teamId) {
+    return fixturesByGroup;
+  }
+
+  return Object.entries(fixturesByGroup).reduce((acc, [group, fixtures]) => {
+    const filtered = fixtures.filter(
+      (fixture) => fixture.homeTeam === teamId || fixture.awayTeam === teamId
+    );
+
+    if (filtered.length > 0) {
+      acc[group] = filtered;
+    }
+
+    return acc;
+  }, {});
+}
+
 export function isFixturePast(fixture, now = new Date()) {
   return parseFixtureInstant(fixture) < now;
 }

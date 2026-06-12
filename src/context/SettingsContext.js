@@ -12,10 +12,12 @@ import {
   applyTheme,
   buildTeamTheme,
   getThemeColorMeta,
+  readFavoriteTeamPromptDismissed,
   readStoredFavoriteTeam,
   readStoredTheme,
   THEME_OPTIONS,
   writeCachedTeamThemeVars,
+  writeFavoriteTeamPromptDismissed,
   writeStoredFavoriteTeam,
   writeStoredTheme,
 } from '../utils/themes';
@@ -33,7 +35,10 @@ export function SettingsProvider({ children }) {
     () => readStoredTheme() ?? THEME_OPTIONS.DARK
   );
   const [favoriteTeamId, setFavoriteTeamIdState] = useState(
-    () => readStoredFavoriteTeam() ?? 'MEX'
+    () => readStoredFavoriteTeam()
+  );
+  const [showFavoriteTeamPrompt, setShowFavoriteTeamPrompt] = useState(
+    () => !readStoredFavoriteTeam() && !readFavoriteTeamPromptDismissed()
   );
   const [teamColors, setTeamColors] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -85,8 +90,19 @@ export function SettingsProvider({ children }) {
   }, []);
 
   const setFavoriteTeamId = useCallback((nextTeamId) => {
+    if (!nextTeamId) {
+      return;
+    }
+
     setFavoriteTeamIdState(nextTeamId);
     writeStoredFavoriteTeam(nextTeamId);
+    setShowFavoriteTeamPrompt(false);
+    writeFavoriteTeamPromptDismissed();
+  }, []);
+
+  const dismissFavoriteTeamPrompt = useCallback(() => {
+    setShowFavoriteTeamPrompt(false);
+    writeFavoriteTeamPromptDismissed();
   }, []);
 
   const openModal = useCallback(() => {
@@ -103,6 +119,8 @@ export function SettingsProvider({ children }) {
       setTheme,
       favoriteTeamId,
       setFavoriteTeamId,
+      showFavoriteTeamPrompt,
+      dismissFavoriteTeamPrompt,
       teamColors,
       isModalOpen,
       openModal,
@@ -113,6 +131,8 @@ export function SettingsProvider({ children }) {
       setTheme,
       favoriteTeamId,
       setFavoriteTeamId,
+      showFavoriteTeamPrompt,
+      dismissFavoriteTeamPrompt,
       teamColors,
       isModalOpen,
       openModal,
