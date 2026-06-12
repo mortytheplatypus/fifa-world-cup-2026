@@ -1,0 +1,530 @@
+[
+  {
+    "id": "MEX",
+    "name": "Mexico",
+    "group": "A",
+    "flagCode": "mx",
+    "colors": [
+      "#960000",
+      "#03a154",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "RSA",
+    "name": "South Africa",
+    "group": "A",
+    "flagCode": "za",
+    "colors": [
+      "#ffc525",
+      "#01963a",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "KOR",
+    "name": "South Korea",
+    "group": "A",
+    "flagCode": "kr",
+    "colors": [
+      "#000000",
+      "#e20325",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "CZE",
+    "name": "Czechia",
+    "group": "A",
+    "flagCode": "cz",
+    "colors": [
+      "#f00000",
+      "#ffffff",
+      "#0000ff"
+    ]
+  },
+  {
+    "id": "CAN",
+    "name": "Canada",
+    "group": "B",
+    "flagCode": "ca",
+    "colors": [
+      "#ff0000",
+      "#ffffff",
+      "#cc0000"
+    ]
+  },
+  {
+    "id": "BIH",
+    "name": "Bosnia and Herzegovina",
+    "group": "B",
+    "flagCode": "ba",
+    "colors": [
+      "#002395",
+      "#fecb00",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "QAT",
+    "name": "Qatar",
+    "group": "B",
+    "flagCode": "qa",
+    "colors": [
+      "#7f1431",
+      "#ffffff",
+      "#5a0f23"
+    ]
+  },
+  {
+    "id": "SUI",
+    "name": "Switzerland",
+    "group": "B",
+    "flagCode": "ch",
+    "colors": [
+      "#ff0000",
+      "#740c14",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "BRA",
+    "name": "Brazil",
+    "group": "C",
+    "flagCode": "br",
+    "colors": [
+      "#ffdc02",
+      "#19ae47",
+      "#193375"
+    ]
+  },
+  {
+    "id": "MAR",
+    "name": "Morocco",
+    "group": "C",
+    "flagCode": "ma",
+    "colors": [
+      "#17a376",
+      "#e50011",
+      "#d29d63"
+    ]
+  },
+  {
+    "id": "HAI",
+    "name": "Haiti",
+    "group": "C",
+    "flagCode": "ht",
+    "colors": [
+      "#00209f",
+      "#d21034",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "SCO",
+    "name": "Scotland",
+    "group": "C",
+    "flagCode": "gb-sct",
+    "colors": [
+      "#940b13",
+      "#ffff4a",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "USA",
+    "name": "United States",
+    "group": "D",
+    "flagCode": "us",
+    "colors": [
+      "#ffffff",
+      "#000d39",
+      "#002bbe"
+    ]
+  },
+  {
+    "id": "PAR",
+    "name": "Paraguay",
+    "group": "D",
+    "flagCode": "py",
+    "colors": [
+      "#ffffff",
+      "#39455b",
+      "#2c3a50"
+    ]
+  },
+  {
+    "id": "AUS",
+    "name": "Australia",
+    "group": "D",
+    "flagCode": "au",
+    "colors": [
+      "#ffbb00",
+      "#213a36",
+      "#24403c"
+    ]
+  },
+  {
+    "id": "TUR",
+    "name": "Türkiye",
+    "group": "D",
+    "flagCode": "tr",
+    "colors": [
+      "#e30a17",
+      "#ffffff",
+      "#000000"
+    ]
+  },
+  {
+    "id": "GER",
+    "name": "Germany",
+    "group": "E",
+    "flagCode": "de",
+    "colors": [
+      "#000000",
+      "#ffffff",
+      "#ffce00"
+    ]
+  },
+  {
+    "id": "CUW",
+    "name": "Curaçao",
+    "group": "E",
+    "flagCode": "cw",
+    "colors": [
+      "#002b7f",
+      "#fcd116",
+      "#ce1126"
+    ]
+  },
+  {
+    "id": "CIV",
+    "name": "Ivory Coast",
+    "group": "E",
+    "flagCode": "ci",
+    "colors": [
+      "#f77f00",
+      "#ffffff",
+      "#009739"
+    ]
+  },
+  {
+    "id": "ECU",
+    "name": "Ecuador",
+    "group": "E",
+    "flagCode": "ec",
+    "colors": [
+      "#d60000",
+      "#ffef00",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "NED",
+    "name": "Netherlands",
+    "group": "F",
+    "flagCode": "nl",
+    "colors": [
+      "#f36c21",
+      "#ffffff",
+      "#000000"
+    ]
+  },
+  {
+    "id": "JPN",
+    "name": "Japan",
+    "group": "F",
+    "flagCode": "jp",
+    "colors": [
+      "#000080",
+      "#bc002d",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "SWE",
+    "name": "Sweden",
+    "group": "F",
+    "flagCode": "se",
+    "colors": [
+      "#ffec00",
+      "#15244d",
+      "#0537e4"
+    ]
+  },
+  {
+    "id": "TUN",
+    "name": "Tunisia",
+    "group": "F",
+    "flagCode": "tn",
+    "colors": [
+      "#e70013",
+      "#ffffff",
+      "#000000"
+    ]
+  },
+  {
+    "id": "BEL",
+    "name": "Belgium",
+    "group": "G",
+    "flagCode": "be",
+    "colors": [
+      "#000000",
+      "#ff0000",
+      "#ffd800"
+    ]
+  },
+  {
+    "id": "EGY",
+    "name": "Egypt",
+    "group": "G",
+    "flagCode": "eg",
+    "colors": [
+      "#ce1126",
+      "#ffffff",
+      "#000000"
+    ]
+  },
+  {
+    "id": "IRN",
+    "name": "Iran",
+    "group": "G",
+    "flagCode": "ir",
+    "colors": [
+      "#239f40",
+      "#da0000",
+      "#000000"
+    ]
+  },
+  {
+    "id": "NZL",
+    "name": "New Zealand",
+    "group": "G",
+    "flagCode": "nz",
+    "colors": [
+      "#000000",
+      "#ffffff",
+      "#4d4d4d"
+    ]
+  },
+  {
+    "id": "ESP",
+    "name": "Spain",
+    "group": "H",
+    "flagCode": "es",
+    "colors": [
+      "#000000",
+      "#ff0000",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "CPV",
+    "name": "Cape Verde",
+    "group": "H",
+    "flagCode": "cv",
+    "colors": [
+      "#003893",
+      "#ffffff",
+      "#cf2027"
+    ]
+  },
+  {
+    "id": "KSA",
+    "name": "Saudi Arabia",
+    "group": "H",
+    "flagCode": "sa",
+    "colors": [
+      "#125b34",
+      "#7ec8ae",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "URU",
+    "name": "Uruguay",
+    "group": "H",
+    "flagCode": "uy",
+    "colors": [
+      "#000000",
+      "#ffffff",
+      "#0038a8"
+    ]
+  },
+  {
+    "id": "FRA",
+    "name": "France",
+    "group": "I",
+    "flagCode": "fr",
+    "colors": [
+      "#f1030a",
+      "#ffffff",
+      "#123163"
+    ]
+  },
+  {
+    "id": "SEN",
+    "name": "Senegal",
+    "group": "I",
+    "flagCode": "sn",
+    "colors": [
+      "#11a335",
+      "#ffdc00",
+      "#e63f23"
+    ]
+  },
+  {
+    "id": "IRQ",
+    "name": "Iraq",
+    "group": "I",
+    "flagCode": "iq",
+    "colors": [
+      "#ce1126",
+      "#ffffff",
+      "#000000"
+    ]
+  },
+  {
+    "id": "NOR",
+    "name": "Norway",
+    "group": "I",
+    "flagCode": "no",
+    "colors": [
+      "#ba0c2f",
+      "#ffffff",
+      "#00205b"
+    ]
+  },
+  {
+    "id": "ARG",
+    "name": "Argentina",
+    "group": "J",
+    "flagCode": "ar",
+    "colors": [
+      "#43a1d5",
+      "#eeeeee",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "ALG",
+    "name": "Algeria",
+    "group": "J",
+    "flagCode": "dz",
+    "colors": [
+      "#006233",
+      "#ffffff",
+      "#d21034"
+    ]
+  },
+  {
+    "id": "AUT",
+    "name": "Austria",
+    "group": "J",
+    "flagCode": "at",
+    "colors": [
+      "#000000",
+      "#ff0000",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "JOR",
+    "name": "Jordan",
+    "group": "J",
+    "flagCode": "jo",
+    "colors": [
+      "#ce1126",
+      "#ffffff",
+      "#000000"
+    ]
+  },
+  {
+    "id": "POR",
+    "name": "Portugal",
+    "group": "K",
+    "flagCode": "pt",
+    "colors": [
+      "#ff0000",
+      "#006200",
+      "#ffffff"
+    ]
+  },
+  {
+    "id": "COD",
+    "name": "DR Congo",
+    "group": "K",
+    "flagCode": "cd",
+    "colors": [
+      "#007fff",
+      "#f7d618",
+      "#ce1126"
+    ]
+  },
+  {
+    "id": "UZB",
+    "name": "Uzbekistan",
+    "group": "K",
+    "flagCode": "uz",
+    "colors": [
+      "#1eb53a",
+      "#ffffff",
+      "#0099b5"
+    ]
+  },
+  {
+    "id": "COL",
+    "name": "Colombia",
+    "group": "K",
+    "flagCode": "co",
+    "colors": [
+      "#f4553e",
+      "#e40303",
+      "#0f1842"
+    ]
+  },
+  {
+    "id": "ENG",
+    "name": "England",
+    "group": "L",
+    "flagCode": "gb-eng",
+    "colors": [
+      "#ff0000",
+      "#ffffff",
+      "#00007e"
+    ]
+  },
+  {
+    "id": "CRO",
+    "name": "Croatia",
+    "group": "L",
+    "flagCode": "hr",
+    "colors": [
+      "#ed1c24",
+      "#dfb770",
+      "#0457a2"
+    ]
+  },
+  {
+    "id": "GHA",
+    "name": "Ghana",
+    "group": "L",
+    "flagCode": "gh",
+    "colors": [
+      "#ffe500",
+      "#000000",
+      "#d40023"
+    ]
+  },
+  {
+    "id": "PAN",
+    "name": "Panama",
+    "group": "L",
+    "flagCode": "pa",
+    "colors": [
+      "#005293",
+      "#ffffff",
+      "#d21034"
+    ]
+  }
+]

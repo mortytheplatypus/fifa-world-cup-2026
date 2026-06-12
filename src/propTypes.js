@@ -6,6 +6,7 @@ export const teamShape = PropTypes.shape({
   name: PropTypes.string.isRequired,
   group: PropTypes.oneOf(GROUP_LETTERS),
   flagCode: PropTypes.string.isRequired,
+  colors: PropTypes.arrayOf(PropTypes.string),
 });
 
 export const goalShape = PropTypes.shape({

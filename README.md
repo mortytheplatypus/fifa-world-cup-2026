@@ -4,11 +4,19 @@ Static JSON files in this folder drive the site. To update scores and points tab
 
 ## Files
 
-| File | Purpose | Update during tournament? |
-|------|---------|---------------------------|
-| `groups.json` | Teams, group assignments, flag codes | No |
-| `fixtures.json` | Schedule (date, time, venue, teams) | No |
-| `results.json` | Match scores | **Yes — after each match** |
+| File | Purpose | Update during tournament? | MongoDB collection |
+|------|---------|---------------------------|--------------------|
+| `teams.json` | Teams, groups, flag codes, theme colors | No | `teams` |
+| `fixtures.json` | Schedule (date, time, venue, teams) | No | `fixtures` |
+| `results.json` | Match scores | **Yes — after each match** | `results` |
+
+After editing any of these files, push changes to MongoDB:
+
+```bash
+npm run sync:db
+```
+
+Requires `MONGODB_URI` (and optionally `MONGODB_DB_NAME`) in `.env`. The live API reads from MongoDB, not the JSON files directly.
 
 ## Updating results
 
@@ -61,7 +69,7 @@ Ids live in `fixtures.json`, one per match. Pattern: `{group}-{matchNumber}`.
 - **Group A, first match** → `A-1`
 - **Group B, third match** → `B-3`
 
-Team codes (`homeTeam`, `awayTeam`) match `id` values in `groups.json` (e.g. `MEX`, `RSA`).
+Team codes (`homeTeam`, `awayTeam`) match `id` values in `teams.json` (e.g. `MEX`, `RSA`).
 
 ## What updates automatically
 

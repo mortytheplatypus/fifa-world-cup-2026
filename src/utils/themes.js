@@ -267,13 +267,14 @@ export async function initializeThemeFromStorage() {
       updateThemeColorMeta(THEME_OPTIONS.TEAM, cachedVars);
     }
 
-    const teamId = readStoredFavoriteTeam() ?? 'MEX';
+    const teamId = readStoredFavoriteTeam();
     try {
-      const response = await fetch('/data/team-colors.json');
+      const response = await fetch('/data/teams.json');
       if (response.ok) {
-        const colors = await response.json();
-        if (colors[teamId]) {
-          const vars = buildTeamTheme(colors[teamId]);
+        const teams = await response.json();
+        const teamColors = teams.find((team) => team.id === teamId)?.colors;
+        if (teamColors?.length) {
+          const vars = buildTeamTheme(teamColors);
           applyTheme(vars, THEME_OPTIONS.TEAM);
           writeCachedTeamThemeVars(vars);
           updateThemeColorMeta(THEME_OPTIONS.TEAM, vars);
