@@ -115,3 +115,21 @@ The per-match object in `results.json` can be extended later without changing fi
 ```
 
 Only `homeScore` and `awayScore` are used today. Extra fields are ignored until match-detail UI is added.
+
+## API
+
+Read-only endpoints served at `/api/*`.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/teams` | All teams (includes `colors`) |
+| GET | `/api/fixtures` | Fixtures grouped by letter |
+| GET | `/api/results` | Match results |
+
+### Examples
+
+```bash
+curl https://{vercel.host}/api/teams
+curl https://{vercel.host}/api/fixtures
+curl https://{vercel.host}/api/results
+```
