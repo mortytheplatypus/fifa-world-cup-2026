@@ -1,7 +1,8 @@
 const { getDb } = require('./db');
 
 async function getTeams() {
-  const teams = await getDb()
+  const db = await getDb();
+  const teams = await db
     .collection('teams')
     .find({})
     .sort({ group: 1, name: 1 })
@@ -17,7 +18,8 @@ async function getTeams() {
 }
 
 async function getFixtures() {
-  const fixtures = await getDb()
+  const db = await getDb();
+  const fixtures = await db
     .collection('fixtures')
     .find({})
     .sort({ group: 1, matchday: 1, _id: 1 })
@@ -37,7 +39,8 @@ async function getFixtures() {
 }
 
 async function getResults() {
-  const results = await getDb().collection('results').find({}).toArray();
+  const db = await getDb();
+  const results = await db.collection('results').find({}).toArray();
 
   const matches = {};
   let lastUpdated = null;
