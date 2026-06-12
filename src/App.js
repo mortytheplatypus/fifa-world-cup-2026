@@ -20,7 +20,7 @@ function App() {
               <Route index element={<HomePage />} />
               <Route path="groups" element={<GroupsPage />} />
               <Route path="fixtures" element={<FixturesPage />} />
-              <Route path="points" element={<PointsTablesPage />} />
+              <Route path="tables" element={<PointsTablesPage />} />
               <Route path="groups/:groupId" element={<GroupPage />} />
               <Route
                 path="groups/:groupId/fixtures"

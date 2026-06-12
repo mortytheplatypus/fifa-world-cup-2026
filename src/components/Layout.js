@@ -27,7 +27,7 @@ function Layout() {
           <NavLink to="/fixtures" className="site-nav-link">
             Fixtures
           </NavLink>
-          <NavLink to="/points" className="site-nav-link">
+          <NavLink to="/tables" className="site-nav-link">
             Tables
           </NavLink>
         </nav>
