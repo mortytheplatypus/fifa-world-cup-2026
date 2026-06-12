@@ -1,27 +1,30 @@
 export const GROUP_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
-export async function fetchTeams() {
-  const response = await fetch('/data/groups.json');
-  if (!response.ok) throw new Error('Failed to load teams');
+const API_BASE = process.env.REACT_APP_API_URL ?? '';
+
+async function fetchJson(path) {
+  const response = await fetch(`${API_BASE}${path}`);
+  if (!response.ok) throw new Error(`Failed to load ${path}`);
   return response.json();
+}
+
+export async function fetchTeams() {
+  return fetchJson('/api/teams');
 }
 
 export async function fetchFixtures() {
-  const response = await fetch('/data/fixtures.json');
-  if (!response.ok) throw new Error('Failed to load fixtures');
-  return response.json();
+  return fetchJson('/api/fixtures');
 }
 
 export async function fetchResults() {
-  const response = await fetch('/data/results.json');
-  if (!response.ok) throw new Error('Failed to load match results');
-  return response.json();
+  return fetchJson('/api/results');
 }
 
 export async function fetchTeamColors() {
-  const response = await fetch('/data/team-colors.json');
-  if (!response.ok) throw new Error('Failed to load team colors');
-  return response.json();
+  const teams = await fetchTeams();
+  return Object.fromEntries(
+    teams.filter((team) => team.colors?.length).map((team) => [team.id, team.colors])
+  );
 }
 
 export function groupTeamsByLetter(teams) {
