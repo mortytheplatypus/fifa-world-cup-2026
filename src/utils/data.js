@@ -2,54 +2,49 @@ export const GROUP_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 
 const API_BASE = process.env.REACT_APP_API_URL ?? '';
 
-const DEFAULT_CACHE_TTL_MS = 60 * 60 * 1000;
-
-const CACHE_TTL_MS = {
-  '/api/teams': DEFAULT_CACHE_TTL_MS,
-  '/api/fixtures': DEFAULT_CACHE_TTL_MS,
-  '/api/results': DEFAULT_CACHE_TTL_MS,
-};
+const DEFAULT_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 const cache = new Map();
 
-function getCached(path) {
-  const entry = cache.get(path);
+function getCached(key) {
+  const entry = cache.get(key);
   if (!entry) return null;
   if (Date.now() >= entry.expiresAt) {
-    cache.delete(path);
+    cache.delete(key);
     return null;
   }
   return entry.promise;
 }
 
-async function fetchJson(path) {
-  const cached = getCached(path);
+async function fetchData(key) {
+  const cached = getCached(key);
   if (cached) {
     return cached;
   }
 
-  const ttl = CACHE_TTL_MS[path] ?? 5 * 60 * 1000;
-  const promise = fetch(`${API_BASE}${path}`).then((response) => {
+  const path = `${API_BASE}/api/${key}`;
+
+  const promise = fetch(path).then((response) => {
     if (!response.ok) throw new Error(`Failed to load ${path}`);
     return response.json();
   });
 
-  cache.set(path, { promise, expiresAt: Date.now() + ttl });
-  promise.catch(() => cache.delete(path));
+  cache.set(key, { promise, expiresAt: Date.now() + DEFAULT_CACHE_TTL_MS });
+  promise.catch(() => cache.delete(key));
 
   return promise;
 }
 
 export async function fetchTeams() {
-  return fetchJson('/api/teams');
+  return fetchData('teams');
 }
 
 export async function fetchFixtures() {
-  return fetchJson('/api/fixtures');
+  return fetchData('fixtures');
 }
 
 export async function fetchResults() {
-  return fetchJson('/api/results');
+  return fetchData('results');
 }
 
 export async function fetchTeamColors() {
