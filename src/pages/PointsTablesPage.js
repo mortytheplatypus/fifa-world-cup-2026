@@ -1,13 +1,23 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import FavoriteTeamFilter from '../components/FavoriteTeamFilter';
 import LoadingSpinner from '../components/LoadingSpinner';
 import StandingsTable from '../components/StandingsTable';
+import { useSettings } from '../context/SettingsContext';
+import { useGroupTeamFilters } from '../hooks/useGroupTeamFilters';
 import { useGroupsData } from '../hooks/useGroupsData';
 import { GROUP_LETTERS } from '../utils/data';
 import { computeGroupStandings } from '../utils/standings';
 
 function PointsTablesPage() {
-  const { groupedTeams, fixtures, loading, error } = useGroupsData();
-  const [selectedGroup, setSelectedGroup] = useState('all');
+  const { favoriteTeamId } = useSettings();
+  const { teams, groupedTeams, fixtures, loading, error } = useGroupsData();
+  const {
+    selectedGroup,
+    teamFilter,
+    favoriteTeamName,
+    handleGroupChange,
+    handleTeamFilterChange,
+  } = useGroupTeamFilters(teams, favoriteTeamId);
 
   const visibleGroups = useMemo(
     () => (selectedGroup === 'all' ? GROUP_LETTERS : [selectedGroup]),
@@ -42,21 +52,29 @@ function PointsTablesPage() {
           <p className="page-subtitle">Group stage standings</p>
         </div>
 
-        <label className="fixtures-group-filter">
-          <span className="fixtures-group-filter-label">Group</span>
-          <select
-            className="fixtures-group-select"
-            value={selectedGroup}
-            onChange={(event) => setSelectedGroup(event.target.value)}
-          >
-            <option value="all">All groups</option>
-            {GROUP_LETTERS.map((letter) => (
-              <option key={letter} value={letter}>
-                Group {letter}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="fixtures-controls">
+          <label className="fixtures-group-filter">
+            <span className="fixtures-group-filter-label">Group</span>
+            <select
+              className="fixtures-group-select"
+              value={selectedGroup}
+              onChange={handleGroupChange}
+            >
+              <option value="all">All groups</option>
+              {GROUP_LETTERS.map((letter) => (
+                <option key={letter} value={letter}>
+                  Group {letter}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <FavoriteTeamFilter
+            teamName={favoriteTeamName}
+            value={teamFilter}
+            onChange={handleTeamFilterChange}
+          />
+        </div>
       </header>
 
       <div className="points-tables-grid">

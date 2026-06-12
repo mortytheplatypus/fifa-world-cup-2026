@@ -5,6 +5,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import FixtureCard from '../components/FixtureCard';
 import { useSettings } from '../context/SettingsContext';
 import { useTimezone } from '../context/TimezoneContext';
+import { useGroupTeamFilters } from '../hooks/useGroupTeamFilters';
 import { useGroupsData } from '../hooks/useGroupsData';
 import { getTeamById, GROUP_LETTERS } from '../utils/data';
 import {
@@ -22,12 +23,13 @@ function FixturesPage() {
   const { teams, fixtures, loading, error } = useGroupsData();
   const [showAllDates, setShowAllDates] = useState(false);
   const [activeDateIndex, setActiveDateIndex] = useState(0);
-  const [selectedGroup, setSelectedGroup] = useState('all');
-  const [teamFilter, setTeamFilter] = useState('all');
-
-  const favoriteTeamName = favoriteTeamId
-    ? getTeamById(teams, favoriteTeamId)?.name
-    : null;
+  const {
+    selectedGroup,
+    teamFilter,
+    favoriteTeamName,
+    handleGroupChange: onGroupChange,
+    handleTeamFilterChange: onTeamFilterChange,
+  } = useGroupTeamFilters(teams, favoriteTeamId);
 
   const filteredFixtures = useMemo(() => {
     let result = filterFixturesByGroup(fixtures, selectedGroup);
@@ -61,12 +63,12 @@ function FixturesPage() {
   const isGroupFiltered = selectedGroup !== 'all';
 
   function handleGroupChange(event) {
-    setSelectedGroup(event.target.value);
+    onGroupChange(event);
     setActiveDateIndex(0);
   }
 
   function handleTeamFilterChange(event) {
-    setTeamFilter(event.target.value);
+    onTeamFilterChange(event);
     setActiveDateIndex(0);
   }
 

@@ -122,7 +122,9 @@ textarea {
   margin: 0;
   font-size: 0.9rem;
   font-weight: 500;
+  line-height: 1.45;
   color: var(--text);
+  text-wrap: balance;
 }
 
 .favorite-team-banner-actions {
@@ -130,6 +132,7 @@ textarea {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .favorite-team-banner-select {
@@ -1355,12 +1358,14 @@ textarea {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0;
 }
 
 .fixtures-group-filter {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
 }
 
 .fixtures-group-filter-label {
@@ -1894,6 +1899,60 @@ textarea {
   }
 }
 
+@media (max-width: 960px) {
+  .favorite-team-banner-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+
+  .favorite-team-banner-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .favorite-team-banner-select {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .fixtures-header,
+  .points-tables-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fixtures-header .fixtures-controls,
+  .points-tables-header .fixtures-controls,
+  .groups-page-header .fixtures-controls {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .fixtures-group-filter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+    width: 100%;
+  }
+
+  .fixtures-group-select {
+    width: 100%;
+    min-height: 2.75rem;
+    font-size: 1rem;
+  }
+
+  .fixtures-view-toggle {
+    width: 100%;
+    min-height: 2.75rem;
+    text-align: center;
+  }
+}
+
 @media (max-width: 768px) {
   .home-header h1 {
     font-size: 1.5rem;
@@ -1981,17 +2040,46 @@ textarea {
   .favorite-team-banner-content {
     flex-direction: column;
     align-items: stretch;
-    padding: 0.75rem 1rem;
+    gap: 0.65rem;
+    padding: 0.75rem max(1rem, env(safe-area-inset-right)) 0.75rem
+      max(1rem, env(safe-area-inset-left));
+  }
+
+  .favorite-team-banner-text {
+    font-size: 0.875rem;
   }
 
   .favorite-team-banner-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
     width: 100%;
   }
 
   .favorite-team-banner-select {
-    flex: 1;
-    min-width: 0;
+    grid-column: 1 / -1;
     width: 100%;
+    min-width: 0;
+    min-height: 2.75rem;
+    font-size: 1rem;
+  }
+
+  .favorite-team-banner-save,
+  .favorite-team-banner-dismiss {
+    min-height: 2.75rem;
+    width: 100%;
+  }
+
+  .favorite-team-banner-save {
+    grid-column: 1;
+  }
+
+  .favorite-team-banner-dismiss {
+    grid-column: 2;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
   }
 
   .groups-page {
@@ -2044,36 +2132,6 @@ textarea {
     width: 100%;
     height: auto;
     max-width: 44px;
-  }
-
-  .fixtures-header,
-  .points-tables-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .fixtures-controls {
-    width: 100%;
-  }
-
-  .fixtures-group-filter {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .fixtures-group-select {
-    flex: 1;
-    min-width: 0;
-    width: 100%;
-  }
-
-  .fixtures-view-toggle {
-    flex: 1 1 100%;
-    text-align: center;
-  }
-
-  .points-tables-header .fixtures-group-filter {
-    width: 100%;
   }
 
   .group-page-header {
