@@ -199,21 +199,30 @@ export function getLatestResults(
   now = new Date()
 ) {
   const fixturesByDate = groupFixturesByDate(fixturesByGroup, timeZone);
-  const dates = getDateKeys(fixturesByDate).reverse();
+  const todayKey = getTodayDateKey(timeZone, now);
 
-  for (const dateKey of dates) {
-    const dayFixtures = fixturesByDate[dateKey];
-    const completed = dayFixtures.filter(
-      (fixture) => isFixturePast(fixture, now) && isFixtureComplete(fixture)
-    );
+  function getStartedFixturesForDate(dateKey) {
+    const dayFixtures = fixturesByDate[dateKey] ?? [];
+    return sortFixtures(
+      dayFixtures.filter(
+        (fixture) => getFixtureStatus(fixture, now) !== 'upcoming'
+      )
+    ).reverse();
+  }
 
-    if (completed.length > 0) {
-      return { dateKey, fixtures: completed };
-    }
+  const todayStarted = getStartedFixturesForDate(todayKey);
+  if (todayStarted.length > 0) {
+    return { dateKey: todayKey, fixtures: todayStarted };
+  }
 
-    const past = dayFixtures.filter((fixture) => isFixturePast(fixture, now));
-    if (past.length > 0) {
-      return { dateKey, fixtures: past };
+  const pastDates = getDateKeys(fixturesByDate)
+    .filter((dateKey) => dateKey < todayKey)
+    .reverse();
+
+  for (const dateKey of pastDates) {
+    const started = getStartedFixturesForDate(dateKey);
+    if (started.length > 0) {
+      return { dateKey, fixtures: started };
     }
   }
 

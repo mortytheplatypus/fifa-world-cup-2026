@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-11T21:00:00Z",
+  "lastUpdated": "2026-06-12T12:45:00Z",
   "matches": {
     "A-1": {
       "homeScore": 2,
@@ -8,6 +8,16 @@
         { "minute": 9, "scorer": "Julián Quiñones", "team": "home" },
         { "minute": 67, "scorer": "Raúl Jiménez", "team": "home" }
       ]
+    },
+    "A-2": {
+      "homeScore": 2,
+      "awayScore": 1,
+      "goals": [
+        { "minute": 59, "scorer": "Ladislav Krejčí", "team": "away" },
+        { "minute": 67, "scorer": "Hwang In-beom", "team": "home" },
+        { "minute": 80, "scorer": "Oh Hyeon-gyu", "team": "home" }
+      ]
+
     }
   }
 }

@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import FixtureCard from '../components/FixtureCard';
-import LoadingSpinner from '../components/LoadingSpinner';
-import HomeMatchHero from '../components/HomeMatchHero';
-import { useTimezone } from '../context/TimezoneContext';
-import { useGroupsData } from '../hooks/useGroupsData';
-import { getTeamById } from '../utils/data';
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import FixtureCard from "../components/FixtureCard";
+import LoadingSpinner from "../components/LoadingSpinner";
+import HomeMatchHero from "../components/HomeMatchHero";
+import { useTimezone } from "../context/TimezoneContext";
+import { useGroupsData } from "../hooks/useGroupsData";
+import { getTeamById } from "../utils/data";
 import {
   formatDateHeading,
   getLatestResults,
@@ -13,8 +13,8 @@ import {
   getOngoingFixtures,
   getTodayDateKey,
   getUpcomingMatchesDay,
-} from '../utils/fixtures';
-import { getDisplayTimezoneLabel } from '../utils/timezone';
+} from "../utils/fixtures";
+import { getDisplayTimezoneLabel } from "../utils/timezone";
 
 function HomePage() {
   const { timeZone } = useTimezone();
@@ -28,33 +28,33 @@ function HomePage() {
 
   const todayKey = useMemo(
     () => getTodayDateKey(timeZone, now),
-    [timeZone, now]
+    [timeZone, now],
   );
 
   const latestResults = useMemo(
     () => getLatestResults(fixtures, timeZone, now),
-    [fixtures, timeZone, now]
+    [fixtures, timeZone, now],
   );
 
   const ongoingFixtures = useMemo(
     () => getOngoingFixtures(fixtures, now),
-    [fixtures, now]
+    [fixtures, now],
   );
 
   const nextUpcomingFixture = useMemo(
     () => getNextUpcomingFixture(fixtures, now),
-    [fixtures, now]
+    [fixtures, now],
   );
 
   const heroFixture = ongoingFixtures[0] ?? nextUpcomingFixture ?? null;
-  const heroVariant = ongoingFixtures.length > 0 ? 'live' : 'countdown';
+  const heroVariant = ongoingFixtures.length > 0 ? "live" : "countdown";
 
   const upcomingMatchesDay = useMemo(
     () =>
       getUpcomingMatchesDay(fixtures, timeZone, now, {
         excludeFixtureId: heroFixture?.id ?? null,
       }),
-    [fixtures, timeZone, now, heroFixture]
+    [fixtures, timeZone, now, heroFixture],
   );
 
   const timezoneLabel = getDisplayTimezoneLabel(timeZone);
@@ -91,12 +91,10 @@ function HomePage() {
     <section className="page home-page">
       <header className="home-header">
         <h1>FIFA World Cup 2026</h1>
-        <p className="home-subtitle">
-          USA · Canada · Mexico
-        </p>
+        <p className="home-subtitle">USA · Canada · Mexico</p>
         <div className="home-meta">
           <p className="home-timezone">
-            Times in{' '}
+            Times in{" "}
             <span className="home-timezone-label">{timezoneLabel}</span>
           </p>
           <div className="home-today">
@@ -109,14 +107,14 @@ function HomePage() {
       </header>
 
       {heroFixture && heroHomeTeam && heroAwayTeam && (
-          <HomeMatchHero
-            fixture={heroFixture}
-            homeTeam={heroHomeTeam}
-            awayTeam={heroAwayTeam}
-            timeZone={timeZone}
-            variant={heroVariant}
-          />
-        )}
+        <HomeMatchHero
+          fixture={heroFixture}
+          homeTeam={heroHomeTeam}
+          awayTeam={heroAwayTeam}
+          timeZone={timeZone}
+          variant={heroVariant}
+        />
+      )}
 
       <section className="home-section">
         <div className="home-section-header">
@@ -131,7 +129,7 @@ function HomePage() {
         {upcomingMatchesDay ? (
           <div className="fixture-list">
             {upcomingMatchesDay.fixtures.map((fixture) =>
-              renderFixture(fixture)
+              renderFixture(fixture),
             )}
           </div>
         ) : (
@@ -152,7 +150,7 @@ function HomePage() {
         {latestResults ? (
           <div className="fixture-list">
             {latestResults.fixtures.map((fixture) =>
-              renderFixture(fixture, { showDate: true })
+              renderFixture(fixture, { showDate: true }),
             )}
           </div>
         ) : (
