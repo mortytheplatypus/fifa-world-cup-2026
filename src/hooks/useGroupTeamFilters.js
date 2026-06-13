@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getTeamById } from '../utils/data';
+import { getTeamById, getTeamDisplayName } from '../utils/data';
 
 export function useGroupTeamFilters(teams, favoriteTeamId) {
   const [selectedGroup, setSelectedGroup] = useState('all');
@@ -8,7 +8,9 @@ export function useGroupTeamFilters(teams, favoriteTeamId) {
   const favoriteTeam = favoriteTeamId
     ? getTeamById(teams, favoriteTeamId)
     : null;
-  const favoriteTeamName = favoriteTeam?.name ?? null;
+  const favoriteTeamName = favoriteTeam
+    ? getTeamDisplayName(favoriteTeam.name)
+    : null;
   const favoriteTeamGroup = favoriteTeam?.group ?? null;
 
   function handleGroupChange(event) {

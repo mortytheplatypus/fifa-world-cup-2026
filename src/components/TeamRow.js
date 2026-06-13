@@ -1,4 +1,5 @@
 import { teamShape } from '../propTypes';
+import { getTeamDisplayName } from '../utils/data';
 
 function TeamRow({ team }) {
   return (
@@ -10,7 +11,7 @@ function TeamRow({ team }) {
         width={28}
         height={20}
       />
-      <span className="team-name">{team.name}</span>
+      <span className="team-name">{getTeamDisplayName(team.name)}</span>
       <span className="team-code">{team.id}</span>
     </div>
   );

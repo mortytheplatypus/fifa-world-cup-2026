@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { groupIdType, teamShape } from '../propTypes';
+import { getTeamDisplayName } from '../utils/data';
 
 const activityShape = PropTypes.shape({
   variant: PropTypes.oneOf(['upcoming', 'results', 'live']).isRequired,
@@ -29,7 +30,7 @@ function GroupGridCard({ groupId, teams, activities = [] }) {
             <div
               key={team.id}
               className="group-team-cell"
-              data-name={team.name}
+              data-name={getTeamDisplayName(team.name)}
             >
               <img
                 className="group-flag"

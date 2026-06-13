@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
-import { fetchTeams } from '../utils/data';
+import { fetchTeams, getTeamDisplayName } from '../utils/data';
 
 function FavoriteTeamBanner() {
   const {
@@ -67,7 +67,7 @@ function FavoriteTeamBanner() {
             ) : (
               teams.map((team) => (
                 <option key={team.id} value={team.id}>
-                  {team.name}
+                  {getTeamDisplayName(team.name)}
                 </option>
               ))
             )}

@@ -83,6 +83,7 @@ function HomePage() {
         awayTeam={getTeamById(teams, fixture.awayTeam)}
         showGroup
         showDate={options.showDate ?? false}
+        stackedLayout
       />
     );
   }

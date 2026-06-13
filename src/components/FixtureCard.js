@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useTimezone } from '../context/TimezoneContext';
 import { useNow } from '../hooks/useNow';
+import { getTeamDisplayName } from '../utils/data';
 import { fixtureShape, teamShape } from '../propTypes';
 import { getFixtureStatus } from '../utils/fixtures';
 import { getGoalsBySide } from '../utils/results';
@@ -23,6 +24,7 @@ function FixtureCard({
   awayTeam,
   showGroup = false,
   showDate = true,
+  stackedLayout = false,
 }) {
   const { timeZone } = useTimezone();
   const now = useNow();
@@ -38,7 +40,7 @@ function FixtureCard({
     <article
       className={`fixture-card fixture-card--${status}${
         showDate ? ' fixture-card--show-date' : ''
-      }`}
+      }${stackedLayout ? ' fixture-card--stacked' : ''}`}
     >
       <div className="fixture-meta">
         <div className="fixture-meta-tags">
@@ -61,21 +63,27 @@ function FixtureCard({
       </div>
 
       <div className="fixture-teams">
-        <div className="fixture-team-block fixture-team-block--home">
-          <div className="fixture-team home">
+        <div className="fixture-team-side fixture-team-side--home">
+          <div className="fixture-team-label">
             <img
+              className="fixture-team-flag fixture-team-flag--home"
               src={`https://flagcdn.com/w40/${homeTeam.flagCode}.png`}
               alt=""
               width={32}
               height={24}
             />
-            <span>{homeTeam.name}</span>
+            <span className="fixture-team-name fixture-team-name--home">
+              {getTeamDisplayName(homeTeam.name)}
+            </span>
           </div>
           {showScorers && homeGoals.length > 0 && (
-            <ul className="fixture-team-scorers" aria-label={`${homeTeam.name} goals`}>
+            <ul
+              className="fixture-team-scorers fixture-team-scorers--home"
+              aria-label={`${homeTeam.name} goals`}
+            >
               {homeGoals.map((goal) => (
                 <li key={`${goal.scorer}-${goal.minute}`}>
-                  {goal.scorer} {goal.minute}&apos;
+                  {goal.minute}&apos; {goal.scorer}
                 </li>
               ))}
             </ul>
@@ -90,18 +98,24 @@ function FixtureCard({
           <span className="fixture-vs">vs</span>
         )}
 
-        <div className="fixture-team-block fixture-team-block--away">
-          <div className="fixture-team away">
+        <div className="fixture-team-side fixture-team-side--away">
+          <div className="fixture-team-label">
             <img
+              className="fixture-team-flag fixture-team-flag--away"
               src={`https://flagcdn.com/w40/${awayTeam.flagCode}.png`}
               alt=""
               width={32}
               height={24}
             />
-            <span>{awayTeam.name}</span>
+            <span className="fixture-team-name fixture-team-name--away">
+              {getTeamDisplayName(awayTeam.name)}
+            </span>
           </div>
           {showScorers && awayGoals.length > 0 && (
-            <ul className="fixture-team-scorers" aria-label={`${awayTeam.name} goals`}>
+            <ul
+              className="fixture-team-scorers fixture-team-scorers--away"
+              aria-label={`${awayTeam.name} goals`}
+            >
               {awayGoals.map((goal) => (
                 <li key={`${goal.scorer}-${goal.minute}`}>
                   {goal.scorer} {goal.minute}&apos;
@@ -125,6 +139,7 @@ FixtureCard.propTypes = {
   awayTeam: teamShape.isRequired,
   showGroup: PropTypes.bool,
   showDate: PropTypes.bool,
+  stackedLayout: PropTypes.bool,
 };
 
 export default FixtureCard;

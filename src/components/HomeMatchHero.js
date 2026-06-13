@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { getTeamDisplayName } from '../utils/data';
 import CountdownTimer from './CountdownTimer';
 import { fixtureShape, teamShape } from '../propTypes';
 import {
@@ -41,7 +42,7 @@ function HomeMatchHero({
             width={48}
             height={36}
           />
-          <span className="home-hero-team-name">{homeTeam.name}</span>
+          <span className="home-hero-team-name">{getTeamDisplayName(homeTeam.name)}</span>
         </div>
 
         <span className="home-hero-vs" aria-hidden="true">
@@ -56,7 +57,7 @@ function HomeMatchHero({
             width={48}
             height={36}
           />
-          <span className="home-hero-team-name">{awayTeam.name}</span>
+          <span className="home-hero-team-name">{getTeamDisplayName(awayTeam.name)}</span>
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
-import { fetchTeams } from '../utils/data';
+import { fetchTeams, getTeamDisplayName } from '../utils/data';
 import { THEME_OPTIONS } from '../utils/themes';
 
 const THEME_LABELS = {
@@ -149,7 +149,7 @@ function SettingsModal({ onClose, buttonRef }) {
               </option>
               {teams.map((team) => (
                 <option key={team.id} value={team.id}>
-                  {team.name}
+                  {getTeamDisplayName(team.name)}
                 </option>
               ))}
             </select>

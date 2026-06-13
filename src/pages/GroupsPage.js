@@ -6,7 +6,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { useSettings } from '../context/SettingsContext';
 import { useTimezone } from '../context/TimezoneContext';
 import { useGroupsData } from '../hooks/useGroupsData';
-import { getTeamById, GROUP_LETTERS } from '../utils/data';
+import { getTeamById, GROUP_LETTERS, getTeamDisplayName } from '../utils/data';
 import {
   filterGroupsByActivity,
   getActivityFilterEmptyMessage,
@@ -26,7 +26,7 @@ function GroupsPage() {
   );
 
   const favoriteTeamName = favoriteTeamId
-    ? getTeamById(teams, favoriteTeamId)?.name
+    ? getTeamDisplayName(getTeamById(teams, favoriteTeamId)?.name)
     : null;
 
   const visibleGroups = useMemo(() => {

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { GroupActivityBadges } from './GroupActivityBadge';
 import { groupIdType } from '../propTypes';
+import { getTeamDisplayName } from '../utils/data';
 
 const activityShape = PropTypes.shape({
   variant: PropTypes.oneOf(['upcoming', 'results', 'live']).isRequired,
@@ -54,7 +55,7 @@ function StandingsTable({
                       width={24}
                       height={18}
                     />
-                    <span className="standings-team-name">{row.team.name}</span>
+                    <span className="standings-team-name">{getTeamDisplayName(row.team.name)}</span>
                   </div>
                 </td>
                 <td>{row.played}</td>

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { teamShape } from '../propTypes';
+import { getTeamDisplayName } from '../utils/data';
 
 function GroupTeamGrid({ teams }) {
   return (
@@ -13,7 +14,7 @@ function GroupTeamGrid({ teams }) {
             width={56}
             height={42}
           />
-          <span className="group-team-grid-name">{team.name}</span>
+          <span className="group-team-grid-name">{getTeamDisplayName(team.name)}</span>
         </div>
       ))}
     </div>
