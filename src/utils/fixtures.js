@@ -147,8 +147,12 @@ export function getFixturesOnDate(
   );
 }
 
-export function isFixtureComplete(fixture) {
-  return fixture.homeScore != null && fixture.awayScore != null;
+export function isFixtureComplete(fixture, now = new Date()) {
+  return (
+    fixture.homeScore != null &&
+    fixture.awayScore != null &&
+    now >= getFixtureEndInstant(fixture)
+  );
 }
 
 export const MATCH_DURATION_MS = 2 * 60 * 60 * 1000;
@@ -158,8 +162,6 @@ export function getFixtureEndInstant(fixture) {
 }
 
 export function isFixtureOngoing(fixture, now = new Date()) {
-  if (isFixtureComplete(fixture)) return false;
-
   const kickoff = parseFixtureInstant(fixture);
   const end = getFixtureEndInstant(fixture);
 
@@ -167,13 +169,14 @@ export function isFixtureOngoing(fixture, now = new Date()) {
 }
 
 export function getFixtureStatus(fixture, now = new Date()) {
-  if (isFixtureComplete(fixture)) return 'completed';
-  if (isFixtureOngoing(fixture, now)) return 'ongoing';
-
+  const kickoff = parseFixtureInstant(fixture);
   const end = getFixtureEndInstant(fixture);
-  if (now >= end) return 'past';
 
-  return 'upcoming';
+  if (now < kickoff) return 'upcoming';
+  if (now < end) return 'ongoing';
+  if (fixture.homeScore != null && fixture.awayScore != null) return 'completed';
+
+  return 'past';
 }
 
 export function getFirstFixture(fixturesByGroup) {

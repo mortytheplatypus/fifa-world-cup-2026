@@ -32,7 +32,7 @@ function FixtureCard({
   const goals = fixture.goals ?? [];
   const { home: homeGoals, away: awayGoals } = getGoalsBySide(goals);
   const showScorers =
-    status === 'completed' && goals.length > 0;
+    (status === 'completed' || status === 'ongoing') && goals.length > 0;
 
   return (
     <article
