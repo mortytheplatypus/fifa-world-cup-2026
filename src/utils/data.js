@@ -65,6 +65,18 @@ export function getTeamById(teams, id) {
   return teams.find((team) => team.id === id);
 }
 
+const TEAM_DISPLAY_NAMES = {
+  'Bosnia and Herzegovina': 'Bosnia H',
+};
+
+export function getTeamDisplayName(name) {
+  if (!name) {
+    return name;
+  }
+
+  return TEAM_DISPLAY_NAMES[name] ?? name;
+}
+
 export function isValidGroup(groupId) {
   return GROUP_LETTERS.includes(groupId?.toUpperCase());
 }
