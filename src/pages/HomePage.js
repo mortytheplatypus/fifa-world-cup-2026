@@ -90,8 +90,6 @@ function HomePage() {
   return (
     <section className="page home-page">
       <header className="home-header">
-        <h1>FIFA World Cup 2026</h1>
-        <p className="home-subtitle">USA · Canada · Mexico</p>
         <div className="home-meta">
           <p className="home-timezone">
             Times in{" "}

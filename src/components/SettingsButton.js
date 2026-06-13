@@ -27,7 +27,9 @@ function SettingsButton() {
   const { isModalOpen, openModal, closeModal } = useSettings();
   const buttonRef = useRef(null);
 
-  const handleToggle = () => {
+  const handleToggle = (event) => {
+    event.stopPropagation();
+
     if (isModalOpen) {
       closeModal();
       buttonRef.current?.blur();

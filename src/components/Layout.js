@@ -1,9 +1,21 @@
+import { useCallback, useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import FavoriteTeamBanner from './FavoriteTeamBanner';
+import MobileHeaderMenu from './MobileHeaderMenu';
 import SettingsButton from './SettingsButton';
 import TimezoneSelector from './TimezoneSelector';
 
 function Layout() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const closeMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
+  }, []);
+
+  const toggleMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen((open) => !open);
+  }, []);
+
   return (
     <div className="layout">
       <FavoriteTeamBanner />
@@ -16,10 +28,13 @@ function Layout() {
             width={36}
             height={36}
           />
-          <span className="site-title">FIFA World Cup 2026</span>
+          <span className="site-brand-text">
+            <span className="site-title">FIFA World Cup 2026</span>
+            <span className="site-subtitle">USA · Canada · Mexico</span>
+          </span>
         </Link>
 
-        <nav className="site-nav" aria-label="Main navigation">
+        <nav className="site-nav site-nav--desktop" aria-label="Main navigation">
           <NavLink to="/" end className="site-nav-link">
             Home
           </NavLink>
@@ -34,10 +49,16 @@ function Layout() {
           </NavLink>
         </nav>
 
-        <div className="site-header-right">
+        <div className="site-header-right site-header-right--desktop">
           <TimezoneSelector />
           <SettingsButton />
         </div>
+
+        <MobileHeaderMenu
+          isOpen={isMobileMenuOpen}
+          onToggle={toggleMobileMenu}
+          onClose={closeMobileMenu}
+        />
       </header>
       <main className="site-main">
         <Outlet />

@@ -65,11 +65,15 @@ function SettingsModal({ onClose, buttonRef }) {
     }
 
     document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('click', handleClickOutside);
+
+    const clickListenerId = window.setTimeout(() => {
+      document.addEventListener('click', handleClickOutside);
+    }, 0);
 
     closeButtonRef.current?.focus();
 
     return () => {
+      window.clearTimeout(clickListenerId);
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('click', handleClickOutside);
     };

@@ -217,6 +217,13 @@ textarea {
   justify-self: start;
 }
 
+.site-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
 .site-logo {
   display: block;
   width: 36px;
@@ -234,6 +241,19 @@ textarea {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.15;
+}
+
+.site-subtitle {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .site-nav {
@@ -288,6 +308,126 @@ textarea {
   gap: 1rem;
   min-width: 0;
   justify-self: end;
+}
+
+.site-header-mobile {
+  display: none;
+}
+
+.site-menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    background-color 0.15s;
+}
+
+.site-menu-toggle:hover,
+.site-menu-toggle:focus {
+  border-color: var(--accent);
+  color: var(--text);
+  background: var(--surface);
+  outline: none;
+}
+
+.site-menu-toggle[aria-expanded='true'] {
+  border-color: var(--accent);
+  color: var(--text);
+  background: var(--surface);
+}
+
+.site-menu-toggle-icon {
+  display: block;
+}
+
+.site-mobile-menu-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 198;
+  border: none;
+  padding: 0;
+  background: color-mix(in srgb, var(--bg) 35%, transparent);
+  cursor: pointer;
+}
+
+.site-mobile-menu-panel {
+  display: none;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem 1rem;
+  border-top: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 96%, var(--bg));
+}
+
+.site-mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.site-mobile-nav-link {
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.site-mobile-nav-link:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.site-mobile-nav-link.active {
+  background: color-mix(in srgb, var(--highlight) 16%, var(--surface));
+  color: var(--highlight-text);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--highlight) 38%, transparent);
+}
+
+.site-mobile-menu-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+.site-mobile-menu-actions .timezone-selector {
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.site-mobile-menu-actions .settings-dropdown {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.site-mobile-menu-actions .timezone-select {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .timezone-selector {
@@ -606,17 +746,7 @@ textarea {
 }
 
 .home-header {
-  margin-bottom: 2rem;
-}
-
-.home-header h1 {
-  margin: 0 0 0.35rem;
-}
-
-.home-subtitle {
-  margin: 0 0 0.65rem;
-  color: var(--text-muted);
-  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
 }
 
 .home-meta {
@@ -1958,76 +2088,105 @@ textarea {
 
 @media (max-width: 960px) {
   .site-header {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      'brand actions'
-      'nav nav';
-    gap: 0.65rem 1rem;
+    position: relative;
+    z-index: 199;
+    --site-header-bar-height: calc(1.3rem + 36px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
     padding: 0.65rem 1rem;
+    grid-template-columns: unset;
+    grid-template-areas: unset;
+    backdrop-filter: none;
+    background: var(--surface);
   }
 
   .site-brand {
-    grid-area: brand;
+    position: relative;
+    z-index: 202;
+    flex: 1;
     min-width: 0;
     overflow: hidden;
+    padding-bottom: 0;
   }
 
-  .site-header-right {
-    grid-area: actions;
-    flex-shrink: 0;
-    justify-self: end;
-  }
-
-  .timezone-selector {
-    min-width: 0;
-  }
-
-  .timezone-selector-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  .timezone-select {
-    width: auto;
-    min-width: 12.5rem;
-    max-width: min(20rem, 52vw);
-    font-size: 0.8125rem;
-  }
-
-  .site-nav {
-    grid-area: nav;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    justify-self: stretch;
-    gap: 0.25rem;
-    padding: 0.35rem;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    justify-content: center;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .site-nav::-webkit-scrollbar {
+  .site-nav--desktop,
+  .site-header-right--desktop {
     display: none;
   }
 
-  .site-nav-link {
+  .site-header-mobile {
+    position: relative;
+    z-index: 202;
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
-    padding: 0.45rem 0.85rem;
-    font-size: 0.875rem;
+    padding-bottom: 0;
+  }
+
+  .site-header-mobile.is-settings-open {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .site-mobile-menu-panel.is-open {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 201;
+    isolation: isolate;
+    width: 100%;
+    margin: 0;
+    padding: 0.85rem 1rem 1rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 98%, var(--bg));
+    box-shadow: 0 12px 28px color-mix(in srgb, var(--bg) 45%, transparent);
+  }
+
+  .site-mobile-menu-backdrop {
+    display: block;
+  }
+
+  .site-mobile-menu-panel .settings-modal {
+    position: fixed;
+    top: var(--site-header-bar-height);
+    right: 0;
+    left: 0;
+    bottom: auto;
+    width: auto;
+    max-width: none;
+    transform: none;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    z-index: 302;
+  }
+
+  .site-mobile-menu-panel .settings-dropdown {
+    z-index: 303;
   }
 
   .site-title {
-    font-size: 1.05rem;
+    font-size: 1rem;
+  }
+
+  .site-subtitle {
+    font-size: 0.68rem;
+  }
+
+  .site-mobile-menu-actions .timezone-selector-label {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: nowrap;
   }
 }
 
@@ -2086,10 +2245,6 @@ textarea {
 }
 
 @media (max-width: 768px) {
-  .home-header h1 {
-    font-size: 1.5rem;
-  }
-
   .home-meta {
     flex-wrap: nowrap;
     justify-content: space-between;
