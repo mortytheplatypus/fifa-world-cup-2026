@@ -2,9 +2,27 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { groupIdType, teamShape } from '../propTypes';
 
-function GroupGridCard({ groupId, teams }) {
+const activityShape = PropTypes.shape({
+  variant: PropTypes.oneOf(['upcoming', 'results', 'live']).isRequired,
+  label: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+});
+
+function getActivityClasses(activities) {
+  return [...new Set(activities.map((activity) => activity.variant))]
+    .map((variant) => `group-grid-card--${variant}`)
+    .join(' ');
+}
+
+function GroupGridCard({ groupId, teams, activities = [] }) {
+  const activityTitle = activities.map((activity) => activity.label).join(' · ');
+
   return (
-    <Link to={`/groups/${groupId}`} className="group-grid-card">
+    <Link
+      to={`/groups/${groupId}`}
+      className={`group-grid-card ${getActivityClasses(activities)}`.trim()}
+      title={activityTitle || undefined}
+    >
       <div className="group-flags-block">
         <div className="group-flags-grid">
           {teams.map((team) => (
@@ -36,6 +54,7 @@ function GroupGridCard({ groupId, teams }) {
 GroupGridCard.propTypes = {
   groupId: groupIdType,
   teams: PropTypes.arrayOf(teamShape).isRequired,
+  activities: PropTypes.arrayOf(activityShape),
 };
 
 export default GroupGridCard;

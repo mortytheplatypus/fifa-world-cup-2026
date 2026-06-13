@@ -100,6 +100,165 @@ export function splitFixturesByDate(fixtures, now = new Date()) {
   };
 }
 
+export function getTomorrowDateKey(timeZone = DISPLAY_TIMEZONE, now = new Date()) {
+  const todayKey = getTodayDateKey(timeZone, now);
+  const [year, month, day] = todayKey.split('-').map(Number);
+  const tomorrow = new Date(Date.UTC(year, month - 1, day + 1, 12, 0, 0));
+
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(tomorrow);
+}
+
+function formatUpcomingActivityLabel(count) {
+  return count === 1 ? 'Match upcoming' : 'Matches upcoming';
+}
+
+function formatActivityTitle(variant, count, upcomingToday = 0, upcomingTomorrow = 0) {
+  if (variant === 'live') {
+    return `${count} ${count === 1 ? 'match' : 'matches'} live now`;
+  }
+
+  if (variant === 'upcoming') {
+    const parts = [];
+
+    if (upcomingToday > 0) {
+      parts.push(`${upcomingToday} today`);
+    }
+
+    if (upcomingTomorrow > 0) {
+      parts.push(`${upcomingTomorrow} tomorrow`);
+    }
+
+    return `${count} upcoming ${count === 1 ? 'match' : 'matches'} (${parts.join(', ')})`;
+  }
+
+  return `${count} ${count === 1 ? 'result' : 'results'} from today`;
+}
+
+export function getGroupActivityIndicators(
+  fixturesByGroup,
+  timeZone = DISPLAY_TIMEZONE,
+  now = new Date()
+) {
+  const todayKey = getTodayDateKey(timeZone, now);
+  const tomorrowKey = getTomorrowDateKey(timeZone, now);
+  const indicators = new Map();
+
+  for (const [group, fixtures] of Object.entries(fixturesByGroup)) {
+    let liveToday = 0;
+    let upcomingToday = 0;
+    let upcomingTomorrow = 0;
+    let resultsToday = 0;
+
+    for (const fixture of fixtures) {
+      const dateKey = getFixtureDateKey(fixture, timeZone);
+      const status = getFixtureStatus(fixture, now);
+
+      if (status === 'ongoing' && dateKey === todayKey) {
+        liveToday += 1;
+        continue;
+      }
+
+      if (status === 'upcoming') {
+        if (dateKey === todayKey) upcomingToday += 1;
+        else if (dateKey === tomorrowKey) upcomingTomorrow += 1;
+        continue;
+      }
+
+      if (
+        dateKey === todayKey &&
+        (status === 'completed' || status === 'past')
+      ) {
+        resultsToday += 1;
+      }
+    }
+
+    const activities = [];
+
+    if (liveToday > 0) {
+      activities.push({
+        variant: 'live',
+        label: liveToday === 1 ? 'Live match' : 'Live matches',
+        title: formatActivityTitle('live', liveToday),
+      });
+    }
+
+    const upcomingCount = upcomingToday + upcomingTomorrow;
+
+    if (upcomingCount > 0) {
+      activities.push({
+        variant: 'upcoming',
+        label: formatUpcomingActivityLabel(upcomingCount),
+        title: formatActivityTitle(
+          'upcoming',
+          upcomingCount,
+          upcomingToday,
+          upcomingTomorrow
+        ),
+      });
+    }
+
+    if (resultsToday > 0) {
+      activities.push({
+        variant: 'results',
+        label: resultsToday === 1 ? 'Latest result' : 'Latest results',
+        title: formatActivityTitle('results', resultsToday),
+      });
+    }
+
+    if (activities.length > 0) {
+      indicators.set(group, activities);
+    }
+  }
+
+  return indicators;
+}
+
+export function filterGroupsByActivity(groups, groupActivity, activityFilter = 'all') {
+  if (activityFilter === 'all') {
+    return groups;
+  }
+
+  return groups.filter((group) => {
+    const activities = groupActivity.get(group) ?? [];
+
+    if (activities.length === 0) {
+      return false;
+    }
+
+    switch (activityFilter) {
+      case 'active':
+        return true;
+      case 'results':
+        return activities.some((activity) => activity.variant === 'results');
+      case 'upcoming':
+        return activities.some(
+          (activity) =>
+            activity.variant === 'upcoming' || activity.variant === 'live'
+        );
+      default:
+        return true;
+    }
+  });
+}
+
+export function getActivityFilterEmptyMessage(activityFilter) {
+  switch (activityFilter) {
+    case 'results':
+      return 'No groups with latest results today.';
+    case 'upcoming':
+      return 'No groups with upcoming matches right now.';
+    case 'active':
+      return 'No groups with latest results or upcoming matches right now.';
+    default:
+      return '';
+  }
+}
+
 export function getTodayDateKey(timeZone = DISPLAY_TIMEZONE, now = new Date()) {
   return new Intl.DateTimeFormat('en-CA', {
     timeZone,

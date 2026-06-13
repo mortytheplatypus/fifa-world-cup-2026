@@ -1,12 +1,30 @@
 import PropTypes from 'prop-types';
+import { GroupActivityBadges } from './GroupActivityBadge';
 import { groupIdType } from '../propTypes';
 
-function StandingsTable({ groupId, standings, title, embedded }) {
+const activityShape = PropTypes.shape({
+  variant: PropTypes.oneOf(['upcoming', 'results', 'live']).isRequired,
+  label: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+});
+
+function StandingsTable({
+  groupId,
+  standings,
+  title,
+  embedded,
+  activities = [],
+}) {
   const heading = title ?? `Group ${groupId}`;
 
   return (
     <section className={embedded ? 'standings-embedded' : 'standings-card'}>
-      {!embedded && <h2 className="standings-group-title">{heading}</h2>}
+      {!embedded && (
+        <h2 className="standings-group-title">
+          <span>{heading}</span>
+          <GroupActivityBadges activities={activities} />
+        </h2>
+      )}
       <div className="standings-table-wrap">
         <table className="standings-table">
           <thead>
@@ -62,6 +80,7 @@ StandingsTable.propTypes = {
   groupId: groupIdType,
   title: PropTypes.string,
   embedded: PropTypes.bool,
+  activities: PropTypes.arrayOf(activityShape),
   standings: PropTypes.arrayOf(
     PropTypes.shape({
       team: PropTypes.shape({
