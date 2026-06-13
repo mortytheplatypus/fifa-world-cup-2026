@@ -109,6 +109,32 @@ export function getTodayDateKey(timeZone = DISPLAY_TIMEZONE, now = new Date()) {
   }).format(now);
 }
 
+export function getDefaultDateIndex(
+  dates,
+  timeZone = DISPLAY_TIMEZONE,
+  now = new Date()
+) {
+  if (dates.length === 0) return 0;
+
+  const todayKey = getTodayDateKey(timeZone, now);
+  const todayIndex = dates.indexOf(todayKey);
+
+  if (todayIndex !== -1) {
+    return todayIndex;
+  }
+
+  if (todayKey < dates[0]) {
+    return 0;
+  }
+
+  if (todayKey > dates[dates.length - 1]) {
+    return dates.length - 1;
+  }
+
+  const nextIndex = dates.findIndex((dateKey) => dateKey >= todayKey);
+  return nextIndex === -1 ? dates.length - 1 : nextIndex;
+}
+
 export function getFixturesOnDate(
   fixturesByGroup,
   dateKey,

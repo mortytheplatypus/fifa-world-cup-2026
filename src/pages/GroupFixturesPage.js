@@ -9,6 +9,7 @@ import { getTeamById, GROUP_LETTERS, isValidGroup } from '../utils/data';
 import {
   formatDateHeading,
   getDateKeys,
+  getDefaultDateIndex,
   groupFixturesByDate,
   sortFixtures,
   splitFixturesByDate,
@@ -48,10 +49,14 @@ function GroupFixturesPage() {
   );
 
   const dates = useMemo(() => getDateKeys(fixturesByDate), [fixturesByDate]);
+  const defaultDateIndex = useMemo(
+    () => getDefaultDateIndex(dates, timeZone),
+    [dates, timeZone]
+  );
 
   useEffect(() => {
-    setActiveDateIndex(0);
-  }, [groupId, view]);
+    setActiveDateIndex(defaultDateIndex);
+  }, [groupId, view, defaultDateIndex]);
 
   if (!isValidGroup(groupId)) {
     return <Navigate to="/groups" replace />;

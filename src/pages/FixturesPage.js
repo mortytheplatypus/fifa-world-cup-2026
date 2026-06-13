@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import DateNavigator from '../components/DateNavigator';
 import FavoriteTeamFilter from '../components/FavoriteTeamFilter';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -13,6 +13,7 @@ import {
   filterFixturesByTeam,
   formatDateHeading,
   getDateKeys,
+  getDefaultDateIndex,
   groupFixturesByDate,
 } from '../utils/fixtures';
 import { getDisplayTimezoneLabel } from '../utils/timezone';
@@ -47,7 +48,15 @@ function FixturesPage() {
   );
 
   const dates = useMemo(() => getDateKeys(fixturesByDate), [fixturesByDate]);
+  const defaultDateIndex = useMemo(
+    () => getDefaultDateIndex(dates, timeZone),
+    [dates, timeZone]
+  );
   const timezoneLabel = getDisplayTimezoneLabel(timeZone);
+
+  useEffect(() => {
+    setActiveDateIndex(defaultDateIndex);
+  }, [defaultDateIndex, selectedGroup, teamFilter]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -64,12 +73,10 @@ function FixturesPage() {
 
   function handleGroupChange(event) {
     onGroupChange(event);
-    setActiveDateIndex(0);
   }
 
   function handleTeamFilterChange(event) {
     onTeamFilterChange(event);
-    setActiveDateIndex(0);
   }
 
   function handlePreviousDate() {
