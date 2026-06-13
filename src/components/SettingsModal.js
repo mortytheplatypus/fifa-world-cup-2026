@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
 import { fetchTeams } from '../utils/data';
@@ -9,14 +10,13 @@ const THEME_LABELS = {
   [THEME_OPTIONS.TEAM]: 'Favorite Team',
 };
 
-function SettingsModal() {
+function SettingsModal({ onClose, buttonRef }) {
   const {
     theme,
     setTheme,
     favoriteTeamId,
     setFavoriteTeamId,
     isModalOpen,
-    closeModal,
   } = useSettings();
   const [teams, setTeams] = useState([]);
   const dialogRef = useRef(null);
@@ -47,32 +47,42 @@ function SettingsModal() {
 
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
-        closeModal();
+        onClose();
       }
     };
 
+    function handleClickOutside(event) {
+      if (dialogRef.current?.contains(event.target)) {
+        return;
+      }
+
+      if (buttonRef?.current?.contains(event.target)) {
+        return;
+      }
+
+      onClose();
+      buttonRef?.current?.blur();
+    }
+
     document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('click', handleClickOutside);
+
     closeButtonRef.current?.focus();
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('click', handleClickOutside);
     };
-  }, [isModalOpen, closeModal]);
+  }, [isModalOpen, onClose, buttonRef]);
 
   if (!isModalOpen) {
     return null;
   }
 
   return (
-    <>
-      <div
-        className="settings-modal-overlay"
-        onClick={closeModal}
-        aria-hidden="true"
-      />
-      <div
-        ref={dialogRef}
-        className="settings-modal"
+    <div
+      ref={dialogRef}
+      className="settings-modal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="settings-modal-title"
@@ -85,7 +95,7 @@ function SettingsModal() {
             ref={closeButtonRef}
             type="button"
             className="settings-modal-close"
-            onClick={closeModal}
+            onClick={onClose}
             aria-label="Close settings"
           >
             <svg
@@ -142,8 +152,12 @@ function SettingsModal() {
           </label>
         </div>
       </div>
-    </>
   );
 }
+
+SettingsModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  buttonRef: PropTypes.shape({ current: PropTypes.any }),
+};
 
 export default SettingsModal;

@@ -353,6 +353,12 @@ textarea {
   outline: none;
 }
 
+.settings-button[aria-expanded='true'] {
+  border-color: var(--accent);
+  color: var(--text);
+  background: var(--surface);
+}
+
 .settings-button-icon {
   display: block;
 }
@@ -368,6 +374,7 @@ textarea {
   inset: 0;
   z-index: 199;
   background: transparent;
+  pointer-events: none;
 }
 
 .settings-modal {
