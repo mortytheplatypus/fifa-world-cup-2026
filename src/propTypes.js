@@ -10,7 +10,7 @@ export const teamShape = PropTypes.shape({
 });
 
 export const goalShape = PropTypes.shape({
-  minute: PropTypes.number.isRequired,
+  minute: PropTypes.string.isRequired,
   scorer: PropTypes.string.isRequired,
   team: PropTypes.oneOf(['home', 'away']).isRequired,
 });

@@ -1,5 +1,12 @@
+function goalMinuteSortKey(minute) {
+  const [base, extra = '0'] = String(minute).split('+');
+  return Number(base) * 100 + Number(extra);
+}
+
 export function sortGoals(goals = []) {
-  return [...goals].sort((a, b) => a.minute - b.minute);
+  return [...goals].sort(
+    (a, b) => goalMinuteSortKey(a.minute) - goalMinuteSortKey(b.minute)
+  );
 }
 
 export function getGoalsBySide(goals = []) {

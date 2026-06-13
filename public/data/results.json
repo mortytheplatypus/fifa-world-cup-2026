@@ -1,23 +1,41 @@
 {
-  "lastUpdated": "2026-06-12T12:45:00Z",
+  "lastUpdated": "2026-06-13T11:40:00Z",
   "matches": {
     "A-1": {
       "homeScore": 2,
       "awayScore": 0,
       "goals": [
-        { "minute": 9, "scorer": "Julián Quiñones", "team": "home" },
-        { "minute": 67, "scorer": "Raúl Jiménez", "team": "home" }
+        { "minute": "9", "scorer": "Julián Quiñones", "team": "home" },
+        { "minute": "67", "scorer": "Raúl Jiménez", "team": "home" }
       ]
     },
     "A-2": {
       "homeScore": 2,
       "awayScore": 1,
       "goals": [
-        { "minute": 59, "scorer": "Ladislav Krejčí", "team": "away" },
-        { "minute": 67, "scorer": "Hwang In-beom", "team": "home" },
-        { "minute": 80, "scorer": "Oh Hyeon-gyu", "team": "home" }
+        { "minute": "59", "scorer": "Ladislav Krejčí", "team": "away" },
+        { "minute": "67", "scorer": "Hwang In-beom", "team": "home" },
+        { "minute": "80", "scorer": "Oh Hyeon-gyu", "team": "home" }
       ]
-
+    },
+    "B-1": {
+      "homeScore": 1,
+      "awayScore": 1,
+      "goals": [
+        { "minute": "21", "scorer": "Jovo Lukić", "team": "away" },
+        { "minute": "78", "scorer": "Cyle Larin", "team": "home" }
+      ]
+    },
+    "D-1": {
+      "homeScore": 4,
+      "awayScore": 1,
+      "goals": [
+        { "minute": "7", "scorer": "Damian Bobadilla (OG)", "team": "home" },
+        { "minute": "31", "scorer": "Folarin Balogun", "team": "home" },
+        { "minute": "45+6", "scorer": "Folarin Balogun", "team": "home" },
+        { "minute": "73", "scorer": "Mauricio", "team": "away" },
+        { "minute": "90+8", "scorer": "Giovanni Reyna", "team": "home" }
+      ]
     }
   }
 }
