@@ -1,5 +1,7 @@
 const { getDb } = require('./db');
 
+
+
 async function getTeams() {
   const db = await getDb();
   const teams = await db
