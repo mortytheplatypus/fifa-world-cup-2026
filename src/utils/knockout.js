@@ -15,6 +15,8 @@ export const KNOCKOUT_ROUND_LABELS = {
   final: 'Final',
 };
 
+export const KNOCKOUT_ROUND_VIEWS = ['r32', 'r16', 'qf', 'sf'];
+
 function runnerUp(group) {
   return { type: 'runnerUp', group };
 }
@@ -70,6 +72,28 @@ export const KNOCKOUT_MATCHES = {
   M103: { id: 'M103', round: 'third', teamA: loserOf('M101'), teamB: loserOf('M102') },
   M104: { id: 'M104', round: 'final', teamA: winnerOf('M101'), teamB: winnerOf('M102') },
 };
+
+const R32_MATCH_ORDER = [
+  'M73', 'M74', 'M75', 'M76', 'M77', 'M78', 'M79', 'M80',
+  'M81', 'M82', 'M83', 'M84', 'M85', 'M86', 'M87', 'M88',
+];
+const R16_MATCH_ORDER = ['M89', 'M90', 'M91', 'M92', 'M93', 'M94', 'M95', 'M96'];
+const QF_MATCH_ORDER = ['M97', 'M98', 'M99', 'M100'];
+const SF_MATCH_ORDER = ['M101', 'M102'];
+
+/** Short slot tags shown beside match ids (e.g. M90 → R16-2, M97 → QF1). */
+export const KNOCKOUT_MATCH_TAGS = Object.fromEntries([
+  ...R32_MATCH_ORDER.map((id, i) => [id, `R32-${i + 1}`]),
+  ...R16_MATCH_ORDER.map((id, i) => [id, `R16-${i + 1}`]),
+  ...QF_MATCH_ORDER.map((id, i) => [id, `QF${i + 1}`]),
+  ...SF_MATCH_ORDER.map((id, i) => [id, `SF${i + 1}`]),
+  ['M103', '3rd'],
+  ['M104', 'Final'],
+]);
+
+export function getKnockoutMatchTag(matchId) {
+  return KNOCKOUT_MATCH_TAGS[matchId] ?? null;
+}
 
 /**
  * Bracket tree for visual rendering.
