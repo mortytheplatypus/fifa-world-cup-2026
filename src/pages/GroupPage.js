@@ -116,6 +116,8 @@ function GroupPage() {
                 fixture={fixture}
                 homeTeam={getTeamById(teams, fixture.homeTeam)}
                 awayTeam={getTeamById(teams, fixture.awayTeam)}
+                showDate
+                stackedLayout
               />
             ))}
           </div>

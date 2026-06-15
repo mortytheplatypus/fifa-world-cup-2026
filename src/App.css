@@ -2221,6 +2221,17 @@ textarea {
   min-width: 0;
 }
 
+.standings-group-title--link {
+  text-decoration: none;
+  transition: background-color 0.15s;
+}
+
+.standings-group-title--link:hover,
+.standings-group-title--link:focus {
+  background: var(--surface-hover);
+  outline: none;
+}
+
 .groups-empty,
 .points-tables-empty {
   margin-top: 1rem;

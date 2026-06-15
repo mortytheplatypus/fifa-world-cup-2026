@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { GroupActivityBadges } from './GroupActivityBadge';
 import { groupIdType } from '../propTypes';
 import { getTeamDisplayName } from '../utils/data';
@@ -35,14 +36,26 @@ function StandingsTable({
   showQualification = false,
 }) {
   const heading = title ?? `Group ${groupId}`;
+  const titleContent = (
+    <>
+      <span>{heading}</span>
+      <GroupActivityBadges activities={activities} />
+    </>
+  );
 
   return (
     <section className={embedded ? 'standings-embedded' : 'standings-card'}>
       {!embedded && (
-        <h2 className="standings-group-title">
-          <span>{heading}</span>
-          <GroupActivityBadges activities={activities} />
-        </h2>
+        groupId ? (
+          <Link
+            to={`/groups/${groupId}`}
+            className="standings-group-title standings-group-title--link"
+          >
+            {titleContent}
+          </Link>
+        ) : (
+          <h2 className="standings-group-title">{titleContent}</h2>
+        )
       )}
       <div className="standings-table-wrap">
         <table className="standings-table">
