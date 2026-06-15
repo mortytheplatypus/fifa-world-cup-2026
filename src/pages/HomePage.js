@@ -20,6 +20,7 @@ function HomePage() {
   const { timeZone } = useTimezone();
   const { teams, fixtures, loading, error } = useGroupsData();
   const [now, setNow] = useState(() => new Date());
+  const [activeMatchesTab, setActiveMatchesTab] = useState("upcoming");
 
   useEffect(() => {
     const intervalId = setInterval(() => setNow(new Date()), 1000);
@@ -115,46 +116,84 @@ function HomePage() {
         />
       )}
 
-      <section className="home-section">
-        <div className="home-section-header">
-          <h2 className="home-section-title">Upcoming matches</h2>
-          {upcomingMatchesDay && (
+      <section className="home-section home-matches-section">
+        <div className="home-matches-header">
+          <div className="home-fixtures-tabs" role="tablist" aria-label="Matches">
+            <button
+              type="button"
+              role="tab"
+              id="home-matches-tab-upcoming"
+              className={`home-fixtures-tab${
+                activeMatchesTab === "upcoming" ? " active" : ""
+              }`}
+              aria-selected={activeMatchesTab === "upcoming"}
+              aria-controls="home-matches-panel-upcoming"
+              onClick={() => setActiveMatchesTab("upcoming")}
+            >
+              Upcoming matches
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="home-matches-tab-results"
+              className={`home-fixtures-tab${
+                activeMatchesTab === "results" ? " active" : ""
+              }`}
+              aria-selected={activeMatchesTab === "results"}
+              aria-controls="home-matches-panel-results"
+              onClick={() => setActiveMatchesTab("results")}
+            >
+              Latest results
+            </button>
+          </div>
+
+          {activeMatchesTab === "upcoming" && upcomingMatchesDay && (
             <span className="home-section-date">
               {formatDateHeading(upcomingMatchesDay.dateKey)}
             </span>
           )}
-        </div>
-
-        {upcomingMatchesDay ? (
-          <div className="fixture-list">
-            {upcomingMatchesDay.fixtures.map((fixture) =>
-              renderFixture(fixture),
-            )}
-          </div>
-        ) : (
-          <p className="status-message home-empty">No upcoming matches.</p>
-        )}
-      </section>
-
-      <section className="home-section">
-        <div className="home-section-header">
-          <h2 className="home-section-title">Latest results</h2>
-          {latestResults && (
+          {activeMatchesTab === "results" && latestResults && (
             <span className="home-section-date">
               {formatDateHeading(latestResults.dateKey)}
             </span>
           )}
         </div>
 
-        {latestResults ? (
-          <div className="fixture-list">
-            {latestResults.fixtures.map((fixture) =>
-              renderFixture(fixture, { showDate: true }),
-            )}
-          </div>
-        ) : (
-          <p className="status-message home-empty">No results yet.</p>
-        )}
+        <div
+          role="tabpanel"
+          id="home-matches-panel-upcoming"
+          className="home-matches-panel"
+          aria-labelledby="home-matches-tab-upcoming"
+          hidden={activeMatchesTab !== "upcoming"}
+        >
+          {upcomingMatchesDay ? (
+            <div className="fixture-list home-matches-list">
+              {upcomingMatchesDay.fixtures.map((fixture) =>
+                renderFixture(fixture),
+              )}
+            </div>
+          ) : (
+            <p className="status-message home-empty">No upcoming matches.</p>
+          )}
+        </div>
+
+        <div
+          role="tabpanel"
+          id="home-matches-panel-results"
+          className="home-matches-panel"
+          aria-labelledby="home-matches-tab-results"
+          hidden={activeMatchesTab !== "results"}
+        >
+          {latestResults ? (
+            <div className="fixture-list home-matches-list">
+              {latestResults.fixtures.map((fixture) =>
+                renderFixture(fixture, { showDate: true }),
+              )}
+            </div>
+          ) : (
+            <p className="status-message home-empty">No results yet.</p>
+          )}
+        </div>
       </section>
 
       <div className="home-quick-links">

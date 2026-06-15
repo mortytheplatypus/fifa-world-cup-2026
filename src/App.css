@@ -1058,6 +1058,48 @@ textarea {
   margin: 0;
 }
 
+.home-matches-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.home-fixtures-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.home-fixtures-tab {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.home-fixtures-tab:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.home-fixtures-tab.active {
+  border-color: color-mix(in srgb, var(--highlight) 50%, var(--border));
+  background: color-mix(in srgb, var(--highlight) 14%, var(--surface));
+  color: var(--highlight-text);
+}
+
+.home-matches-list {
+  margin-top: 0;
+}
+
 .home-quick-links {
   display: flex;
   flex-wrap: wrap;
@@ -2852,6 +2894,24 @@ textarea {
   }
 
   .group-fixtures-tab {
+    text-align: center;
+  }
+
+  .home-fixtures-tabs {
+    width: 100%;
+  }
+
+  .home-fixtures-tab {
+    flex: 1;
+    text-align: center;
+  }
+
+  .home-matches-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-matches-header .home-section-date {
     text-align: center;
   }
 
