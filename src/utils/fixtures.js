@@ -100,6 +100,11 @@ export function splitFixturesByDate(fixtures, now = new Date()) {
   };
 }
 
+export function getDayFixturesDisplayOrder(fixtures, now = new Date()) {
+  const { upcoming, past } = splitFixturesByDate(fixtures, now);
+  return [...past, ...upcoming];
+}
+
 export function getTomorrowDateKey(timeZone = DISPLAY_TIMEZONE, now = new Date()) {
   const todayKey = getTodayDateKey(timeZone, now);
   const [year, month, day] = todayKey.split('-').map(Number);
