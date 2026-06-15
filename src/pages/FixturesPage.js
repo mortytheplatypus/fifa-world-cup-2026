@@ -68,7 +68,9 @@ function FixturesPage() {
 
   const currentDateIndex = Math.min(activeDateIndex, Math.max(dates.length - 1, 0));
   const currentDate = dates[currentDateIndex];
-  const visibleFixtures = showAllDates ? null : fixturesByDate[currentDate] ?? [];
+  const visibleFixtures = showAllDates
+    ? null
+    : [...(fixturesByDate[currentDate] ?? [])].reverse();
   const isGroupFiltered = selectedGroup !== 'all';
 
   function handleGroupChange(event) {
@@ -87,7 +89,7 @@ function FixturesPage() {
     setActiveDateIndex((index) => Math.min(dates.length - 1, index + 1));
   }
 
-  function renderFixture(fixture) {
+  function renderFixture(fixture, { stackedLayout = false } = {}) {
     return (
       <FixtureCard
         key={fixture.id}
@@ -96,6 +98,7 @@ function FixturesPage() {
         awayTeam={getTeamById(teams, fixture.awayTeam)}
         showGroup={!isGroupFiltered}
         showDate={false}
+        stackedLayout={stackedLayout}
       />
     );
   }
@@ -126,7 +129,9 @@ function FixturesPage() {
 
     return (
       <div className="fixture-list">
-        {visibleFixtures.map(renderFixture)}
+        {visibleFixtures.map((fixture) =>
+          renderFixture(fixture, { stackedLayout: true })
+        )}
       </div>
     );
   }
