@@ -45,6 +45,8 @@ function SettingsModal({ onClose, buttonRef }) {
   useEffect(() => {
     if (!isModalOpen) return undefined;
 
+    const mobileMediaQuery = window.matchMedia('(max-width: 960px)');
+
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         onClose();
@@ -60,20 +62,33 @@ function SettingsModal({ onClose, buttonRef }) {
         return;
       }
 
+      const activeElement = document.activeElement;
+      if (
+        activeElement instanceof HTMLSelectElement &&
+        dialogRef.current?.contains(activeElement)
+      ) {
+        return;
+      }
+
       onClose();
       buttonRef?.current?.blur();
     }
 
     document.addEventListener('keydown', handleKeyDown);
 
-    const clickListenerId = window.setTimeout(() => {
-      document.addEventListener('click', handleClickOutside);
-    }, 0);
+    let clickListenerId;
+    if (!mobileMediaQuery.matches) {
+      clickListenerId = window.setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+      }, 0);
+    }
 
     closeButtonRef.current?.focus();
 
     return () => {
-      window.clearTimeout(clickListenerId);
+      if (clickListenerId !== undefined) {
+        window.clearTimeout(clickListenerId);
+      }
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('click', handleClickOutside);
     };

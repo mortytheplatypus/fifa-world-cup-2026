@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
@@ -35,15 +36,25 @@ function MenuIcon({ isOpen }) {
   );
 }
 
+MenuIcon.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+};
+
 function MobileHeaderMenu({ isOpen, onToggle, onClose }) {
   const toggleRef = useRef(null);
   const menuPanelRef = useRef(null);
   const location = useLocation();
-  const { isModalOpen } = useSettings();
+  const { isModalOpen, closeModal } = useSettings();
 
   useEffect(() => {
     onClose();
   }, [location.pathname, onClose]);
+
+  useEffect(() => {
+    if (!isOpen && isModalOpen) {
+      closeModal();
+    }
+  }, [isOpen, isModalOpen, closeModal]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 960px)');
@@ -72,6 +83,10 @@ function MobileHeaderMenu({ isOpen, onToggle, onClose }) {
     };
 
     const handlePointerDown = (event) => {
+      if (isModalOpen) {
+        return;
+      }
+
       const target = event.target;
 
       if (toggleRef.current?.contains(target)) {
@@ -159,5 +174,11 @@ function MobileHeaderMenu({ isOpen, onToggle, onClose }) {
     </>
   );
 }
+
+MobileHeaderMenu.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
 
 export default MobileHeaderMenu;
