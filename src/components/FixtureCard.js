@@ -18,6 +18,8 @@ const STATUS_LABELS = {
   past: 'Awaiting result',
 };
 
+const GOAL_EMOJI = '⚽';
+
 function FixtureCard({
   fixture,
   homeTeam,
@@ -83,6 +85,9 @@ function FixtureCard({
             >
               {homeGoals.map((goal) => (
                 <li key={`${goal.scorer}-${goal.minute}`}>
+                  <span className="fixture-goal-emoji" aria-hidden="true">
+                    {GOAL_EMOJI}
+                  </span>{' '}
                   {goal.minute}&apos; {goal.scorer}
                 </li>
               ))}
@@ -118,7 +123,10 @@ function FixtureCard({
             >
               {awayGoals.map((goal) => (
                 <li key={`${goal.scorer}-${goal.minute}`}>
-                  {goal.scorer} {goal.minute}&apos;
+                  {goal.scorer} {goal.minute}&apos;{' '}
+                  <span className="fixture-goal-emoji" aria-hidden="true">
+                    {GOAL_EMOJI}
+                  </span>
                 </li>
               ))}
             </ul>

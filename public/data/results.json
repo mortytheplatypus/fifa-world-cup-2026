@@ -1,40 +1,266 @@
 {
-  "lastUpdated": "2026-06-13T11:40:00Z",
+  "lastUpdated": "2026-06-15T05:49:54.032Z",
   "matches": {
     "A-1": {
       "homeScore": 2,
       "awayScore": 0,
       "goals": [
-        { "minute": "9", "scorer": "Julián Quiñones", "team": "home" },
-        { "minute": "67", "scorer": "Raúl Jiménez", "team": "home" }
+        {
+          "minute": 9,
+          "scorer": "Julián Quiñones",
+          "team": "home"
+        },
+        {
+          "minute": 67,
+          "scorer": "Raúl Jiménez",
+          "team": "home"
+        }
       ]
     },
     "A-2": {
       "homeScore": 2,
       "awayScore": 1,
       "goals": [
-        { "minute": "59", "scorer": "Ladislav Krejčí", "team": "away" },
-        { "minute": "67", "scorer": "Hwang In-beom", "team": "home" },
-        { "minute": "80", "scorer": "Oh Hyeon-gyu", "team": "home" }
+        {
+          "minute": 59,
+          "scorer": "Ladislav Krejčí",
+          "team": "away"
+        },
+        {
+          "minute": 67,
+          "scorer": "Hwang In-beom",
+          "team": "home"
+        },
+        {
+          "minute": 80,
+          "scorer": "Oh Hyeon-gyu",
+          "team": "home"
+        }
       ]
     },
     "B-1": {
       "homeScore": 1,
       "awayScore": 1,
       "goals": [
-        { "minute": "21", "scorer": "Jovo Lukić", "team": "away" },
-        { "minute": "78", "scorer": "Cyle Larin", "team": "home" }
+        {
+          "minute": 21,
+          "scorer": "Jovo Lukić",
+          "team": "away"
+        },
+        {
+          "minute": 78,
+          "scorer": "Cyle Larin",
+          "team": "home"
+        }
       ]
     },
     "D-1": {
       "homeScore": 4,
       "awayScore": 1,
       "goals": [
-        { "minute": "7", "scorer": "Damian Bobadilla (OG)", "team": "home" },
-        { "minute": "31", "scorer": "Folarin Balogun", "team": "home" },
-        { "minute": "45+6", "scorer": "Folarin Balogun", "team": "home" },
-        { "minute": "73", "scorer": "Mauricio", "team": "away" },
-        { "minute": "90+8", "scorer": "Giovanni Reyna", "team": "home" }
+        {
+          "minute": 7,
+          "scorer": "(OG) Damian Bobadilla",
+          "team": "home"
+        },
+        {
+          "minute": 31,
+          "scorer": "Folarin Balogun",
+          "team": "home"
+        },
+        {
+          "minute": "45+6",
+          "scorer": "Folarin Balogun",
+          "team": "home"
+        },
+        {
+          "minute": 73,
+          "scorer": "Mauricio",
+          "team": "away"
+        },
+        {
+          "minute": "90+8",
+          "scorer": "Giovanni Reyna",
+          "team": "home"
+        }
+      ]
+    },
+    "C-1": {
+      "homeScore": 1,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "21",
+          "scorer": "Ismael Saibari",
+          "team": "away"
+        },
+        {
+          "minute": "32",
+          "scorer": "Vinícius Júnior",
+          "team": "home"
+        }
+      ]
+    },
+    "C-2": {
+      "homeScore": 0,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "28",
+          "scorer": "John McGinn",
+          "team": "away"
+        }
+      ]
+    },
+    "B-2": {
+      "homeScore": 1,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "17",
+          "scorer": "Breel Embolo (P)",
+          "team": "away"
+        },
+        {
+          "minute": "90+4",
+          "scorer": "Miro Muheim (OG)",
+          "team": "home"
+        }
+      ]
+    },
+    "D-2": {
+      "homeScore": 2,
+      "awayScore": 0,
+      "goals": [
+        {
+          "minute": "27",
+          "scorer": "Nestory Irankunda",
+          "team": "home"
+        },
+        {
+          "minute": "75",
+          "scorer": "Connor Metcalfe",
+          "team": "home"
+        }
+      ]
+    },
+    "F-2": {
+      "homeScore": 5,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "7",
+          "scorer": "Yasin Ayari",
+          "team": "home"
+        },
+        {
+          "minute": "30",
+          "scorer": "Alexander Isak",
+          "team": "home"
+        },
+        {
+          "minute": "43",
+          "scorer": "Omar Rekik",
+          "team": "away"
+        },
+        {
+          "minute": "59",
+          "scorer": "Viktor Gyökeres",
+          "team": "home"
+        },
+        {
+          "minute": "84",
+          "scorer": "Mattias Svanberg",
+          "team": "home"
+        },
+        {
+          "minute": "90+6",
+          "scorer": "Yasin Ayari",
+          "team": "home"
+        }
+      ]
+    },
+    "E-2": {
+      "homeScore": 1,
+      "awayScore": 0,
+      "goals": [
+        {
+          "minute": "90",
+          "scorer": "Amad Diallo",
+          "team": "home"
+        }
+      ]
+    },
+    "E-1": {
+      "homeScore": 7,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "6",
+          "scorer": "Felix Nmecha",
+          "team": "home"
+        },
+        {
+          "minute": "21",
+          "scorer": "Livano Comenencia",
+          "team": "away"
+        },
+        {
+          "minute": "38",
+          "scorer": "Nico Schlotterbeck",
+          "team": "home"
+        },
+        {
+          "minute": "45+5",
+          "scorer": "Kai Havertz (P)",
+          "team": "home"
+        },
+        {
+          "minute": "47",
+          "scorer": "Jamal Musiala",
+          "team": "home"
+        },
+        {
+          "minute": "68",
+          "scorer": "Nathaniel Brown",
+          "team": "home"
+        },
+        {
+          "minute": "78",
+          "scorer": "Deniz Undav",
+          "team": "home"
+        },
+        {
+          "minute": "88",
+          "scorer": "Kai Havertz",
+          "team": "home"
+        }
+      ]
+    },
+    "F-1": {
+      "homeScore": 2,
+      "awayScore": 2,
+      "goals": [
+        {
+          "minute": "51",
+          "scorer": "Virgil van Dijk",
+          "team": "home"
+        },
+        {
+          "minute": "57",
+          "scorer": "Keito Nakamura",
+          "team": "away"
+        },
+        {
+          "minute": "64",
+          "scorer": "Crysencio Summerville",
+          "team": "home"
+        },
+        {
+          "minute": "89",
+          "scorer": "Daichi Kamada",
+          "team": "away"
+        }
       ]
     }
   }
