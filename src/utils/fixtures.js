@@ -154,45 +154,41 @@ export function getGroupActivityIndicators(
   const indicators = new Map();
 
   for (const [group, fixtures] of Object.entries(fixturesByGroup)) {
-    let liveToday = 0;
+    let liveCount = 0;
     let upcomingToday = 0;
     let upcomingTomorrow = 0;
     let resultsToday = 0;
 
     for (const fixture of fixtures) {
-      const dateKey = getFixtureDateKey(fixture, timeZone);
-      const status = getFixtureStatus(fixture, now);
-
-      if (status === 'ongoing' && dateKey === todayKey) {
-        liveToday += 1;
+      if (isFixtureOngoing(fixture, now)) {
+        liveCount += 1;
         continue;
       }
 
-      if (status === 'upcoming') {
+      const dateKey = getFixtureDateKey(fixture, timeZone);
+      const kickoff = parseFixtureInstant(fixture);
+
+      if (now < kickoff) {
         if (dateKey === todayKey) upcomingToday += 1;
         else if (dateKey === tomorrowKey) upcomingTomorrow += 1;
         continue;
       }
 
-      if (
-        dateKey === todayKey &&
-        (status === 'completed' || status === 'past')
-      ) {
+      if (dateKey === todayKey) {
         resultsToday += 1;
       }
     }
 
+    const upcomingCount = upcomingToday + upcomingTomorrow;
     const activities = [];
 
-    if (liveToday > 0) {
+    if (liveCount > 0) {
       activities.push({
         variant: 'live',
-        label: liveToday === 1 ? 'Live match' : 'Live matches',
-        title: formatActivityTitle('live', liveToday),
+        label: liveCount === 1 ? 'Live match' : 'Live matches',
+        title: formatActivityTitle('live', liveCount),
       });
     }
-
-    const upcomingCount = upcomingToday + upcomingTomorrow;
 
     if (upcomingCount > 0) {
       activities.push({
@@ -207,7 +203,7 @@ export function getGroupActivityIndicators(
       });
     }
 
-    if (resultsToday > 0) {
+    if (activities.length === 0 && resultsToday > 0) {
       activities.push({
         variant: 'results',
         label: resultsToday === 1 ? 'Latest result' : 'Latest results',

@@ -8,6 +8,7 @@ import { useSettings } from '../context/SettingsContext';
 import { useTimezone } from '../context/TimezoneContext';
 import { useGroupTeamFilters } from '../hooks/useGroupTeamFilters';
 import { useGroupsData } from '../hooks/useGroupsData';
+import { useNow } from '../hooks/useNow';
 import { GROUP_LETTERS } from '../utils/data';
 import {
   filterGroupsByActivity,
@@ -20,6 +21,7 @@ function PointsTablesPage() {
   const { timeZone } = useTimezone();
   const { favoriteTeamId } = useSettings();
   const { teams, groupedTeams, fixtures, loading, error } = useGroupsData();
+  const now = useNow(30000);
   const [activityFilter, setActivityFilter] = useState('all');
   const {
     selectedGroup,
@@ -30,8 +32,8 @@ function PointsTablesPage() {
   } = useGroupTeamFilters(teams, favoriteTeamId);
 
   const groupActivity = useMemo(
-    () => getGroupActivityIndicators(fixtures, timeZone),
-    [fixtures, timeZone]
+    () => getGroupActivityIndicators(fixtures, timeZone, now),
+    [fixtures, timeZone, now]
   );
 
   const visibleGroups = useMemo(() => {
