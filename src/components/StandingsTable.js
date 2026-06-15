@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { GroupActivityBadges } from './GroupActivityBadge';
 import { groupIdType } from '../propTypes';
 import { getTeamDisplayName } from '../utils/data';
+import { THIRD_PLACE_HINT } from '../utils/qualification';
 
 const activityShape = PropTypes.shape({
   variant: PropTypes.oneOf(['upcoming', 'results', 'live']).isRequired,
@@ -9,12 +10,29 @@ const activityShape = PropTypes.shape({
   title: PropTypes.string.isRequired,
 });
 
+function getQualificationRowClass(index, showQualification) {
+  if (!showQualification) {
+    return undefined;
+  }
+
+  if (index === 0 || index === 1) {
+    return 'standings-row--qualified';
+  }
+
+  if (index === 2) {
+    return 'standings-row--third';
+  }
+
+  return undefined;
+}
+
 function StandingsTable({
   groupId,
   standings,
   title,
   embedded,
   activities = [],
+  showQualification = false,
 }) {
   const heading = title ?? `Group ${groupId}`;
 
@@ -44,7 +62,16 @@ function StandingsTable({
           </thead>
           <tbody>
             {standings.map((row, index) => (
-              <tr key={row.team.id}>
+              <tr
+                key={row.team.id}
+                className={getQualificationRowClass(index, showQualification)}
+                title={
+                  showQualification && index === 2 ? THIRD_PLACE_HINT : undefined
+                }
+                aria-label={
+                  showQualification && index === 2 ? THIRD_PLACE_HINT : undefined
+                }
+              >
                 <td className="standings-col-pos">{index + 1}</td>
                 <td className="standings-col-team">
                   <div className="standings-team">
@@ -82,6 +109,7 @@ StandingsTable.propTypes = {
   title: PropTypes.string,
   embedded: PropTypes.bool,
   activities: PropTypes.arrayOf(activityShape),
+  showQualification: PropTypes.bool,
   standings: PropTypes.arrayOf(
     PropTypes.shape({
       team: PropTypes.shape({

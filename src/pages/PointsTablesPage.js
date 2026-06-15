@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import FavoriteTeamFilter from '../components/FavoriteTeamFilter';
 import GroupActivityFilter from '../components/GroupActivityFilter';
 import LoadingSpinner from '../components/LoadingSpinner';
+import QualificationInfo from '../components/QualificationInfo';
 import StandingsTable from '../components/StandingsTable';
 import { useSettings } from '../context/SettingsContext';
 import { useTimezone } from '../context/TimezoneContext';
@@ -65,7 +66,10 @@ function PointsTablesPage() {
       <header className="points-tables-header">
         <div>
           <h1>Points Tables</h1>
-          <p className="page-subtitle">Group stage standings</p>
+          <div className="points-tables-subtitle-row">
+            <p className="page-subtitle">Group stage standings</p>
+            <QualificationInfo />
+          </div>
         </div>
 
         <div className="fixtures-controls">
@@ -110,6 +114,7 @@ function PointsTablesPage() {
               groupId={letter}
               standings={standingsByGroup[letter]}
               activities={groupActivity.get(letter) ?? []}
+              showQualification
             />
           ))}
         </div>
