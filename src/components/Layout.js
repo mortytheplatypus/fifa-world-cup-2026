@@ -47,6 +47,9 @@ function Layout() {
           <NavLink to="/tables" className="site-nav-link">
             Tables
           </NavLink>
+          <NavLink to="/knockout" className="site-nav-link">
+            Knockout
+          </NavLink>
         </nav>
 
         <div className="site-header-right site-header-right--desktop">

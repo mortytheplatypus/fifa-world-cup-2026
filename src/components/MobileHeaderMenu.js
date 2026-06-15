@@ -163,6 +163,9 @@ function MobileHeaderMenu({ isOpen, onToggle, onClose }) {
             <NavLink to="/tables" className="site-mobile-nav-link" onClick={onClose}>
               Tables
             </NavLink>
+            <NavLink to="/knockout" className="site-mobile-nav-link" onClick={onClose}>
+              Knockout
+            </NavLink>
           </nav>
 
           <div className="site-mobile-menu-actions">
