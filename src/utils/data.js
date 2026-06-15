@@ -1,5 +1,7 @@
 export const GROUP_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
+const API_BASE = process.env.REACT_APP_API_URL ?? '';
+
 const DEFAULT_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 const cache = new Map();
@@ -20,7 +22,7 @@ async function fetchData(key) {
     return cached;
   }
 
-  const path = `data/${key}.json`;
+  const path = `${API_BASE}/api/${key}`;
 
   const promise = fetch(path).then((response) => {
     if (!response.ok) throw new Error(`Failed to load ${path}`);
