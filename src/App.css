@@ -3266,14 +3266,19 @@ textarea {
   min-width: 380px;
 }
 
-/* Round of 32 — one bracket half at a time (R32 through SF) */
+/* Round of 32 / R16 — one bracket half at a time */
 .knockout-bracket--half {
   min-width: 0;
-  max-width: 44rem;
+  width: 100%;
 }
 
 .knockout-bracket-tree--half {
+  width: 100%;
   justify-content: flex-start;
+}
+
+.knockout-bracket-tree--half-right {
+  justify-content: flex-end;
 }
 
 .knockout-bracket-tree--half .knockout-bracket-half {
@@ -3287,35 +3292,12 @@ textarea {
 }
 
 .knockout-bracket-half {
-  flex: 1;
+  --knockout-feeder-gap: 1.5rem;
+  --knockout-merge-width: 2.5rem;
   display: flex;
   flex-direction: row;
-  align-items: center;
-  gap: 0;
-}
-
-.knockout-bracket-half-quarters {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  gap: 1.5rem;
+  align-items: stretch;
   flex: 1;
-}
-
-.knockout-bracket-half--right {
-  flex-direction: row-reverse;
-}
-
-.knockout-bracket-half--right .knockout-bracket-quarter {
-  flex-direction: row-reverse;
-}
-
-.knockout-bracket-half--right .knockout-bracket-pair {
-  flex-direction: row-reverse;
-}
-
-.knockout-bracket-half--right .knockout-bracket-pair-r32 {
-  align-items: flex-end;
 }
 
 .knockout-bracket-half--right .knockout-slot {
@@ -3323,96 +3305,96 @@ textarea {
 }
 
 .knockout-bracket-quarter {
+  --knockout-feeder-gap: 0.75rem;
+  --knockout-merge-width: 2.5rem;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0;
-}
-
-.knockout-bracket-quarter-pairs {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  gap: 0.75rem;
+  align-items: stretch;
 }
 
 .knockout-bracket-pair {
+  --knockout-feeder-gap: 0.75rem;
+  --knockout-merge-width: 2.5rem;
+  display: flex;
+  align-items: stretch;
+}
+
+.knockout-bracket-half--mirrored,
+.knockout-bracket-quarter--mirrored,
+.knockout-bracket-pair--mirrored {
+  flex-direction: row-reverse;
+}
+
+.knockout-bracket-pair-feeders,
+.knockout-bracket-quarter-feeders,
+.knockout-bracket-half-feeders {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--knockout-feeder-gap);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.knockout-bracket-feeder {
   display: flex;
   align-items: center;
-  gap: 0;
 }
 
-.knockout-bracket-pair-r32 {
+.knockout-bracket-feeder::after {
+  content: '';
+  flex-shrink: 0;
+  width: calc(var(--knockout-merge-width) / 2);
+  height: 2px;
+  background: var(--border);
+}
+
+.knockout-bracket-pair--mirrored .knockout-bracket-feeder::after,
+.knockout-bracket-quarter--mirrored .knockout-bracket-feeder::after,
+.knockout-bracket-half--mirrored .knockout-bracket-feeder::after {
+  order: -1;
+}
+
+.knockout-bracket-pair-target,
+.knockout-bracket-quarter-target,
+.knockout-bracket-half-target {
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  gap: 0.75rem;
+  align-items: center;
+  flex-shrink: 0;
 }
 
-.knockout-bracket-connector {
+.knockout-bracket-pair-target::before,
+.knockout-bracket-quarter-target::before,
+.knockout-bracket-half-target::before {
+  content: '';
+  flex-shrink: 0;
+  width: calc(var(--knockout-merge-width) / 2);
+  height: 2px;
+  background: var(--border);
+}
+
+.knockout-bracket-pair--mirrored .knockout-bracket-pair-target::before,
+.knockout-bracket-quarter--mirrored .knockout-bracket-quarter-target::before,
+.knockout-bracket-half--mirrored .knockout-bracket-half-target::before {
+  order: 1;
+}
+
+.knockout-bracket-merge {
   flex-shrink: 0;
   align-self: stretch;
-  width: 1.25rem;
-  position: relative;
+  width: var(--knockout-merge-width);
+  min-width: var(--knockout-merge-width);
+  color: var(--border);
 }
 
-.knockout-bracket-connector--r32-r16::before {
-  content: '';
-  position: absolute;
-  top: 25%;
-  bottom: 25%;
-  left: 0;
-  right: 0;
-  border-top: 2px solid var(--border);
-  border-bottom: 2px solid var(--border);
-  border-right: 2px solid var(--border);
+.knockout-bracket-merge-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-.knockout-bracket-half--right .knockout-bracket-connector--r32-r16::before {
-  border-right: none;
-  border-left: 2px solid var(--border);
-}
-
-.knockout-bracket-connector--r16-qf {
-  width: 1.5rem;
-}
-
-.knockout-bracket-connector--r16-qf::before {
-  content: '';
-  position: absolute;
-  top: 20%;
-  bottom: 20%;
-  left: 0;
-  right: 0;
-  border-top: 2px solid var(--border);
-  border-bottom: 2px solid var(--border);
-  border-right: 2px solid var(--border);
-}
-
-.knockout-bracket-half--right .knockout-bracket-connector--r16-qf::before {
-  border-right: none;
-  border-left: 2px solid var(--border);
-}
-
-.knockout-bracket-connector--qf-sf {
-  width: 1.75rem;
-}
-
-.knockout-bracket-connector--qf-sf::before {
-  content: '';
-  position: absolute;
-  top: 30%;
-  bottom: 30%;
-  left: 0;
-  right: 0;
-  border-top: 2px solid var(--border);
-  border-bottom: 2px solid var(--border);
-  border-right: 2px solid var(--border);
-}
-
-.knockout-bracket-half--right .knockout-bracket-connector--qf-sf::before {
-  border-right: none;
-  border-left: 2px solid var(--border);
+.knockout-bracket-merge-path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2px;
 }
 
 .knockout-bracket-center {

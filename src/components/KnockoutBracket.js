@@ -51,7 +51,36 @@ KnockoutMatchCard.propTypes = {
   compact: PropTypes.bool,
 };
 
-function BracketPair({ pair, standingsByGroup, startRound }) {
+function BracketMergeConnector({ mirrored = false }) {
+  return (
+    <div
+      className={`knockout-bracket-merge${mirrored ? ' knockout-bracket-merge--mirrored' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="knockout-bracket-merge-svg"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+      >
+        <path
+          className="knockout-bracket-merge-path"
+          d={mirrored ? 'M 50 25 V 75 M 50 50 H 0' : 'M 50 25 V 75 M 50 50 H 100'}
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+    </div>
+  );
+}
+
+BracketMergeConnector.propTypes = {
+  mirrored: PropTypes.bool,
+};
+
+BracketMergeConnector.defaultProps = {
+  mirrored: false,
+};
+
+function BracketPair({ pair, standingsByGroup, startRound, mirrored }) {
   if (startRound === 'qf' || startRound === 'sf') return null;
 
   if (startRound === 'r16') {
@@ -65,23 +94,31 @@ function BracketPair({ pair, standingsByGroup, startRound }) {
   }
 
   return (
-    <div className="knockout-bracket-pair">
-      <div className="knockout-bracket-pair-r32">
-        {pair.r32.map((matchId) => (
+    <div className={`knockout-bracket-pair${mirrored ? ' knockout-bracket-pair--mirrored' : ''}`}>
+      <div className="knockout-bracket-pair-feeders">
+        <div className="knockout-bracket-feeder">
           <KnockoutMatchCard
-            key={matchId}
-            matchId={matchId}
+            matchId={pair.r32[0]}
             standingsByGroup={standingsByGroup}
             compact
           />
-        ))}
+        </div>
+        <div className="knockout-bracket-feeder">
+          <KnockoutMatchCard
+            matchId={pair.r32[1]}
+            standingsByGroup={standingsByGroup}
+            compact
+          />
+        </div>
       </div>
-      <div className="knockout-bracket-connector knockout-bracket-connector--r32-r16" />
-      <KnockoutMatchCard
-        matchId={pair.r16}
-        standingsByGroup={standingsByGroup}
-        compact
-      />
+      <BracketMergeConnector mirrored={mirrored} />
+      <div className="knockout-bracket-pair-target">
+        <KnockoutMatchCard
+          matchId={pair.r16}
+          standingsByGroup={standingsByGroup}
+          compact
+        />
+      </div>
     </div>
   );
 }
@@ -93,9 +130,14 @@ BracketPair.propTypes = {
   }).isRequired,
   standingsByGroup: standingsByGroupShape.isRequired,
   startRound: PropTypes.oneOf(['r32', 'r16', 'qf', 'sf']).isRequired,
+  mirrored: PropTypes.bool,
 };
 
-function BracketQuarter({ quarter, standingsByGroup, startRound }) {
+BracketPair.defaultProps = {
+  mirrored: false,
+};
+
+function BracketQuarter({ quarter, standingsByGroup, startRound, mirrored }) {
   if (startRound === 'sf') return null;
 
   if (startRound === 'qf') {
@@ -109,17 +151,33 @@ function BracketQuarter({ quarter, standingsByGroup, startRound }) {
   }
 
   return (
-    <div className="knockout-bracket-quarter">
-      <div className="knockout-bracket-quarter-pairs">
-        <BracketPair pair={quarter.pair1} standingsByGroup={standingsByGroup} startRound={startRound} />
-        <BracketPair pair={quarter.pair2} standingsByGroup={standingsByGroup} startRound={startRound} />
+    <div className={`knockout-bracket-quarter${mirrored ? ' knockout-bracket-quarter--mirrored' : ''}`}>
+      <div className="knockout-bracket-quarter-feeders">
+        <div className="knockout-bracket-feeder">
+          <BracketPair
+            pair={quarter.pair1}
+            standingsByGroup={standingsByGroup}
+            startRound={startRound}
+            mirrored={mirrored}
+          />
+        </div>
+        <div className="knockout-bracket-feeder">
+          <BracketPair
+            pair={quarter.pair2}
+            standingsByGroup={standingsByGroup}
+            startRound={startRound}
+            mirrored={mirrored}
+          />
+        </div>
       </div>
-      <div className="knockout-bracket-connector knockout-bracket-connector--r16-qf" />
-      <KnockoutMatchCard
-        matchId={quarter.r16}
-        standingsByGroup={standingsByGroup}
-        compact
-      />
+      <BracketMergeConnector mirrored={mirrored} />
+      <div className="knockout-bracket-quarter-target">
+        <KnockoutMatchCard
+          matchId={quarter.r16}
+          standingsByGroup={standingsByGroup}
+          compact
+        />
+      </div>
     </div>
   );
 }
@@ -132,14 +190,19 @@ BracketQuarter.propTypes = {
   }).isRequired,
   standingsByGroup: standingsByGroupShape.isRequired,
   startRound: PropTypes.oneOf(['r32', 'r16', 'qf', 'sf']).isRequired,
+  mirrored: PropTypes.bool,
 };
 
-function BracketHalf({ half, side, standingsByGroup, startRound, flowLtr }) {
-  const layoutSide = flowLtr ? 'left' : side;
+BracketQuarter.defaultProps = {
+  mirrored: false,
+};
+
+function BracketHalf({ half, side, standingsByGroup, startRound }) {
+  const mirrored = side === 'right';
 
   if (startRound === 'sf') {
     return (
-      <div className={`knockout-bracket-half knockout-bracket-half--${layoutSide}`}>
+      <div className={`knockout-bracket-half knockout-bracket-half--${side}`}>
         <KnockoutMatchCard
           matchId={half.sf}
           standingsByGroup={standingsByGroup}
@@ -150,17 +213,37 @@ function BracketHalf({ half, side, standingsByGroup, startRound, flowLtr }) {
   }
 
   return (
-    <div className={`knockout-bracket-half knockout-bracket-half--${layoutSide}`}>
-      <div className="knockout-bracket-half-quarters">
-        <BracketQuarter quarter={half.quarter1} standingsByGroup={standingsByGroup} startRound={startRound} />
-        <BracketQuarter quarter={half.quarter2} standingsByGroup={standingsByGroup} startRound={startRound} />
+    <div
+      className={`knockout-bracket-half knockout-bracket-half--${side}${
+        mirrored ? ' knockout-bracket-half--mirrored' : ''
+      }`}
+    >
+      <div className="knockout-bracket-half-feeders">
+        <div className="knockout-bracket-feeder">
+          <BracketQuarter
+            quarter={half.quarter1}
+            standingsByGroup={standingsByGroup}
+            startRound={startRound}
+            mirrored={mirrored}
+          />
+        </div>
+        <div className="knockout-bracket-feeder">
+          <BracketQuarter
+            quarter={half.quarter2}
+            standingsByGroup={standingsByGroup}
+            startRound={startRound}
+            mirrored={mirrored}
+          />
+        </div>
       </div>
-      <div className="knockout-bracket-connector knockout-bracket-connector--qf-sf" />
-      <KnockoutMatchCard
-        matchId={half.sf}
-        standingsByGroup={standingsByGroup}
-        compact
-      />
+      <BracketMergeConnector mirrored={mirrored} />
+      <div className="knockout-bracket-half-target">
+        <KnockoutMatchCard
+          matchId={half.sf}
+          standingsByGroup={standingsByGroup}
+          compact
+        />
+      </div>
     </div>
   );
 }
@@ -174,11 +257,6 @@ BracketHalf.propTypes = {
   side: PropTypes.oneOf(['left', 'right']).isRequired,
   standingsByGroup: standingsByGroupShape.isRequired,
   startRound: PropTypes.oneOf(['r32', 'r16', 'qf', 'sf']).isRequired,
-  flowLtr: PropTypes.bool,
-};
-
-BracketHalf.defaultProps = {
-  flowLtr: false,
 };
 
 const BRACKET_SIDES = ['left', 'right'];
@@ -188,27 +266,39 @@ const BRACKET_SIDE_LABELS = {
   right: 'Right bracket',
 };
 
-function R32HalfTreeView({ standingsByGroup, bracketSide }) {
+const HALF_BRACKET_ROUNDS = ['r32', 'r16'];
+
+function BracketHalfTreeView({ standingsByGroup, bracketSide, startRound }) {
   const half = BRACKET_TREE[bracketSide];
 
+  const isRight = bracketSide === 'right';
+
   return (
-    <div className="knockout-bracket knockout-bracket--half">
-      <div className="knockout-bracket-tree knockout-bracket-tree--half">
+    <div
+      className={`knockout-bracket knockout-bracket--half${
+        isRight ? ' knockout-bracket--half-right' : ''
+      }`}
+    >
+      <div
+        className={`knockout-bracket-tree knockout-bracket-tree--half${
+          isRight ? ' knockout-bracket-tree--half-right' : ''
+        }`}
+      >
         <BracketHalf
           half={half}
           side={bracketSide}
-          flowLtr
           standingsByGroup={standingsByGroup}
-          startRound="r32"
+          startRound={startRound}
         />
       </div>
     </div>
   );
 }
 
-R32HalfTreeView.propTypes = {
+BracketHalfTreeView.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
   bracketSide: PropTypes.oneOf(BRACKET_SIDES).isRequired,
+  startRound: PropTypes.oneOf(HALF_BRACKET_ROUNDS).isRequired,
 };
 
 function BracketTreeView({ standingsByGroup, viewRound }) {
@@ -246,12 +336,14 @@ function BracketTreeView({ standingsByGroup, viewRound }) {
 
 BracketTreeView.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
-  viewRound: PropTypes.oneOf(['r16', 'qf', 'sf']).isRequired,
+  viewRound: PropTypes.oneOf(['qf', 'sf']).isRequired,
 };
 
 function KnockoutBracket({ standingsByGroup }) {
   const [viewRound, setViewRound] = useState('r32');
-  const [r32Side, setR32Side] = useState('left');
+  const [bracketSide, setBracketSide] = useState('left');
+
+  const showHalfBracket = HALF_BRACKET_ROUNDS.includes(viewRound);
 
   return (
     <div className="knockout-bracket-container">
@@ -274,7 +366,7 @@ function KnockoutBracket({ standingsByGroup }) {
           ))}
         </div>
 
-        {viewRound === 'r32' && (
+        {showHalfBracket && (
           <div className="knockout-bracket-tabs knockout-bracket-tabs--side" role="tablist" aria-label="Bracket side">
             {BRACKET_SIDES.map((side) => (
               <button
@@ -282,10 +374,10 @@ function KnockoutBracket({ standingsByGroup }) {
                 type="button"
                 role="tab"
                 id={`knockout-side-tab-${side}`}
-                className={`knockout-bracket-tab${r32Side === side ? ' active' : ''}`}
-                aria-selected={r32Side === side}
+                className={`knockout-bracket-tab${bracketSide === side ? ' active' : ''}`}
+                aria-selected={bracketSide === side}
                 aria-controls={`knockout-side-panel-${side}`}
-                onClick={() => setR32Side(side)}
+                onClick={() => setBracketSide(side)}
               >
                 {BRACKET_SIDE_LABELS[side]}
               </button>
@@ -297,13 +389,17 @@ function KnockoutBracket({ standingsByGroup }) {
       <div
         className="knockout-bracket-scroll"
         role="tabpanel"
-        id={viewRound === 'r32' ? `knockout-side-panel-${r32Side}` : `knockout-panel-${viewRound}`}
+        id={showHalfBracket ? `knockout-side-panel-${bracketSide}` : `knockout-panel-${viewRound}`}
         aria-labelledby={
-          viewRound === 'r32' ? `knockout-side-tab-${r32Side}` : `knockout-tab-${viewRound}`
+          showHalfBracket ? `knockout-side-tab-${bracketSide}` : `knockout-tab-${viewRound}`
         }
       >
-        {viewRound === 'r32' ? (
-          <R32HalfTreeView standingsByGroup={standingsByGroup} bracketSide={r32Side} />
+        {showHalfBracket ? (
+          <BracketHalfTreeView
+            standingsByGroup={standingsByGroup}
+            bracketSide={bracketSide}
+            startRound={viewRound}
+          />
         ) : (
           <BracketTreeView standingsByGroup={standingsByGroup} viewRound={viewRound} />
         )}
