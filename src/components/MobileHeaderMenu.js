@@ -50,11 +50,14 @@ function MobileHeaderMenu({ isOpen, onToggle, onClose }) {
     onClose();
   }, [location.pathname, onClose]);
 
+  const prevIsOpenRef = useRef(isOpen);
+
   useEffect(() => {
-    if (!isOpen && isModalOpen) {
+    if (prevIsOpenRef.current && !isOpen) {
       closeModal();
     }
-  }, [isOpen, isModalOpen, closeModal]);
+    prevIsOpenRef.current = isOpen;
+  }, [isOpen, closeModal]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 960px)');
