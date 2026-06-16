@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-16T03:48:36.320Z",
+  "lastUpdated": "2026-06-16T14:54:00.000Z",
   "matches": {
     "A-1": {
       "homeScore": 2,
@@ -15,6 +15,14 @@
           "scorer": "Raúl Jiménez",
           "team": "home"
         }
+      ],
+      "cards": [
+        { "team": "away", "type": "yellow" },
+        { "team": "home", "type": "yellow" },
+        { "team": "away", "type": "directRed" },
+        { "team": "away", "type": "yellow" },
+        { "team": "away", "type": "directRed" },
+        { "team": "home", "type": "directRed" }
       ]
     },
     "A-2": {
@@ -36,6 +44,9 @@
           "scorer": "Oh Hyeon-gyu",
           "team": "home"
         }
+      ],
+      "cards": [
+        { "team": "home", "type": "yellow" }
       ]
     },
     "B-1": {
@@ -52,6 +63,13 @@
           "scorer": "Cyle Larin",
           "team": "home"
         }
+      ],
+      "cards": [
+        { "team": "home", "type": "yellow" },
+        { "team": "away", "type": "yellow" },
+        { "team": "away", "type": "yellow" },
+        { "team": "home", "type": "yellow" },
+        { "team": "away", "type": "yellow" }
       ]
     },
     "D-1": {
@@ -83,6 +101,14 @@
           "scorer": "Giovanni Reyna",
           "team": "home"
         }
+      ],
+      "cards": [
+        { "team": "away", "type": "yellow" },
+        { "team": "away", "type": "yellow" },
+        { "team": "home", "type": "yellow" },
+        { "team": "away", "type": "yellow" },
+        { "team": "away", "type": "yellow" },
+        { "team": "away", "type": "yellow" }
       ]
     },
     "C-1": {
@@ -99,6 +125,10 @@
           "scorer": "Vinícius Júnior",
           "team": "home"
         }
+      ],
+      "cards": [
+        { "team": "home", "type": "yellow" },
+        { "team": "home", "type": "yellow" }
       ]
     },
     "C-2": {
@@ -110,6 +140,12 @@
           "scorer": "John McGinn",
           "team": "away"
         }
+      ],
+      "cards": [
+        { "team": "home", "type": "yellow" },
+        { "team": "away", "type": "yellow" },
+        { "team": "away", "type": "yellow" },
+        { "team": "away", "type": "yellow" }
       ]
     },
     "B-2": {
@@ -126,6 +162,11 @@
           "scorer": "Miro Muheim (OG)",
           "team": "home"
         }
+      ],
+      "cards": [
+        { "team": "home", "type": "yellow" },
+        { "team": "home", "type": "yellow" },
+        { "team": "away", "type": "yellow" }
       ]
     },
     "D-2": {
@@ -142,6 +183,9 @@
           "scorer": "Connor Metcalfe",
           "team": "home"
         }
+      ],
+      "cards": [
+        { "team": "away", "type": "yellow" }
       ]
     },
     "F-2": {
@@ -178,6 +222,9 @@
           "scorer": "Yasin Ayari",
           "team": "home"
         }
+      ],
+      "cards": [
+        { "team": "away", "type": "yellow" }
       ]
     },
     "E-2": {
@@ -189,6 +236,12 @@
           "scorer": "Amad Diallo",
           "team": "home"
         }
+      ],
+      "cards": [
+        { "team": "home", "type": "yellow" },
+        { "team": "home", "type": "yellow" },
+        { "team": "home", "type": "yellow" },
+        { "team": "away", "type": "yellow" }
       ]
     },
     "E-1": {
@@ -261,6 +314,11 @@
           "scorer": "Daichi Kamada",
           "team": "away"
         }
+      ],
+      "cards": [
+        { "team": "home", "type": "yellow" },
+        { "team": "home", "type": "yellow" },
+        { "team": "home", "type": "yellow" }
       ]
     },
     "G-1": {
@@ -277,6 +335,12 @@
           "scorer": "(OG) Mohamed Hany",
           "team": "home"
         }
+      ],
+      "cards": [
+        { "team": "away", "type": "yellow" },
+        { "team": "home", "type": "yellow" },
+        { "team": "away", "type": "yellow" },
+        { "team": "home", "type": "yellow" }
       ]
     },
     "G-2": {
@@ -303,11 +367,18 @@
           "scorer": "Mohammad Mohebbi",
           "team": "home"
         }
+      ],
+      "cards": [
+        { "team": "home", "type": "yellow" }
       ]
     },
     "H-1": {
       "homeScore": 0,
-      "awayScore": 0
+      "awayScore": 0,
+      "cards": [
+        { "team": "away", "type": "yellow" },
+        { "team": "home", "type": "yellow" }
+      ]
     },
     "H-2": {
       "homeScore": 1,
@@ -323,6 +394,9 @@
           "scorer": "Maxi Araújo",
           "team": "away"
         }
+      ],
+      "cards": [
+        { "team": "home", "type": "yellow" }
       ]
     }
   }

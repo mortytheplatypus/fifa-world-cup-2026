@@ -6,7 +6,7 @@ Static JSON files in this folder drive the site. To update scores and points tab
 
 | File | Purpose | Update during tournament? | MongoDB collection |
 |------|---------|---------------------------|--------------------|
-| `teams.json` | Teams, groups, flag codes, theme colors | No | `teams` |
+| `teams.json` | Teams, groups, flag codes, theme colors, FIFA ranking | Rarely (pre-tournament snapshot) | `teams` |
 | `fixtures.json` | Schedule (date, time, venue, teams) | No | `fixtures` |
 | `results.json` | Match scores | **Yes — after each match** | `results` |
 
@@ -46,8 +46,33 @@ Edit `results.json` and add or update an entry under `matches`, keyed by **fixtu
 | `matches` | Yes | Object mapping fixture id → result |
 | `matches[id].homeScore` | Yes | Goals scored by the home team |
 | `matches[id].awayScore` | Yes | Goals scored by the away team |
+| `matches[id].goals` | Optional | Goal scorers for match detail UI |
+| `matches[id].cards` | Optional | Discipline events for tie-breakers (see below) |
 
 Both scores must be numbers. Omit a fixture from `matches` if it has not been played yet.
+
+### Cards (`results.json`)
+
+Add a `cards` array when you have discipline data. Each entry applies to one booking in that match:
+
+```json
+"H-2": {
+  "homeScore": 1,
+  "awayScore": 1,
+  "cards": [
+    { "team": "home", "type": "yellow" }
+  ]
+}
+```
+
+| `type` | Conduct deduction |
+|--------|-------------------|
+| `yellow` | −1 |
+| `secondYellow` | −3 |
+| `directRed` | −4 |
+| `yellowAndDirectRed` | −5 |
+
+`team` is `"home"` or `"away"`. The team with the **higher** conduct score ranks above teams with more deductions.
 
 ### Fixture ids
 
@@ -70,6 +95,27 @@ Ids live in `fixtures.json`, one per match. Pattern: `{group}-{matchNumber}`.
 - **Group B, third match** → `B-3`
 
 Team codes (`homeTeam`, `awayTeam`) match `id` values in `teams.json` (e.g. `MEX`, `RSA`).
+
+### Team fields (`teams.json`)
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `id` | Yes | Three-letter team code |
+| `name` | Yes | Full team name |
+| `group` | Yes | Group letter (`A`–`L`) |
+| `flagCode` | Yes | ISO code for flagcdn.com |
+| `colors` | Optional | Theme colors for UI |
+| `fifaRankingPreWc` | Yes | June 11 2026 FIFA/Coca-Cola Men's World Ranking position before the tournament (lower is better). Used for group-stage tie-breakers. |
+
+## Points table tie-breakers
+
+When teams are level on points, standings follow FIFA group-stage rules in order:
+
+1. Head-to-head points, then goal difference, then goals scored among tied teams
+2. Repeat head-to-head criteria for any remaining tied subsets, then overall goal difference, overall goals scored, and team conduct (fair play)
+3. FIFA world ranking (June 2026 edition), then team code as a final fallback
+
+Team conduct is calculated from `cards` in `results.json` (see below). Matches without card data contribute 0 to conduct.
 
 ## What updates automatically
 
@@ -108,9 +154,9 @@ Once you add scores to `results.json`, the match shows as **FT** even if still i
 4. Optionally set `lastUpdated` to the current UTC time.
 5. Save, rebuild/redeploy, or refresh in development.
 
-## Future fields
+## Optional match fields
 
-The per-match object in `results.json` can be extended later without changing fixture ids, for example:
+The per-match object in `results.json` can include extra detail without changing fixture ids:
 
 ```json
 "A-1": {
@@ -122,7 +168,7 @@ The per-match object in `results.json` can be extended later without changing fi
 }
 ```
 
-Only `homeScore` and `awayScore` are used today. Extra fields are ignored until match-detail UI is added.
+`homeScore`, `awayScore`, and `cards` affect points tables. Other fields are reserved for future match-detail UI.
 
 ## API
 
@@ -130,7 +176,7 @@ Read-only endpoints served at `/api/*`.
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/api/teams` | All teams (includes `colors`) |
+| GET | `/api/teams` | All teams (includes `colors`, `fifaRankingPreWc`) |
 | GET | `/api/fixtures` | Fixtures grouped by letter |
 | GET | `/api/results` | Match results |
 

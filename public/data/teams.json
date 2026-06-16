@@ -8,7 +8,8 @@
       "#960000",
       "#03a154",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 14
   },
   {
     "id": "RSA",
@@ -19,7 +20,8 @@
       "#ffc525",
       "#01963a",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 60
   },
   {
     "id": "KOR",
@@ -30,7 +32,8 @@
       "#000000",
       "#e20325",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 25
   },
   {
     "id": "CZE",
@@ -41,7 +44,8 @@
       "#f00000",
       "#ffffff",
       "#0000ff"
-    ]
+    ],
+    "fifaRankingPreWc": 40
   },
   {
     "id": "CAN",
@@ -52,7 +56,8 @@
       "#ff0000",
       "#ffffff",
       "#cc0000"
-    ]
+    ],
+    "fifaRankingPreWc": 30
   },
   {
     "id": "BIH",
@@ -63,7 +68,8 @@
       "#002395",
       "#fecb00",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 64
   },
   {
     "id": "QAT",
@@ -74,7 +80,8 @@
       "#7f1431",
       "#ffffff",
       "#5a0f23"
-    ]
+    ],
+    "fifaRankingPreWc": 56
   },
   {
     "id": "SUI",
@@ -85,7 +92,8 @@
       "#ff0000",
       "#740c14",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 19
   },
   {
     "id": "BRA",
@@ -96,7 +104,8 @@
       "#ffdc02",
       "#19ae47",
       "#193375"
-    ]
+    ],
+    "fifaRankingPreWc": 6
   },
   {
     "id": "MAR",
@@ -107,7 +116,8 @@
       "#17a376",
       "#e50011",
       "#d29d63"
-    ]
+    ],
+    "fifaRankingPreWc": 7
   },
   {
     "id": "HAI",
@@ -118,7 +128,8 @@
       "#00209f",
       "#d21034",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 83
   },
   {
     "id": "SCO",
@@ -129,7 +140,8 @@
       "#940b13",
       "#ffff4a",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 42
   },
   {
     "id": "USA",
@@ -140,7 +152,8 @@
       "#ffffff",
       "#000d39",
       "#002bbe"
-    ]
+    ],
+    "fifaRankingPreWc": 17
   },
   {
     "id": "PAR",
@@ -151,7 +164,8 @@
       "#ffffff",
       "#39455b",
       "#2c3a50"
-    ]
+    ],
+    "fifaRankingPreWc": 41
   },
   {
     "id": "AUS",
@@ -162,7 +176,8 @@
       "#ffbb00",
       "#213a36",
       "#24403c"
-    ]
+    ],
+    "fifaRankingPreWc": 27
   },
   {
     "id": "TUR",
@@ -173,7 +188,8 @@
       "#e30a17",
       "#ffffff",
       "#000000"
-    ]
+    ],
+    "fifaRankingPreWc": 22
   },
   {
     "id": "GER",
@@ -184,7 +200,8 @@
       "#000000",
       "#ffffff",
       "#ffce00"
-    ]
+    ],
+    "fifaRankingPreWc": 10
   },
   {
     "id": "CUW",
@@ -195,7 +212,8 @@
       "#002b7f",
       "#fcd116",
       "#ce1126"
-    ]
+    ],
+    "fifaRankingPreWc": 82
   },
   {
     "id": "CIV",
@@ -206,7 +224,8 @@
       "#f77f00",
       "#ffffff",
       "#009739"
-    ]
+    ],
+    "fifaRankingPreWc": 33
   },
   {
     "id": "ECU",
@@ -217,7 +236,8 @@
       "#d60000",
       "#ffef00",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 23
   },
   {
     "id": "NED",
@@ -228,7 +248,8 @@
       "#f36c21",
       "#ffffff",
       "#000000"
-    ]
+    ],
+    "fifaRankingPreWc": 8
   },
   {
     "id": "JPN",
@@ -239,7 +260,8 @@
       "#000080",
       "#bc002d",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 18
   },
   {
     "id": "SWE",
@@ -250,7 +272,8 @@
       "#ffec00",
       "#15244d",
       "#0537e4"
-    ]
+    ],
+    "fifaRankingPreWc": 38
   },
   {
     "id": "TUN",
@@ -261,7 +284,8 @@
       "#e70013",
       "#ffffff",
       "#000000"
-    ]
+    ],
+    "fifaRankingPreWc": 45
   },
   {
     "id": "BEL",
@@ -272,7 +296,8 @@
       "#000000",
       "#ff0000",
       "#ffd800"
-    ]
+    ],
+    "fifaRankingPreWc": 9
   },
   {
     "id": "EGY",
@@ -283,7 +308,8 @@
       "#ce1126",
       "#ffffff",
       "#000000"
-    ]
+    ],
+    "fifaRankingPreWc": 29
   },
   {
     "id": "IRN",
@@ -294,7 +320,8 @@
       "#239f40",
       "#da0000",
       "#000000"
-    ]
+    ],
+    "fifaRankingPreWc": 20
   },
   {
     "id": "NZL",
@@ -305,7 +332,8 @@
       "#000000",
       "#ffffff",
       "#4d4d4d"
-    ]
+    ],
+    "fifaRankingPreWc": 85
   },
   {
     "id": "ESP",
@@ -316,7 +344,8 @@
       "#000000",
       "#ff0000",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 2
   },
   {
     "id": "CPV",
@@ -327,7 +356,8 @@
       "#003893",
       "#ffffff",
       "#cf2027"
-    ]
+    ],
+    "fifaRankingPreWc": 67
   },
   {
     "id": "KSA",
@@ -338,7 +368,8 @@
       "#125b34",
       "#7ec8ae",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 61
   },
   {
     "id": "URU",
@@ -349,7 +380,8 @@
       "#000000",
       "#ffffff",
       "#0038a8"
-    ]
+    ],
+    "fifaRankingPreWc": 16
   },
   {
     "id": "FRA",
@@ -360,7 +392,8 @@
       "#f1030a",
       "#ffffff",
       "#123163"
-    ]
+    ],
+    "fifaRankingPreWc": 3
   },
   {
     "id": "SEN",
@@ -371,7 +404,8 @@
       "#11a335",
       "#ffdc00",
       "#e63f23"
-    ]
+    ],
+    "fifaRankingPreWc": 15
   },
   {
     "id": "IRQ",
@@ -382,7 +416,8 @@
       "#ce1126",
       "#ffffff",
       "#000000"
-    ]
+    ],
+    "fifaRankingPreWc": 57
   },
   {
     "id": "NOR",
@@ -393,7 +428,8 @@
       "#ba0c2f",
       "#ffffff",
       "#00205b"
-    ]
+    ],
+    "fifaRankingPreWc": 31
   },
   {
     "id": "ARG",
@@ -404,7 +440,8 @@
       "#43a1d5",
       "#eeeeee",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 1
   },
   {
     "id": "ALG",
@@ -415,7 +452,8 @@
       "#006233",
       "#ffffff",
       "#d21034"
-    ]
+    ],
+    "fifaRankingPreWc": 28
   },
   {
     "id": "AUT",
@@ -426,7 +464,8 @@
       "#000000",
       "#ff0000",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 24
   },
   {
     "id": "JOR",
@@ -437,7 +476,8 @@
       "#ce1126",
       "#ffffff",
       "#000000"
-    ]
+    ],
+    "fifaRankingPreWc": 63
   },
   {
     "id": "POR",
@@ -448,7 +488,8 @@
       "#ff0000",
       "#006200",
       "#ffffff"
-    ]
+    ],
+    "fifaRankingPreWc": 5
   },
   {
     "id": "COD",
@@ -459,7 +500,8 @@
       "#007fff",
       "#f7d618",
       "#ce1126"
-    ]
+    ],
+    "fifaRankingPreWc": 46
   },
   {
     "id": "UZB",
@@ -470,7 +512,8 @@
       "#1eb53a",
       "#ffffff",
       "#0099b5"
-    ]
+    ],
+    "fifaRankingPreWc": 50
   },
   {
     "id": "COL",
@@ -481,7 +524,8 @@
       "#f4553e",
       "#e40303",
       "#0f1842"
-    ]
+    ],
+    "fifaRankingPreWc": 13
   },
   {
     "id": "ENG",
@@ -492,7 +536,8 @@
       "#ff0000",
       "#ffffff",
       "#00007e"
-    ]
+    ],
+    "fifaRankingPreWc": 4
   },
   {
     "id": "CRO",
@@ -503,7 +548,8 @@
       "#ed1c24",
       "#dfb770",
       "#0457a2"
-    ]
+    ],
+    "fifaRankingPreWc": 11
   },
   {
     "id": "GHA",
@@ -514,7 +560,8 @@
       "#ffe500",
       "#000000",
       "#d40023"
-    ]
+    ],
+    "fifaRankingPreWc": 73
   },
   {
     "id": "PAN",
@@ -525,6 +572,7 @@
       "#005293",
       "#ffffff",
       "#d21034"
-    ]
+    ],
+    "fifaRankingPreWc": 34
   }
 ]

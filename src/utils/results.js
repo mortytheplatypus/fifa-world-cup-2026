@@ -33,6 +33,7 @@ export function applyMatchResults(fixturesByGroup, results) {
           homeScore: result.homeScore,
           awayScore: result.awayScore,
           goals: result.goals ?? [],
+          cards: result.cards ?? [],
         };
       }),
     ])
