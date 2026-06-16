@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-15T05:49:54.032Z",
+  "lastUpdated": "2026-06-16T03:48:36.320Z",
   "matches": {
     "A-1": {
       "homeScore": 2,
@@ -259,6 +259,68 @@
         {
           "minute": "89",
           "scorer": "Daichi Kamada",
+          "team": "away"
+        }
+      ]
+    },
+    "G-1": {
+      "homeScore": 1,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "20",
+          "scorer": "Emam Ashour",
+          "team": "away"
+        },
+        {
+          "minute": "66",
+          "scorer": "(OG) Mohamed Hany",
+          "team": "home"
+        }
+      ]
+    },
+    "G-2": {
+      "homeScore": 2,
+      "awayScore": 2,
+      "goals": [
+        {
+          "minute": "7",
+          "scorer": "Elijah Just",
+          "team": "away"
+        },
+        {
+          "minute": "32",
+          "scorer": "Ramin Rezaeian",
+          "team": "home"
+        },
+        {
+          "minute": "54",
+          "scorer": "Elijah Just",
+          "team": "away"
+        },
+        {
+          "minute": "64",
+          "scorer": "Mohammad Mohebbi",
+          "team": "home"
+        }
+      ]
+    },
+    "H-1": {
+      "homeScore": 0,
+      "awayScore": 0
+    },
+    "H-2": {
+      "homeScore": 1,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "41",
+          "scorer": "Abdulelah Al-Amri",
+          "team": "home"
+        },
+        {
+          "minute": "80",
+          "scorer": "Maxi Araújo",
           "team": "away"
         }
       ]
