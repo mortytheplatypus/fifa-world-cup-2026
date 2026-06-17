@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const FIXTURES_PATH = path.join(__dirname, '..', '..', '..', 'public', 'data', 'fixtures.json');
-const DISPLAY_TIMEZONE = 'America/New_York';
+const USA_TIMEZONE = 'America/New_York';
 const KICKOFF_DELAY_MS = 3 * 60 * 60 * 1000;
 
 const CITY_TIMEZONES = {
@@ -25,9 +25,10 @@ const CITY_TIMEZONES = {
 };
 
 let cachedKickoffs = null;
+let cachedUsaDayIndex = null;
 
 function getVenueTimezone(city) {
-  return CITY_TIMEZONES[city] ?? DISPLAY_TIMEZONE;
+  return CITY_TIMEZONES[city] ?? USA_TIMEZONE;
 }
 
 function zonedTimeToUtc(dateStr, timeStr, timeZone) {
@@ -83,12 +84,25 @@ function parseFixtureInstant(fixture) {
   return zonedTimeToUtc(fixture.date, fixture.time, venueTimezone);
 }
 
+function getUsaDateKey(instant, timeZone = USA_TIMEZONE) {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(instant);
+}
+
+function loadFixturesByGroup() {
+  return JSON.parse(fs.readFileSync(FIXTURES_PATH, 'utf8'));
+}
+
 function loadKickoffIndex() {
   if (cachedKickoffs) {
     return cachedKickoffs;
   }
 
-  const fixturesByGroup = JSON.parse(fs.readFileSync(FIXTURES_PATH, 'utf8'));
+  const fixturesByGroup = loadFixturesByGroup();
   const index = {};
 
   for (const fixtures of Object.values(fixturesByGroup)) {
@@ -99,6 +113,102 @@ function loadKickoffIndex() {
 
   cachedKickoffs = index;
   return index;
+}
+
+/**
+ * USA Eastern calendar day → { lastKickoff, fixtureIds, syncAt }.
+ */
+function loadUsaDayIndex() {
+  if (cachedUsaDayIndex) {
+    return cachedUsaDayIndex;
+  }
+
+  const fixturesByGroup = loadFixturesByGroup();
+  const kickoffs = loadKickoffIndex();
+  const index = {};
+
+  for (const fixtures of Object.values(fixturesByGroup)) {
+    for (const fixture of fixtures) {
+      const instant = kickoffs[fixture.id];
+      const usaDay = getUsaDateKey(instant);
+
+      if (!index[usaDay]) {
+        index[usaDay] = {
+          lastKickoff: instant,
+          fixtureIds: [fixture.id],
+          syncAt: new Date(instant.getTime() + KICKOFF_DELAY_MS),
+        };
+        continue;
+      }
+
+      index[usaDay].fixtureIds.push(fixture.id);
+      if (instant > index[usaDay].lastKickoff) {
+        index[usaDay].lastKickoff = instant;
+        index[usaDay].syncAt = new Date(instant.getTime() + KICKOFF_DELAY_MS);
+      }
+    }
+  }
+
+  cachedUsaDayIndex = index;
+  return index;
+}
+
+function getUsaMatchDaysSorted() {
+  return Object.keys(loadUsaDayIndex()).sort();
+}
+
+function getSyncInstantForUsaDay(usaDay) {
+  return loadUsaDayIndex()[usaDay]?.syncAt ?? null;
+}
+
+function isUsaDaySyncDue(usaDay, now = new Date()) {
+  const syncAt = getSyncInstantForUsaDay(usaDay);
+  if (!syncAt) {
+    return false;
+  }
+  return now.getTime() >= syncAt.getTime();
+}
+
+function getFixtureIdsForUsaDay(usaDay) {
+  return loadUsaDayIndex()[usaDay]?.fixtureIds ?? [];
+}
+
+/**
+ * Latest match day (USA ET) whose last kickoff + 3h has passed and is after lastSynced.
+ */
+function getNextUsaMatchDayToSync(now = new Date(), lastSynced = null) {
+  let candidate = null;
+
+  for (const usaDay of getUsaMatchDaysSorted()) {
+    if (lastSynced && usaDay <= lastSynced) {
+      continue;
+    }
+    if (!isUsaDaySyncDue(usaDay, now)) {
+      continue;
+    }
+    candidate = usaDay;
+  }
+
+  return candidate;
+}
+
+/** UTC hour for daily Vercel cron (latest USA-day sync instant across the tournament). */
+function getDailyCronUtcHour() {
+  const index = loadUsaDayIndex();
+  let maxHour = 0;
+  let maxMinute = 0;
+
+  for (const { syncAt } of Object.values(index)) {
+    const hour = syncAt.getUTCHours();
+    const minute = syncAt.getUTCMinutes();
+
+    if (hour > maxHour || (hour === maxHour && minute > maxMinute)) {
+      maxHour = hour;
+      maxMinute = minute;
+    }
+  }
+
+  return maxHour;
 }
 
 function isKickoffDelayElapsed(fixtureId, now = new Date()) {
@@ -113,7 +223,16 @@ function isKickoffDelayElapsed(fixtureId, now = new Date()) {
 }
 
 module.exports = {
+  USA_TIMEZONE,
   loadKickoffIndex,
+  loadUsaDayIndex,
+  getUsaDateKey,
+  getUsaMatchDaysSorted,
+  getSyncInstantForUsaDay,
+  isUsaDaySyncDue,
+  getFixtureIdsForUsaDay,
+  getNextUsaMatchDayToSync,
+  getDailyCronUtcHour,
   isKickoffDelayElapsed,
   KICKOFF_DELAY_MS,
 };

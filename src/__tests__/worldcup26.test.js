@@ -5,6 +5,13 @@ const {
 } = require('../../api/lib/worldcup26/parseScorers');
 const { resolveFixtureId } = require('../../api/lib/worldcup26/idMap');
 const { transformGame } = require('../../api/lib/worldcup26/transform');
+const {
+  getUsaMatchDaysSorted,
+  isUsaDaySyncDue,
+  getNextUsaMatchDayToSync,
+  getFixtureIdsForUsaDay,
+  getDailyCronUtcHour,
+} = require('../../api/lib/worldcup26/fixtures');
 
 describe('parseScorers', () => {
   test('parses normal home scorers', () => {
@@ -80,5 +87,32 @@ describe('transformGame', () => {
     expect(outcome.result.homeScore).toBe(2);
     expect(outcome.result.awayScore).toBe(0);
     expect(outcome.result.goals).toHaveLength(2);
+  });
+});
+
+describe('usa match days', () => {
+  test('groups fixtures by USA Eastern calendar day', () => {
+    const days = getUsaMatchDaysSorted();
+    expect(days.length).toBeGreaterThan(0);
+    expect(days[0]).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+
+  test('daily cron UTC hour covers latest USA-day sync window', () => {
+    expect(getDailyCronUtcHour()).toBe(6);
+  });
+
+  test('picks next USA match day after last synced', () => {
+    const firstDay = getUsaMatchDaysSorted()[0];
+    const syncAt = new Date(
+      require('../../api/lib/worldcup26/fixtures').getSyncInstantForUsaDay(firstDay)
+    );
+    const afterWindow = new Date(syncAt.getTime() + 60000);
+
+    expect(getNextUsaMatchDayToSync(afterWindow, null)).toBe(firstDay);
+    expect(getNextUsaMatchDayToSync(afterWindow, firstDay)).not.toBe(firstDay);
+  });
+
+  test('June 11 USA day includes A-1', () => {
+    expect(getFixtureIdsForUsaDay('2026-06-11')).toContain('A-1');
   });
 });

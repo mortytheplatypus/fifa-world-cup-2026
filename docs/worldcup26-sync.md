@@ -19,7 +19,7 @@ This document is separate from the main [README.md](../README.md), which covers 
 - A fetch + transform pipeline pulls finished group-stage games from worldcup26.ir
 - Scores and goal scorers are converted to the existing result schema
 - Results are merged into `results.json` and upserted into MongoDB
-- Manual CLI scripts and an hourly Vercel cron can run the sync
+- Manual CLI and a once-daily Vercel cron can run the sync
 
 ### Unchanged
 
@@ -35,21 +35,21 @@ This document is separate from the main [README.md](../README.md), which covers 
 | `public/data/worldcup26-id-map.json` | Fixed map: worldcup26 game id `"1"`–`"72"` → fixture id |
 | `api/lib/worldcup26/fetch.js` | HTTP fetch from worldcup26.ir |
 | `api/lib/worldcup26/idMap.js` | O(1) lookup using the static id map |
-| `api/lib/worldcup26/fixtures.js` | Kickoff times for the 3-hour post-match gate |
+| `api/lib/worldcup26/fixtures.js` | USA Eastern match days + 3-hour sync windows |
 | `api/lib/worldcup26/parseScorers.js` | Parses worldcup26 scorer strings into `goals[]` |
 | `api/lib/worldcup26/transform.js` | Filters and converts games to result objects |
 | `api/lib/worldcup26/persist.js` | Writes `results.json` + MongoDB upserts |
 | `api/lib/worldcup26/sync.js` | Orchestrates the full pipeline |
 | `scripts/sync-results-worldcup26.js` | CLI entry point |
 | `api/cron/sync-results.js` | Vercel cron handler |
-| `src/__tests__/worldcup26.test.js` | Unit tests |
+| `api/lib/worldcup26/syncMeta.js` | Once-per-day guard in MongoDB `sync_meta` |
 
 ### Files modified
 
 | Path | Change |
 |------|--------|
 | `package.json` | Added `sync:db`, `sync:results` scripts; Jest test path for `api/**/*.test.js` |
-| `vercel.json` | Hourly cron at `/api/cron/sync-results` |
+| `vercel.json` | Daily cron at `/api/cron/sync-results` (06:00 UTC) |
 | `.env.example` | Added `CRON_SECRET` |
 
 ---
@@ -73,9 +73,9 @@ GET /api/results  →  React app (standings, fixture cards, etc.)
 ```
 
 Manual runs: `scripts/sync-results-worldcup26.js`  
-Automated runs: Vercel cron → `/api/cron/sync-results` (hourly)
+Automated runs: Vercel cron → `/api/cron/sync-results` (once daily)
 
-Both paths always enforce the **3-hour post-kickoff gate**.
+Both paths always enforce the **3-hour post-kickoff gate** per match.
 
 ---
 
@@ -119,14 +119,32 @@ Same as before — upserts everything in `results.json` into MongoDB.
 
 ### Automated sync (Vercel cron)
 
+One cron job per day (Vercel Hobby free tier limit).
+
+**Schedule:** `0 6 * * *` (06:00 UTC ≈ 2:00 AM Eastern) — the latest “last kickoff of the USA day + 3 hours” across the tournament when grouped by **US Eastern time** (`America/New_York`).
+
+**Cron behaviour (at most once per USA Eastern calendar day):**
+
+1. Skip if cron already ran today (USA ET) — stored in MongoDB `sync_meta`
+2. Find the next USA match day whose **last kickoff + 3 hours** has passed
+3. If none is due yet, exit without syncing
+4. Sync finished group matches from that day only
+5. Record the run; advance `lastMatchDaySynced` only when matches were imported
+
+A “USA day” is defined by when kickoff occurs in US Eastern time (a 9 PM Pacific kickoff on June 12 counts as June 13 ET, etc.).
+
 Configured in `vercel.json`:
 
 ```json
 {
   "path": "/api/cron/sync-results",
-  "schedule": "0 * * * *"
+  "schedule": "0 6 * * *"
 }
 ```
+
+**Hobby plan note:** Vercel may invoke the job anytime within the scheduled hour (06:00–06:59 UTC). The handler still checks the USA-day sync window before importing.
+
+**Setup:**
 
 1. Set `CRON_SECRET` and `MONGODB_URI` in Vercel env vars
 2. Deploy
@@ -142,7 +160,7 @@ curl -H "Authorization: Bearer YOUR_CRON_SECRET" \
 
 ## What gets synced
 
-Every sync (manual or cron) imports a game only when **all** of these are true:
+### Manual (`npm run sync:results`)
 
 | Condition | Required |
 |-----------|----------|
@@ -150,6 +168,16 @@ Every sync (manual or cron) imports a game only when **all** of these are true:
 | `type === "group"` | Yes |
 | Id in `worldcup26-id-map.json` | Yes |
 | Kickoff + 3 hours ≤ now | Yes |
+
+### Cron (once per USA Eastern day)
+
+All of the above, plus:
+
+| Condition | Required |
+|-----------|----------|
+| Cron has not run yet today (USA ET) | Yes |
+| USA match day’s last kickoff + 3 hours ≤ now | Yes |
+| Fixture belongs to that USA match day | Yes |
 
 **Out of scope:** Knockout matches (worldcup26 ids 73–104) and unfinished games.
 
@@ -199,12 +227,13 @@ worldcup26 is the source of truth on sync; a manual edit to one fixture will be 
 
 ## Fallback if cron fails
 
-There is **no automatic retry or alert** beyond the next hourly run.
+There is **no automatic retry** beyond the next daily run.
 
 | Situation | Action |
 |-----------|--------|
-| Cron missed an hour | Wait for next run, or run `npm run sync:results` locally |
-| After each matchday | Run `npm run sync:results` once kickoff + 3 hours has passed |
+| Cron missed a day | Run `npm run sync:results` locally |
+| Cron returned `not_due` | Last USA-day kickoff + 3h has not passed yet — wait |
+| Cron returned `already_ran_today` | Normal — only one cron sync per USA ET day |
 | Cron returns 401/500 | Check Vercel logs; verify `CRON_SECRET` and `MONGODB_URI` |
 | Site shows stale scores | MongoDB still has old data — run manual sync |
 

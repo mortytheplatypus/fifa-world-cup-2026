@@ -2,7 +2,7 @@ const { resolveFixtureId } = require('./idMap');
 const { isKickoffDelayElapsed } = require('./fixtures');
 const { parseMatchGoals } = require('./parseScorers');
 
-function transformGame(game, { now = new Date() } = {}) {
+function transformGame(game, { now = new Date(), usaDayFixtureIds = null } = {}) {
   if (game.type !== 'group') {
     return { skip: 'not_group' };
   }
@@ -14,6 +14,10 @@ function transformGame(game, { now = new Date() } = {}) {
   const fixtureId = resolveFixtureId(game.id);
   if (!fixtureId) {
     return { skip: 'unmapped' };
+  }
+
+  if (usaDayFixtureIds && !usaDayFixtureIds.has(fixtureId)) {
+    return { skip: 'wrong_day' };
   }
 
   if (!isKickoffDelayElapsed(fixtureId, now)) {
@@ -34,12 +38,14 @@ function transformGame(game, { now = new Date() } = {}) {
 }
 
 function transformGames(games, options = {}) {
+  const { usaDayFixtureIds = null } = options;
   const matches = {};
   const skipped = {
     not_group: 0,
     unfinished: 0,
     unmapped: 0,
     too_early: 0,
+    wrong_day: 0,
   };
   const synced = [];
 
