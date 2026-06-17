@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { useSettings } from '../context/SettingsContext';
 import SettingsModal from './SettingsModal';
 
@@ -25,14 +24,13 @@ function GearIcon() {
 
 function SettingsButton() {
   const { isModalOpen, openModal, closeModal } = useSettings();
-  const buttonRef = useRef(null);
 
   const handleToggle = (event) => {
     event.stopPropagation();
 
     if (isModalOpen) {
       closeModal();
-      buttonRef.current?.blur();
+      event.currentTarget.blur();
     } else {
       openModal();
     }
@@ -41,7 +39,6 @@ function SettingsButton() {
   return (
     <div className="settings-dropdown">
       <button
-        ref={buttonRef}
         type="button"
         className="settings-button"
         onClick={handleToggle}
@@ -51,7 +48,7 @@ function SettingsButton() {
       >
         <GearIcon />
       </button>
-      <SettingsModal onClose={closeModal} buttonRef={buttonRef} />
+      <SettingsModal onClose={closeModal} />
     </div>
   );
 }

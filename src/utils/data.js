@@ -68,7 +68,7 @@ export function getTeamById(teams, id) {
 const TEAM_DISPLAY_NAMES = {
   'Bosnia and Herzegovina': 'Bosnia H',
   'South Korea': 'S Korea',
-  'Saudi Arabia': 'S Arabia',
+  'Saudi Arabia': 'Saudi',
   'United States': 'USA',
   'South Africa': 'S Africa',
 };
