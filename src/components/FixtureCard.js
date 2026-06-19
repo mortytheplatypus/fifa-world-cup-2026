@@ -1,24 +1,30 @@
-import PropTypes from 'prop-types';
-import { useTimezone } from '../context/TimezoneContext';
-import { useNow } from '../hooks/useNow';
-import { getTeamDisplayName } from '../utils/data';
-import { fixtureShape, teamShape } from '../propTypes';
-import { getFixtureStatus } from '../utils/fixtures';
-import { getCardDisplay, getCardPlayerName, getCardsBySide, getGoalsBySide } from '../utils/results';
+import PropTypes from "prop-types";
+import { useTimezone } from "../context/TimezoneContext";
+import { useNow } from "../hooks/useNow";
+import { getTeamDisplayName } from "../utils/data";
+import KnockoutMatchLabel from "./KnockoutMatchLabel";
+import { fixtureShape, teamShape } from "../propTypes";
+import { getFixtureStatus } from "../utils/fixtures";
+import {
+  getCardDisplay,
+  getCardPlayerName,
+  getCardsBySide,
+  getGoalsBySide,
+} from "../utils/results";
 import {
   formatFixtureDate,
   formatFixtureTime,
   parseFixtureInstant,
-} from '../utils/timezone';
+} from "../utils/timezone";
 
 const STATUS_LABELS = {
-  completed: 'FT',
-  ongoing: 'Live',
-  upcoming: 'Upcoming',
-  past: 'Awaiting result',
+  completed: "FT",
+  ongoing: "Live",
+  upcoming: "Upcoming",
+  past: "Awaiting result",
 };
 
-const GOAL_EMOJI = '⚽';
+const GOAL_EMOJI = "⚽";
 
 function FixtureCard({
   fixture,
@@ -37,22 +43,24 @@ function FixtureCard({
   const cards = fixture.cards ?? [];
   const { home: homeGoals, away: awayGoals } = getGoalsBySide(goals);
   const { home: homeCards, away: awayCards } = getCardsBySide(cards);
-  const showMatchEvents = status === 'completed' || status === 'ongoing';
+  const showMatchEvents = status === "completed" || status === "ongoing";
   const showScorers = showMatchEvents && goals.length > 0;
   const showCards = showMatchEvents && cards.length > 0;
 
   return (
     <article
       className={`fixture-card fixture-card--${status}${
-        showDate ? ' fixture-card--show-date' : ''
-      }${stackedLayout ? ' fixture-card--stacked' : ''}`}
+        showDate ? " fixture-card--show-date" : ""
+      }${stackedLayout ? " fixture-card--stacked" : ""}`}
     >
       <div className="fixture-meta">
         <div className="fixture-meta-tags">
           {fixture.isKnockout && fixture.knockoutTag && (
-            <span className="fixture-group fixture-knockout-tag">
-              {fixture.knockoutTag}
-            </span>
+            <KnockoutMatchLabel
+              tag={fixture.knockoutTag}
+              matchId={fixture.id}
+              className="fixture-knockout-label"
+            />
           )}
           {showGroup && fixture.group && (
             <span className="fixture-group">Group {fixture.group}</span>
@@ -65,7 +73,7 @@ function FixtureCard({
           {showDate && (
             <>
               {formatFixtureDate(fixture, timeZone)}
-              {' · '}
+              {" · "}
             </>
           )}
           {formatFixtureTime(fixture, timeZone)}
@@ -95,7 +103,7 @@ function FixtureCard({
                 <li key={`${goal.scorer}-${goal.minute}`}>
                   <span className="fixture-goal-emoji" aria-hidden="true">
                     {GOAL_EMOJI}
-                  </span>{' '}
+                  </span>{" "}
                   {goal.minute}&apos; {goal.scorer}
                 </li>
               ))}
@@ -151,7 +159,7 @@ function FixtureCard({
             >
               {awayGoals.map((goal) => (
                 <li key={`${goal.scorer}-${goal.minute}`}>
-                  {goal.scorer} {goal.minute}&apos;{' '}
+                  {goal.scorer} {goal.minute}&apos;{" "}
                   <span className="fixture-goal-emoji" aria-hidden="true">
                     {GOAL_EMOJI}
                   </span>
@@ -170,8 +178,7 @@ function FixtureCard({
                 return (
                   <li key={`${card.type}-${player ?? index}-${index}`}>
                     {player ?? label}
-                    {card.minute != null && <> {card.minute}&apos;</>}
-                    {' '}
+                    {card.minute != null && <> {card.minute}&apos;</>}{" "}
                     <span className="fixture-card-emoji" aria-hidden="true">
                       {emoji}
                     </span>
