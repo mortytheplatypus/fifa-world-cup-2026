@@ -18,6 +18,38 @@ export function getGoalsBySide(goals = []) {
   };
 }
 
+export const CARD_DISPLAY = {
+  yellow: { emoji: '🟨', label: 'Yellow' },
+  secondYellow: { emoji: '🟨', label: '2nd yellow' },
+  directRed: { emoji: '🟥', label: 'Direct red' },
+  yellowAndDirectRed: { emoji: '🟨🟥', label: 'YC + direct red' },
+};
+
+export function getCardDisplay(card) {
+  return CARD_DISPLAY[card.type] ?? { emoji: '🟨', label: card.type };
+}
+
+export function getCardPlayerName(card) {
+  return card.player ?? card.scorer ?? card.name ?? null;
+}
+
+export function sortCards(cards = []) {
+  return [...cards].sort((a, b) => {
+    const aKey = a.minute != null ? goalMinuteSortKey(a.minute) : Number.MAX_SAFE_INTEGER;
+    const bKey = b.minute != null ? goalMinuteSortKey(b.minute) : Number.MAX_SAFE_INTEGER;
+    return aKey - bKey;
+  });
+}
+
+export function getCardsBySide(cards = []) {
+  const sorted = sortCards(cards);
+
+  return {
+    home: sorted.filter((card) => card.team === 'home'),
+    away: sorted.filter((card) => card.team === 'away'),
+  };
+}
+
 export function applyMatchResults(fixturesByGroup, results) {
   const matchResults = results?.matches ?? {};
 
