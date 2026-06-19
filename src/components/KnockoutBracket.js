@@ -5,6 +5,7 @@ import {
   KNOCKOUT_ROUND_LABELS,
   KNOCKOUT_ROUND_VIEWS,
   getKnockoutMatchTag,
+  formatKnockoutMatchDate,
   resolveKnockoutMatch,
 } from '../utils/knockout';
 import { isKnockoutTeamsRevealed } from '../utils/knockoutConfig';
@@ -29,11 +30,23 @@ function KnockoutMatchCard({ matchId, standingsByGroup, compact }) {
   if (!match) return null;
 
   const tag = getKnockoutMatchTag(match.id);
+  const dateLabel = formatKnockoutMatchDate(match.date);
 
   return (
-    <div className={`knockout-match${compact ? ' knockout-match--compact' : ''}`}>
+    <div
+      className={`knockout-match knockout-match--${match.round}${
+        compact ? ' knockout-match--compact' : ''
+      }`}
+    >
       <div className="knockout-match-header">
-        <span className="knockout-match-id">{match.id}</span>
+        <div className="knockout-match-meta">
+          <span className="knockout-match-id">{match.id}</span>
+          {dateLabel && (
+            <time className="knockout-match-date" dateTime={match.date}>
+              {dateLabel}
+            </time>
+          )}
+        </div>
         {tag && <span className="knockout-match-tag">{tag}</span>}
       </div>
       <div className="knockout-match-teams">

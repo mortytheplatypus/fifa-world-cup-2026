@@ -74,6 +74,42 @@ export const KNOCKOUT_MATCHES = {
   M104: { id: 'M104', round: 'final', teamA: winnerOf('M101'), teamB: winnerOf('M102') },
 };
 
+/** Official schedule dates (YYYY-MM-DD) for knockout matches M73–M104. */
+const KNOCKOUT_MATCH_DATES = {
+  M73: '2026-06-28',
+  M74: '2026-06-29',
+  M75: '2026-06-29',
+  M76: '2026-06-29',
+  M77: '2026-06-30',
+  M78: '2026-06-30',
+  M79: '2026-06-30',
+  M80: '2026-07-01',
+  M81: '2026-07-01',
+  M82: '2026-07-01',
+  M83: '2026-07-02',
+  M84: '2026-07-02',
+  M85: '2026-07-02',
+  M86: '2026-07-03',
+  M87: '2026-07-03',
+  M88: '2026-07-03',
+  M89: '2026-07-04',
+  M90: '2026-07-04',
+  M91: '2026-07-05',
+  M92: '2026-07-05',
+  M93: '2026-07-06',
+  M94: '2026-07-06',
+  M95: '2026-07-07',
+  M96: '2026-07-07',
+  M97: '2026-07-09',
+  M98: '2026-07-10',
+  M99: '2026-07-11',
+  M100: '2026-07-11',
+  M101: '2026-07-14',
+  M102: '2026-07-15',
+  M103: '2026-07-18',
+  M104: '2026-07-19',
+};
+
 const R32_MATCH_ORDER = [
   'M73', 'M74', 'M75', 'M76', 'M77', 'M78', 'M79', 'M80',
   'M81', 'M82', 'M83', 'M84', 'M85', 'M86', 'M87', 'M88',
@@ -94,6 +130,24 @@ export const KNOCKOUT_MATCH_TAGS = Object.fromEntries([
 
 export function getKnockoutMatchTag(matchId) {
   return KNOCKOUT_MATCH_TAGS[matchId] ?? null;
+}
+
+export function formatKnockoutMatchDate(dateKey) {
+  if (!dateKey) {
+    return null;
+  }
+
+  const [year, month, day] = dateKey.split('-').map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+  const dayPart = String(day).padStart(2, '0');
+  const monthPart = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'UTC',
+    month: 'short',
+  })
+    .format(date)
+    .toUpperCase();
+
+  return `${dayPart} ${monthPart}`;
 }
 
 /**
@@ -200,6 +254,7 @@ export function resolveKnockoutMatch(matchId, standingsByGroup, options = {}) {
 
   return {
     ...match,
+    date: KNOCKOUT_MATCH_DATES[matchId] ?? null,
     resolvedA: resolveKnockoutSlot(match.teamA, standingsByGroup, options),
     resolvedB: resolveKnockoutSlot(match.teamB, standingsByGroup, options),
   };
