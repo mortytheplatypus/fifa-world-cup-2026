@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { writeVisitCountCache } from '../utils/visitCountCache';
 
 const VISIT_RECORDED_KEY = 'visit_recorded';
 export const VISITOR_COUNT_UPDATED = 'visitor-count-updated';
@@ -11,27 +12,60 @@ function dispatchVisitorCountUpdated(total) {
   );
 }
 
+async function fetchVisitCount() {
+  const response = await fetch(`${API_BASE}/api/visitors`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch visit count');
+  }
+
+  const { total } = await response.json();
+  writeVisitCountCache(total);
+  dispatchVisitorCountUpdated(total);
+  return total;
+}
+
+async function recordNewVisit() {
+  const response = await fetch(`${API_BASE}/api/visitors`, {
+    method: 'POST',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to record visit');
+  }
+
+  const { total } = await response.json();
+  sessionStorage.setItem(VISIT_RECORDED_KEY, '1');
+  writeVisitCountCache(total);
+  dispatchVisitorCountUpdated(total);
+  return total;
+}
+
 export function useVisitTracker() {
   useEffect(() => {
-    if (sessionStorage.getItem(VISIT_RECORDED_KEY)) {
-      return;
-    }
+    let cancelled = false;
 
-    const recordVisit = async () => {
+    const run = async () => {
       try {
-        const response = await fetch(`${API_BASE}/api/visitors`, {
-          method: 'POST',
-        });
-        if (!response.ok) return;
+        if (sessionStorage.getItem(VISIT_RECORDED_KEY)) {
+          await fetchVisitCount();
+          return;
+        }
 
-        const { total } = await response.json();
-        sessionStorage.setItem(VISIT_RECORDED_KEY, '1');
-        dispatchVisitorCountUpdated(total);
+        await recordNewVisit();
       } catch {
-        // Counter still works via GET if recording fails.
+        if (cancelled) return;
+
+        try {
+          await fetchVisitCount();
+        } catch {
+          // Cached count remains available for settings display.
+        }
       }
     };
 
-    recordVisit();
+    run();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 }
