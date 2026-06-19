@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
 import { fetchTeams, getTeamDisplayName } from '../utils/data';
 import { THEME_OPTIONS } from '../utils/themes';
+import VisitorCounter from './VisitorCounter';
 
 const THEME_LABELS = {
   [THEME_OPTIONS.DARK]: 'Dark',
@@ -171,6 +172,10 @@ function SettingsModal({ onClose }) {
               ))}
             </select>
           </label>
+        </div>
+
+        <div className="settings-modal-footer">
+          <VisitorCounter />
         </div>
       </div>
   );
