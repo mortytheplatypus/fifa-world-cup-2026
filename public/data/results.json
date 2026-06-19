@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-19T05:09:17.206Z",
+  "lastUpdated": "2026-06-19T13:03:34.234Z",
   "matches": {
     "A-1": {
       "homeScore": 2,
@@ -17,12 +17,42 @@
         }
       ],
       "cards": [
-        { "team": "away", "type": "yellow" },
-        { "team": "home", "type": "yellow" },
-        { "team": "away", "type": "directRed" },
-        { "team": "away", "type": "yellow" },
-        { "team": "away", "type": "directRed" },
-        { "team": "home", "type": "directRed" }
+        {
+          "minute": "17",
+          "player": "Teboho Mokoena",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "23",
+          "player": "Brian Gutiérrez",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "49",
+          "player": "Sphephelo Sithole",
+          "team": "away",
+          "type": "directRed"
+        },
+        {
+          "minute": "74",
+          "player": "Nkosinathi Sibisi",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "84",
+          "player": "Themba Zwane",
+          "team": "away",
+          "type": "directRed"
+        },
+        {
+          "minute": "90+2",
+          "player": "César Montes",
+          "team": "home",
+          "type": "directRed"
+        }
       ]
     },
     "A-2": {
@@ -46,7 +76,12 @@
         }
       ],
       "cards": [
-        { "team": "home", "type": "yellow" }
+        {
+          "minute": "90+6",
+          "player": "Lee Gi-Hyuk",
+          "team": "home",
+          "type": "yellow"
+        }
       ]
     },
     "B-1": {
@@ -65,11 +100,36 @@
         }
       ],
       "cards": [
-        { "team": "home", "type": "yellow" },
-        { "team": "away", "type": "yellow" },
-        { "team": "away", "type": "yellow" },
-        { "team": "home", "type": "yellow" },
-        { "team": "away", "type": "yellow" }
+        {
+          "minute": "11",
+          "player": "Alistair Johnston",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "45",
+          "player": "Ermedin Demirovic",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "45+1",
+          "player": "Jovo Lukic",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "53",
+          "player": "Luc de Fougerolles",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+3",
+          "player": "Nikola Katic",
+          "team": "away",
+          "type": "yellow"
+        }
       ]
     },
     "D-1": {
@@ -103,12 +163,42 @@
         }
       ],
       "cards": [
-        { "team": "away", "type": "yellow" },
-        { "team": "away", "type": "yellow" },
-        { "team": "home", "type": "yellow" },
-        { "team": "away", "type": "yellow" },
-        { "team": "away", "type": "yellow" },
-        { "team": "away", "type": "yellow" }
+        {
+          "minute": "10",
+          "player": "Juan Jose Cáceres",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "53",
+          "player": "Miguel Almirón",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "59",
+          "player": "Tyler Adams",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "79",
+          "player": "Diego Gómez",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "88",
+          "player": "Alex Arce",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+3",
+          "player": "Júnior Alonso",
+          "team": "away",
+          "type": "yellow"
+        }
       ]
     },
     "C-1": {
@@ -127,8 +217,18 @@
         }
       ],
       "cards": [
-        { "team": "home", "type": "yellow" },
-        { "team": "home", "type": "yellow" }
+        {
+          "minute": "37",
+          "player": "Casemiro",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "43",
+          "player": "Roger Ibañez",
+          "team": "home",
+          "type": "yellow"
+        }
       ]
     },
     "C-2": {
@@ -142,10 +242,30 @@
         }
       ],
       "cards": [
-        { "team": "home", "type": "yellow" },
-        { "team": "away", "type": "yellow" },
-        { "team": "away", "type": "yellow" },
-        { "team": "away", "type": "yellow" }
+        {
+          "minute": "39",
+          "player": "Jean-Ricner Bellegarde",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "46",
+          "player": "Aaron Hickey",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+1",
+          "player": "Findlay Curtis",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+5",
+          "player": "Kenny McLean",
+          "team": "away",
+          "type": "yellow"
+        }
       ]
     },
     "B-2": {
@@ -164,9 +284,24 @@
         }
       ],
       "cards": [
-        { "team": "home", "type": "yellow" },
-        { "team": "home", "type": "yellow" },
-        { "team": "away", "type": "yellow" }
+        {
+          "minute": "16",
+          "player": "Mahmoud Abunada",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "23",
+          "player": "Jassem Gaber",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "42",
+          "player": "Denis Zakaria",
+          "team": "away",
+          "type": "yellow"
+        }
       ]
     },
     "D-2": {
@@ -185,7 +320,12 @@
         }
       ],
       "cards": [
-        { "team": "away", "type": "yellow" }
+        {
+          "minute": "86",
+          "player": "Yunus Akgün",
+          "team": "away",
+          "type": "yellow"
+        }
       ]
     },
     "F-2": {
@@ -224,7 +364,12 @@
         }
       ],
       "cards": [
-        { "team": "away", "type": "yellow" }
+        {
+          "minute": "54",
+          "player": "Rani Khedira",
+          "team": "away",
+          "type": "yellow"
+        }
       ]
     },
     "E-2": {
@@ -238,10 +383,30 @@
         }
       ],
       "cards": [
-        { "team": "home", "type": "yellow" },
-        { "team": "home", "type": "yellow" },
-        { "team": "home", "type": "yellow" },
-        { "team": "away", "type": "yellow" }
+        {
+          "minute": "28",
+          "player": "Seko Fofana",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "38",
+          "player": "Franck Kessié",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "40",
+          "player": "Guela Doué",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "73",
+          "player": "Jackson Porozo",
+          "team": "away",
+          "type": "yellow"
+        }
       ]
     },
     "E-1": {
@@ -316,9 +481,42 @@
         }
       ],
       "cards": [
-        { "team": "home", "type": "yellow" },
-        { "team": "home", "type": "yellow" },
-        { "team": "home", "type": "yellow" }
+        {
+          "minute": "61",
+          "player": "Crysencio Summerville",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "83",
+          "player": "Memphis Depay",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+1",
+          "player": "Micky van de Ven",
+          "team": "home",
+          "type": "yellow"
+        }
+      ]
+    },
+    "H-1": {
+      "homeScore": 0,
+      "awayScore": 0,
+      "cards": [
+        {
+          "minute": "16",
+          "player": "Sidny Lopes Cabral",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+3",
+          "player": "Pedri",
+          "team": "home",
+          "type": "yellow"
+        }
       ]
     },
     "G-1": {
@@ -337,10 +535,54 @@
         }
       ],
       "cards": [
-        { "team": "away", "type": "yellow" },
-        { "team": "home", "type": "yellow" },
-        { "team": "away", "type": "yellow" },
-        { "team": "home", "type": "yellow" }
+        {
+          "minute": "13",
+          "player": "Marawan Attia",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "14",
+          "player": "Timothy Castagne",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "34",
+          "player": "Ahmed Fatouh",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "75",
+          "player": "Maxim De Cuyper",
+          "team": "home",
+          "type": "yellow"
+        }
+      ]
+    },
+    "H-2": {
+      "homeScore": 1,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "41",
+          "scorer": "Abdulelah Al-Amri",
+          "team": "home"
+        },
+        {
+          "minute": "80",
+          "scorer": "Maxi Araújo",
+          "team": "away"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "44",
+          "player": "Abdulelah Al-Amri",
+          "team": "home",
+          "type": "yellow"
+        }
       ]
     },
     "G-2": {
@@ -369,34 +611,12 @@
         }
       ],
       "cards": [
-        { "team": "home", "type": "yellow" }
-      ]
-    },
-    "H-1": {
-      "homeScore": 0,
-      "awayScore": 0,
-      "cards": [
-        { "team": "away", "type": "yellow" },
-        { "team": "home", "type": "yellow" }
-      ]
-    },
-    "H-2": {
-      "homeScore": 1,
-      "awayScore": 1,
-      "goals": [
         {
-          "minute": "41",
-          "scorer": "Abdulelah Al-Amri",
-          "team": "home"
-        },
-        {
-          "minute": "80",
-          "scorer": "Maxi Araújo",
-          "team": "away"
+          "minute": "89",
+          "player": "Ehsan Hajsafi",
+          "team": "home",
+          "type": "yellow"
         }
-      ],
-      "cards": [
-        { "team": "home", "type": "yellow" }
       ]
     },
     "I-1": {
@@ -475,6 +695,14 @@
           "scorer": "(OG) Aymen Hussein",
           "team": "away"
         }
+      ],
+      "cards": [
+        {
+          "minute": "86",
+          "player": "Zaid Tahseen",
+          "team": "home",
+          "type": "yellow"
+        }
       ]
     },
     "J-2": {
@@ -501,6 +729,14 @@
           "scorer": "Marko Arnautović",
           "team": "home"
         }
+      ],
+      "cards": [
+        {
+          "minute": "77",
+          "player": "Marcel Sabitzer",
+          "team": "home",
+          "type": "yellow"
+        }
       ]
     },
     "K-1": {
@@ -516,6 +752,32 @@
           "minute": "45+5",
           "scorer": "Yoane Wissa",
           "team": "away"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "13",
+          "player": "Bernardo Silva",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "32",
+          "player": "Chancel Mbemba",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "88",
+          "player": "Nélson Semedo",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+2",
+          "player": "Tomás Araújo",
+          "team": "home",
+          "type": "yellow"
         }
       ]
     },
@@ -564,6 +826,26 @@
           "scorer": "Caleb Yirenkyi",
           "team": "home"
         }
+      ],
+      "cards": [
+        {
+          "minute": "16",
+          "player": "Caleb Yirenkyi",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "72",
+          "player": "César Blackman",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+9",
+          "player": "Carlos Harvey",
+          "team": "away",
+          "type": "yellow"
+        }
       ]
     },
     "K-2": {
@@ -590,6 +872,20 @@
           "scorer": "Jaminton Campaz",
           "team": "away"
         }
+      ],
+      "cards": [
+        {
+          "minute": "7",
+          "player": "Johan Mojica",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "34",
+          "player": "Abdukodir Khusanov",
+          "team": "home",
+          "type": "yellow"
+        }
       ]
     },
     "A-4": {
@@ -606,6 +902,26 @@
           "scorer": "Teboho Mokoena (P)",
           "team": "home"
         }
+      ],
+      "cards": [
+        {
+          "minute": "33",
+          "player": "Teboho Mokoena",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "40",
+          "player": "Thalente Mbatha",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "75",
+          "player": "Ladislav Krejcí",
+          "team": "away",
+          "type": "yellow"
+        }
       ]
     },
     "A-3": {
@@ -616,6 +932,20 @@
           "minute": "50",
           "scorer": "Luis Romo",
           "team": "home"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "4",
+          "player": "Lee Kang-In",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "58",
+          "player": "Paik Seung-Ho",
+          "team": "away",
+          "type": "yellow"
         }
       ]
     },
@@ -647,6 +977,32 @@
           "minute": "90+7",
           "scorer": "Granit Xhaka (P)",
           "team": "home"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "59",
+          "player": "Amar Dedic",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "61",
+          "player": "Edin Dzeko",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "65",
+          "player": "Nico Elvedi",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "80",
+          "player": "Tarik Muharemovic",
+          "team": "away",
+          "type": "directRed"
         }
       ]
     },
@@ -683,6 +1039,32 @@
           "minute": "90+2",
           "scorer": "Jonathan David",
           "team": "home"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "9",
+          "player": "Derek Cornelius",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "33",
+          "player": "Homam Ahmed",
+          "team": "away",
+          "type": "directRed"
+        },
+        {
+          "minute": "53",
+          "player": "Assim Madibo",
+          "team": "away",
+          "type": "directRed"
+        },
+        {
+          "minute": "62",
+          "player": "Ahmed Fathy",
+          "team": "away",
+          "type": "yellow"
         }
       ]
     }
