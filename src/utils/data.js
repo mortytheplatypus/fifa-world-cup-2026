@@ -2,9 +2,19 @@ export const GROUP_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 
 const API_BASE = process.env.REACT_APP_API_URL ?? '';
 
+const STATIC_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // teams & fixtures
 const DEFAULT_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
+const CACHE_TTL_BY_KEY = {
+  teams: STATIC_CACHE_TTL_MS,
+  fixtures: STATIC_CACHE_TTL_MS,
+};
+
 const cache = new Map();
+
+function getCacheTtl(key) {
+  return CACHE_TTL_BY_KEY[key] ?? DEFAULT_CACHE_TTL_MS;
+}
 
 function getCached(key) {
   const entry = cache.get(key);
@@ -29,7 +39,7 @@ async function fetchData(key) {
     return response.json();
   });
 
-  cache.set(key, { promise, expiresAt: Date.now() + DEFAULT_CACHE_TTL_MS });
+  cache.set(key, { promise, expiresAt: Date.now() + getCacheTtl(key) });
   promise.catch(() => cache.delete(key));
 
   return promise;
@@ -68,7 +78,7 @@ export function getTeamById(teams, id) {
 const TEAM_DISPLAY_NAMES = {
   'Bosnia and Herzegovina': 'Bosnia H',
   'South Korea': 'S Korea',
-  'Saudi Arabia': 'S Arabia',
+  'Saudi Arabia': 'Saudi',
   'United States': 'USA',
   'South Africa': 'S Africa',
 };

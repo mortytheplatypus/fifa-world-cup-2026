@@ -82,6 +82,8 @@ function GroupPage() {
           <StandingsTable
             groupId={groupId}
             standings={standings}
+            fixtures={fixtures[groupId] ?? []}
+            showConduct
             embedded
           />
         </div>

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
 import { fetchTeams, getTeamDisplayName } from '../utils/data';
 import { THEME_OPTIONS } from '../utils/themes';
+import VisitorCounter from './VisitorCounter';
 
 const THEME_LABELS = {
   [THEME_OPTIONS.DARK]: 'Dark',
@@ -10,7 +11,7 @@ const THEME_LABELS = {
   [THEME_OPTIONS.TEAM]: 'Favorite Team',
 };
 
-function SettingsModal({ onClose, buttonRef }) {
+function SettingsModal({ onClose }) {
   const {
     theme,
     setTheme,
@@ -58,7 +59,10 @@ function SettingsModal({ onClose, buttonRef }) {
         return;
       }
 
-      if (buttonRef?.current?.contains(event.target)) {
+      if (
+        event.target instanceof Element &&
+        event.target.closest('.settings-dropdown')
+      ) {
         return;
       }
 
@@ -71,7 +75,6 @@ function SettingsModal({ onClose, buttonRef }) {
       }
 
       onClose();
-      buttonRef?.current?.blur();
     }
 
     document.addEventListener('keydown', handleKeyDown);
@@ -92,7 +95,7 @@ function SettingsModal({ onClose, buttonRef }) {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('click', handleClickOutside);
     };
-  }, [isModalOpen, onClose, buttonRef]);
+  }, [isModalOpen, onClose]);
 
   if (!isModalOpen) {
     return null;
@@ -170,13 +173,16 @@ function SettingsModal({ onClose, buttonRef }) {
             </select>
           </label>
         </div>
+
+        <div className="settings-modal-footer">
+          <VisitorCounter />
+        </div>
       </div>
   );
 }
 
 SettingsModal.propTypes = {
   onClose: PropTypes.func.isRequired,
-  buttonRef: PropTypes.shape({ current: PropTypes.any }),
 };
 
 export default SettingsModal;

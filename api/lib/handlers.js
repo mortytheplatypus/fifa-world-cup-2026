@@ -8,12 +8,13 @@ async function getTeams() {
     .sort({ group: 1, name: 1 })
     .toArray();
 
-  return teams.map(({ _id, name, group, flagCode, colors }) => ({
+  return teams.map(({ _id, name, group, flagCode, colors, fifaRankingPreWc }) => ({
     id: _id,
     name,
     group,
     flagCode,
     ...(colors?.length ? { colors } : {}),
+    ...(fifaRankingPreWc != null ? { fifaRankingPreWc } : {}),
   }));
 }
 
@@ -46,11 +47,12 @@ async function getResults() {
   let lastUpdated = null;
 
   for (const result of results) {
-    const { _id, updatedAt, homeScore, awayScore, goals } = result;
+    const { _id, updatedAt, homeScore, awayScore, goals, cards } = result;
     matches[_id] = {
       homeScore,
       awayScore,
       ...(goals?.length ? { goals } : {}),
+      ...(cards?.length ? { cards } : {}),
     };
 
     if (updatedAt && (!lastUpdated || updatedAt > lastUpdated)) {

@@ -4,7 +4,7 @@ import { useNow } from '../hooks/useNow';
 import { getTeamDisplayName } from '../utils/data';
 import { fixtureShape, teamShape } from '../propTypes';
 import { getFixtureStatus } from '../utils/fixtures';
-import { getGoalsBySide } from '../utils/results';
+import { getCardDisplay, getCardPlayerName, getCardsBySide, getGoalsBySide } from '../utils/results';
 import {
   formatFixtureDate,
   formatFixtureTime,
@@ -34,9 +34,12 @@ function FixtureCard({
   const isoDateTime = instant.toISOString();
   const status = getFixtureStatus(fixture, now);
   const goals = fixture.goals ?? [];
+  const cards = fixture.cards ?? [];
   const { home: homeGoals, away: awayGoals } = getGoalsBySide(goals);
-  const showScorers =
-    (status === 'completed' || status === 'ongoing') && goals.length > 0;
+  const { home: homeCards, away: awayCards } = getCardsBySide(cards);
+  const showMatchEvents = status === 'completed' || status === 'ongoing';
+  const showScorers = showMatchEvents && goals.length > 0;
+  const showCards = showMatchEvents && cards.length > 0;
 
   return (
     <article
@@ -93,6 +96,26 @@ function FixtureCard({
               ))}
             </ul>
           )}
+          {showCards && homeCards.length > 0 && (
+            <ul
+              className="fixture-team-cards fixture-team-cards--home"
+              aria-label={`${homeTeam.name} cards`}
+            >
+              {homeCards.map((card, index) => {
+                const { emoji, label } = getCardDisplay(card);
+                const player = getCardPlayerName(card);
+                return (
+                  <li key={`${card.type}-${player ?? index}-${index}`}>
+                    <span className="fixture-card-emoji" aria-hidden="true">
+                      {emoji}
+                    </span>
+                    {card.minute != null && <> {card.minute}&apos;</>}
+                    {player ? <> {player}</> : <> {label}</>}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
 
         {fixture.homeScore != null && fixture.awayScore != null ? (
@@ -129,6 +152,27 @@ function FixtureCard({
                   </span>
                 </li>
               ))}
+            </ul>
+          )}
+          {showCards && awayCards.length > 0 && (
+            <ul
+              className="fixture-team-cards fixture-team-cards--away"
+              aria-label={`${awayTeam.name} cards`}
+            >
+              {awayCards.map((card, index) => {
+                const { emoji, label } = getCardDisplay(card);
+                const player = getCardPlayerName(card);
+                return (
+                  <li key={`${card.type}-${player ?? index}-${index}`}>
+                    {player ?? label}
+                    {card.minute != null && <> {card.minute}&apos;</>}
+                    {' '}
+                    <span className="fixture-card-emoji" aria-hidden="true">
+                      {emoji}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>

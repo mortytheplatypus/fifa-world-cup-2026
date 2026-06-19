@@ -13,6 +13,7 @@ import {
   filterFixturesByTeam,
   formatDateHeading,
   getDateKeys,
+  getDayFixturesDisplayOrder,
   getDefaultDateIndex,
   groupFixturesByDate,
 } from '../utils/fixtures';
@@ -70,7 +71,7 @@ function FixturesPage() {
   const currentDate = dates[currentDateIndex];
   const visibleFixtures = showAllDates
     ? null
-    : [...(fixturesByDate[currentDate] ?? [])].reverse();
+    : getDayFixturesDisplayOrder(fixturesByDate[currentDate] ?? []);
   const isGroupFiltered = selectedGroup !== 'all';
 
   function handleGroupChange(event) {

@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { GroupActivityBadges } from './GroupActivityBadge';
-import { groupIdType } from '../propTypes';
+import { fixtureShape, groupIdType } from '../propTypes';
 import { getTeamDisplayName } from '../utils/data';
 import { THIRD_PLACE_HINT } from '../utils/qualification';
+import { computeConductScore } from '../utils/standings';
 
 const activityShape = PropTypes.shape({
   variant: PropTypes.oneOf(['upcoming', 'results', 'live']).isRequired,
@@ -34,6 +35,8 @@ function StandingsTable({
   embedded,
   activities = [],
   showQualification = false,
+  showConduct = false,
+  fixtures = [],
 }) {
   const heading = title ?? `Group ${groupId}`;
   const titleContent = (
@@ -71,10 +74,24 @@ function StandingsTable({
               <th scope="col">GA</th>
               <th scope="col">GD</th>
               <th scope="col" className="standings-col-pts">Pts</th>
+              {showConduct && (
+                <th
+                  scope="col"
+                  className="standings-col-conduct"
+                  title="Fair play conduct score (tie-breaker)"
+                >
+                  Conduct
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
-            {standings.map((row, index) => (
+            {standings.map((row, index) => {
+              const conductScore = showConduct
+                ? computeConductScore(row.team.id, fixtures)
+                : null;
+
+              return (
               <tr
                 key={row.team.id}
                 className={getQualificationRowClass(index, showQualification)}
@@ -108,8 +125,20 @@ function StandingsTable({
                   {row.goalDifference > 0 ? `+${row.goalDifference}` : row.goalDifference}
                 </td>
                 <td className="standings-col-pts">{row.points}</td>
+                {showConduct && (
+                  <td
+                    className={
+                      conductScore < 0
+                        ? 'standings-col-conduct standings-negative'
+                        : 'standings-col-conduct'
+                    }
+                  >
+                    {conductScore}
+                  </td>
+                )}
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -123,6 +152,8 @@ StandingsTable.propTypes = {
   embedded: PropTypes.bool,
   activities: PropTypes.arrayOf(activityShape),
   showQualification: PropTypes.bool,
+  showConduct: PropTypes.bool,
+  fixtures: PropTypes.arrayOf(fixtureShape),
   standings: PropTypes.arrayOf(
     PropTypes.shape({
       team: PropTypes.shape({

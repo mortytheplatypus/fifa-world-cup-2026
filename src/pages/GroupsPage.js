@@ -6,6 +6,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { useSettings } from '../context/SettingsContext';
 import { useTimezone } from '../context/TimezoneContext';
 import { useGroupsData } from '../hooks/useGroupsData';
+import { useNow } from '../hooks/useNow';
 import { getTeamById, GROUP_LETTERS, getTeamDisplayName } from '../utils/data';
 import {
   filterGroupsByActivity,
@@ -17,12 +18,13 @@ function GroupsPage() {
   const { timeZone } = useTimezone();
   const { favoriteTeamId } = useSettings();
   const { teams, groupedTeams, fixtures, loading, error } = useGroupsData();
+  const now = useNow(30000);
   const [teamFilter, setTeamFilter] = useState('all');
   const [activityFilter, setActivityFilter] = useState('all');
 
   const groupActivity = useMemo(
-    () => getGroupActivityIndicators(fixtures, timeZone),
-    [fixtures, timeZone]
+    () => getGroupActivityIndicators(fixtures, timeZone, now),
+    [fixtures, timeZone, now]
   );
 
   const favoriteTeamName = favoriteTeamId

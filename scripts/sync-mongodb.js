@@ -39,7 +39,7 @@ async function syncTeams(collection) {
   let count = 0;
 
   for (const team of teams) {
-    const { id, name, group, flagCode, colors } = team;
+    const { id, name, group, flagCode, colors, fifaRankingPreWc } = team;
 
     await collection.replaceOne(
       { _id: id },
@@ -49,6 +49,7 @@ async function syncTeams(collection) {
         group,
         flagCode,
         ...(colors?.length ? { colors } : {}),
+        ...(fifaRankingPreWc != null ? { fifaRankingPreWc } : {}),
       },
       { upsert: true }
     );
@@ -95,7 +96,7 @@ async function syncResults(collection) {
   let count = 0;
 
   for (const [id, result] of Object.entries(data.matches ?? {})) {
-    const { homeScore, awayScore, goals } = result;
+    const { homeScore, awayScore, goals, cards } = result;
 
     await collection.replaceOne(
       { _id: id },
@@ -104,6 +105,7 @@ async function syncResults(collection) {
         homeScore,
         awayScore,
         ...(goals?.length ? { goals } : {}),
+        ...(cards?.length ? { cards } : {}),
         updatedAt,
       },
       { upsert: true }
