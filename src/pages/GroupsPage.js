@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import FavoriteTeamFilter from '../components/FavoriteTeamFilter';
 import GroupActivityFilter from '../components/GroupActivityFilter';
 import GroupGridCard from '../components/GroupGridCard';
+import GroupsPageToolbar from '../components/GroupsPageToolbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useSettings } from '../context/SettingsContext';
 import { useTimezone } from '../context/TimezoneContext';
@@ -51,23 +52,19 @@ function GroupsPage() {
   }
 
   return (
-    <section className="page groups-page">
-      <header className="groups-page-header">
-        <h1>Groups</h1>
+    <>
+      <GroupsPageToolbar>
+        <GroupActivityFilter
+          value={activityFilter}
+          onChange={(event) => setActivityFilter(event.target.value)}
+        />
 
-        <div className="fixtures-controls">
-          <GroupActivityFilter
-            value={activityFilter}
-            onChange={(event) => setActivityFilter(event.target.value)}
-          />
-
-          <FavoriteTeamFilter
-            teamName={favoriteTeamName}
-            value={teamFilter}
-            onChange={(event) => setTeamFilter(event.target.value)}
-          />
-        </div>
-      </header>
+        <FavoriteTeamFilter
+          teamName={favoriteTeamName}
+          value={teamFilter}
+          onChange={(event) => setTeamFilter(event.target.value)}
+        />
+      </GroupsPageToolbar>
 
       {visibleGroups.length === 0 ? (
         <p className="status-message groups-empty">
@@ -85,7 +82,7 @@ function GroupsPage() {
           ))}
         </div>
       )}
-    </section>
+    </>
   );
 }
 

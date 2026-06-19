@@ -157,17 +157,14 @@ function MobileHeaderMenu({ isOpen, onToggle, onClose }) {
             <NavLink to="/" end className="site-mobile-nav-link" onClick={onClose}>
               Home
             </NavLink>
-            <NavLink to="/groups" className="site-mobile-nav-link" onClick={onClose}>
-              Groups
+            <NavLink to="/knockout" className="site-mobile-nav-link" onClick={onClose}>
+              Knockout
             </NavLink>
             <NavLink to="/fixtures" className="site-mobile-nav-link" onClick={onClose}>
               Fixtures
             </NavLink>
-            <NavLink to="/tables" className="site-mobile-nav-link" onClick={onClose}>
-              Tables
-            </NavLink>
-            <NavLink to="/knockout" className="site-mobile-nav-link" onClick={onClose}>
-              Knockout
+            <NavLink to="/groups" className="site-mobile-nav-link" onClick={onClose}>
+              Groups
             </NavLink>
           </nav>
 

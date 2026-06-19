@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { QUALIFICATION_DETAILS } from '../utils/qualification';
 
 function InfoIcon() {
@@ -25,9 +25,53 @@ function InfoIcon() {
 
 function QualificationInfo() {
   const [isOpen, setIsOpen] = useState(false);
+  const rootRef = useRef(null);
+  const panelRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    const root = rootRef.current;
+
+    if (!panel || !root) {
+      return undefined;
+    }
+
+    function positionPanel() {
+      if (!window.matchMedia('(max-width: 768px)').matches || !isOpen) {
+        panel.style.removeProperty('--panel-offset-x');
+        return;
+      }
+
+      const trigger = root.getBoundingClientRect();
+      const margin = 16;
+      const panelWidth = panel.offsetWidth;
+      let offsetX = 0;
+
+      if (trigger.left + panelWidth > window.innerWidth - margin) {
+        offsetX = window.innerWidth - margin - panelWidth - trigger.left;
+      }
+
+      if (trigger.left + offsetX < margin) {
+        offsetX = margin - trigger.left;
+      }
+
+      panel.style.setProperty('--panel-offset-x', `${offsetX}px`);
+    }
+
+    positionPanel();
+    window.addEventListener('resize', positionPanel);
+
+    return () => {
+      window.removeEventListener('resize', positionPanel);
+      panel.style.removeProperty('--panel-offset-x');
+    };
+  }, [isOpen]);
 
   return (
-    <div className={`qualification-info${isOpen ? ' is-open' : ''}`}>
+    <div
+      ref={rootRef}
+      className={`qualification-info${isOpen ? ' is-open' : ''}`}
+    >
       <button
         type="button"
         className="qualification-info-trigger"
@@ -39,6 +83,7 @@ function QualificationInfo() {
         <InfoIcon />
       </button>
       <div
+        ref={panelRef}
         id="qualification-info-panel"
         role="tooltip"
         className="qualification-info-panel"

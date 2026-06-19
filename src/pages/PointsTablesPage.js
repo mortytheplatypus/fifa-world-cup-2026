@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import FavoriteTeamFilter from '../components/FavoriteTeamFilter';
 import GroupActivityFilter from '../components/GroupActivityFilter';
+import GroupsPageToolbar from '../components/GroupsPageToolbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import QualificationInfo from '../components/QualificationInfo';
 import StandingsTable from '../components/StandingsTable';
@@ -64,45 +65,42 @@ function PointsTablesPage() {
   }
 
   return (
-    <section className="page points-tables-page">
-      <header className="points-tables-header">
-        <div>
-          <h1>Points Tables</h1>
-          <div className="points-tables-subtitle-row">
-            <p className="page-subtitle">Group stage standings</p>
-            <QualificationInfo />
-          </div>
+    <div className="points-tables-page">
+      <GroupsPageToolbar>
+        <label className="fixtures-group-filter">
+          <span className="fixtures-group-filter-label">Group</span>
+          <select
+            className="fixtures-group-select"
+            value={selectedGroup}
+            onChange={handleGroupChange}
+          >
+            <option value="all">All groups</option>
+            {GROUP_LETTERS.map((letter) => (
+              <option key={letter} value={letter}>
+                Group {letter}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <FavoriteTeamFilter
+          teamName={favoriteTeamName}
+          value={teamFilter}
+          onChange={handleTeamFilterChange}
+        />
+
+        <GroupActivityFilter
+          value={activityFilter}
+          onChange={(event) => setActivityFilter(event.target.value)}
+        />
+      </GroupsPageToolbar>
+
+      <div className="points-tables-subtitle-row">
+        <div className="points-tables-subtitle-label">
+          <p className="page-subtitle">Group stage standings</p>
+          <QualificationInfo />
         </div>
-
-        <div className="fixtures-controls">
-          <label className="fixtures-group-filter">
-            <span className="fixtures-group-filter-label">Group</span>
-            <select
-              className="fixtures-group-select"
-              value={selectedGroup}
-              onChange={handleGroupChange}
-            >
-              <option value="all">All groups</option>
-              {GROUP_LETTERS.map((letter) => (
-                <option key={letter} value={letter}>
-                  Group {letter}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <FavoriteTeamFilter
-            teamName={favoriteTeamName}
-            value={teamFilter}
-            onChange={handleTeamFilterChange}
-          />
-
-          <GroupActivityFilter
-            value={activityFilter}
-            onChange={(event) => setActivityFilter(event.target.value)}
-          />
-        </div>
-      </header>
+      </div>
 
       {visibleGroups.length === 0 ? (
         <p className="status-message points-tables-empty">
@@ -121,7 +119,7 @@ function PointsTablesPage() {
           ))}
         </div>
       )}
-    </section>
+    </div>
   );
 }
 

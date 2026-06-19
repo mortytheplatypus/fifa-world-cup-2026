@@ -38,17 +38,14 @@ function Layout() {
           <NavLink to="/" end className="site-nav-link">
             Home
           </NavLink>
-          <NavLink to="/groups" className="site-nav-link">
-            Groups
+          <NavLink to="/knockout" className="site-nav-link">
+            Knockout
           </NavLink>
           <NavLink to="/fixtures" className="site-nav-link">
             Fixtures
           </NavLink>
-          <NavLink to="/tables" className="site-nav-link">
-            Tables
-          </NavLink>
-          <NavLink to="/knockout" className="site-nav-link">
-            Knockout
+          <NavLink to="/groups" className="site-nav-link">
+            Groups
           </NavLink>
         </nav>
 
