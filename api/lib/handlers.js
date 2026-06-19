@@ -66,6 +66,38 @@ async function getResults() {
   };
 }
 
+function formatKnockoutDocument(doc) {
+  const {
+    _id,
+    updatedAt,
+    date,
+    time,
+    venue,
+    city,
+    round,
+    tag,
+    homeScore,
+    awayScore,
+    goals,
+    cards,
+  } = doc;
+
+  return {
+    id: _id,
+    date: date ?? null,
+    time: time ?? null,
+    venue: venue ?? null,
+    city: city ?? null,
+    round: round ?? null,
+    tag: tag ?? null,
+    homeScore: homeScore ?? null,
+    awayScore: awayScore ?? null,
+    ...(goals?.length ? { goals } : {}),
+    ...(cards?.length ? { cards } : {}),
+    ...(updatedAt ? { lastUpdated: new Date(updatedAt).toISOString() } : {}),
+  };
+}
+
 async function getKnockoutResult(matchId) {
   const db = await getDb();
   const result = await db.collection('knockouts').findOne({ _id: matchId });
@@ -74,16 +106,40 @@ async function getKnockoutResult(matchId) {
     return null;
   }
 
-  const { _id, updatedAt, homeScore, awayScore, goals, cards } = result;
+  return formatKnockoutDocument(result);
+}
+
+async function getKnockoutResults() {
+  const db = await getDb();
+  const results = await db
+    .collection('knockouts')
+    .find({})
+    .sort({ _id: 1 })
+    .toArray();
+
+  const matches = {};
+  let lastUpdated = null;
+
+  for (const result of results) {
+    const formatted = formatKnockoutDocument(result);
+    matches[formatted.id] = formatted;
+
+    const updatedAt = result.updatedAt;
+    if (updatedAt && (!lastUpdated || updatedAt > lastUpdated)) {
+      lastUpdated = updatedAt;
+    }
+  }
 
   return {
-    id: _id,
-    homeScore,
-    awayScore,
-    ...(goals?.length ? { goals } : {}),
-    ...(cards?.length ? { cards } : {}),
-    ...(updatedAt ? { lastUpdated: new Date(updatedAt).toISOString() } : {}),
+    lastUpdated: lastUpdated ? new Date(lastUpdated).toISOString() : null,
+    matches,
   };
 }
 
-module.exports = { getTeams, getFixtures, getResults, getKnockoutResult };
+module.exports = {
+  getTeams,
+  getFixtures,
+  getResults,
+  getKnockoutResult,
+  getKnockoutResults,
+};

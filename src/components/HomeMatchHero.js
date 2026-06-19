@@ -28,8 +28,12 @@ function HomeMatchHero({
         ) : (
           'Countdown to kickoff'
         )}
-        {fixture.group && (
-          <span className="home-hero-group">Group {fixture.group}</span>
+        {fixture.isKnockout && fixture.knockoutTag ? (
+          <span className="home-hero-group">{fixture.knockoutTag}</span>
+        ) : (
+          fixture.group && (
+            <span className="home-hero-group">Group {fixture.group}</span>
+          )
         )}
       </div>
 

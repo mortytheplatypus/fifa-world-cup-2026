@@ -49,6 +49,11 @@ function FixtureCard({
     >
       <div className="fixture-meta">
         <div className="fixture-meta-tags">
+          {fixture.isKnockout && fixture.knockoutTag && (
+            <span className="fixture-group fixture-knockout-tag">
+              {fixture.knockoutTag}
+            </span>
+          )}
           {showGroup && fixture.group && (
             <span className="fixture-group">Group {fixture.group}</span>
           )}

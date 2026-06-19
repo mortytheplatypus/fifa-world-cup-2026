@@ -1695,6 +1695,16 @@ textarea {
   min-width: 0;
 }
 
+.fixtures-schedule-tabs {
+  margin-top: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.fixture-knockout-tag {
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
 .fixtures-group-filter {
   display: flex;
   align-items: center;

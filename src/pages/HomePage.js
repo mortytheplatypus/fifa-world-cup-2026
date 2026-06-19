@@ -4,8 +4,9 @@ import FixtureCard from "../components/FixtureCard";
 import LoadingSpinner from "../components/LoadingSpinner";
 import HomeMatchHero from "../components/HomeMatchHero";
 import { useTimezone } from "../context/TimezoneContext";
-import { useGroupsData } from "../hooks/useGroupsData";
+import { useMatchSchedule } from "../hooks/useMatchSchedule";
 import { getTeamById } from "../utils/data";
+import { isKnockoutScheduleMode } from "../utils/knockoutConfig";
 import {
   formatDateHeading,
   getLatestResults,
@@ -18,7 +19,8 @@ import { getDisplayTimezoneLabel } from "../utils/timezone";
 
 function HomePage() {
   const { timeZone } = useTimezone();
-  const { teams, fixtures, loading, error } = useGroupsData();
+  const { teams, fixtures, loading, error } = useMatchSchedule();
+  const knockoutMode = isKnockoutScheduleMode();
   const [now, setNow] = useState(() => new Date());
   const [activeMatchesTab, setActiveMatchesTab] = useState("upcoming");
 
@@ -82,7 +84,7 @@ function HomePage() {
         fixture={fixture}
         homeTeam={getTeamById(teams, fixture.homeTeam)}
         awayTeam={getTeamById(teams, fixture.awayTeam)}
-        showGroup
+        showGroup={!fixture.isKnockout}
         showDate={options.showDate ?? false}
         stackedLayout
       />
@@ -200,9 +202,15 @@ function HomePage() {
         <Link to="/fixtures" className="link-button">
           All fixtures
         </Link>
-        <Link to="/groups" className="link-button secondary">
-          View groups
-        </Link>
+        {knockoutMode ? (
+          <Link to="/knockout" className="link-button secondary">
+            View bracket
+          </Link>
+        ) : (
+          <Link to="/groups" className="link-button secondary">
+            View groups
+          </Link>
+        )}
       </div>
     </section>
   );

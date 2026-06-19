@@ -6,7 +6,7 @@ import FixtureCard from '../components/FixtureCard';
 import { useSettings } from '../context/SettingsContext';
 import { useTimezone } from '../context/TimezoneContext';
 import { useGroupTeamFilters } from '../hooks/useGroupTeamFilters';
-import { useGroupsData } from '../hooks/useGroupsData';
+import { useMatchSchedule } from '../hooks/useMatchSchedule';
 import { getTeamById, GROUP_LETTERS } from '../utils/data';
 import {
   filterFixturesByGroup,
@@ -17,12 +17,15 @@ import {
   getDefaultDateIndex,
   groupFixturesByDate,
 } from '../utils/fixtures';
+import { isKnockoutScheduleMode } from '../utils/knockoutConfig';
 import { getDisplayTimezoneLabel } from '../utils/timezone';
 
 function FixturesPage() {
   const { timeZone } = useTimezone();
   const { favoriteTeamId } = useSettings();
-  const { teams, fixtures, loading, error } = useGroupsData();
+  const { teams, fixtures, groupFixtures, loading, error } = useMatchSchedule();
+  const knockoutMode = isKnockoutScheduleMode();
+  const [scheduleTab, setScheduleTab] = useState('knockout');
   const [showAllDates, setShowAllDates] = useState(false);
   const [activeDateIndex, setActiveDateIndex] = useState(0);
   const {
@@ -33,15 +36,29 @@ function FixturesPage() {
     handleTeamFilterChange: onTeamFilterChange,
   } = useGroupTeamFilters(teams, favoriteTeamId);
 
+  const activeFixtures =
+    knockoutMode && scheduleTab === 'knockout' ? fixtures : groupFixtures;
+
   const filteredFixtures = useMemo(() => {
-    let result = filterFixturesByGroup(fixtures, selectedGroup);
+    if (knockoutMode && scheduleTab === 'knockout') {
+      return activeFixtures;
+    }
+
+    let result = filterFixturesByGroup(activeFixtures, selectedGroup);
 
     if (teamFilter === 'favorite' && favoriteTeamId) {
       result = filterFixturesByTeam(result, favoriteTeamId);
     }
 
     return result;
-  }, [fixtures, selectedGroup, teamFilter, favoriteTeamId]);
+  }, [
+    activeFixtures,
+    selectedGroup,
+    teamFilter,
+    favoriteTeamId,
+    knockoutMode,
+    scheduleTab,
+  ]);
 
   const fixturesByDate = useMemo(
     () => groupFixturesByDate(filteredFixtures, timeZone),
@@ -54,10 +71,17 @@ function FixturesPage() {
     [dates, timeZone]
   );
   const timezoneLabel = getDisplayTimezoneLabel(timeZone);
+  const showGroupFilters = !knockoutMode || scheduleTab === 'groups';
 
   useEffect(() => {
     setActiveDateIndex(defaultDateIndex);
-  }, [defaultDateIndex, selectedGroup, teamFilter]);
+  }, [defaultDateIndex, selectedGroup, teamFilter, scheduleTab]);
+
+  useEffect(() => {
+    if (knockoutMode) {
+      setShowAllDates(false);
+    }
+  }, [scheduleTab, knockoutMode]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -73,6 +97,7 @@ function FixturesPage() {
     ? null
     : getDayFixturesDisplayOrder(fixturesByDate[currentDate] ?? []);
   const isGroupFiltered = selectedGroup !== 'all';
+  const isKnockoutTab = knockoutMode && scheduleTab === 'knockout';
 
   function handleGroupChange(event) {
     onGroupChange(event);
@@ -97,7 +122,7 @@ function FixturesPage() {
         fixture={fixture}
         homeTeam={getTeamById(teams, fixture.homeTeam)}
         awayTeam={getTeamById(teams, fixture.awayTeam)}
-        showGroup={!isGroupFiltered}
+        showGroup={isKnockoutTab || !isGroupFiltered}
         showDate={false}
         stackedLayout={stackedLayout}
       />
@@ -108,7 +133,9 @@ function FixturesPage() {
     if (dates.length === 0) {
       return (
         <p className="status-message fixtures-empty">
-          No fixtures found for the selected filters.
+          {isKnockoutTab
+            ? 'No knockout matches available yet.'
+            : 'No fixtures found for the selected filters.'}
         </p>
       );
     }
@@ -148,38 +175,83 @@ function FixturesPage() {
           </p>
         </div>
 
-        <div className="fixtures-controls">
-          <label className="fixtures-group-filter">
-            <span className="fixtures-group-filter-label">Group</span>
-            <select
-              className="fixtures-group-select"
-              value={selectedGroup}
-              onChange={handleGroupChange}
+        {showGroupFilters && (
+          <div className="fixtures-controls">
+            <label className="fixtures-group-filter">
+              <span className="fixtures-group-filter-label">Group</span>
+              <select
+                className="fixtures-group-select"
+                value={selectedGroup}
+                onChange={handleGroupChange}
+              >
+                <option value="all">All groups</option>
+                {GROUP_LETTERS.map((letter) => (
+                  <option key={letter} value={letter}>
+                    Group {letter}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <FavoriteTeamFilter
+              teamName={favoriteTeamName}
+              value={teamFilter}
+              onChange={handleTeamFilterChange}
+            />
+
+            <button
+              type="button"
+              className="fixtures-view-toggle"
+              onClick={() => setShowAllDates((value) => !value)}
             >
-              <option value="all">All groups</option>
-              {GROUP_LETTERS.map((letter) => (
-                <option key={letter} value={letter}>
-                  Group {letter}
-                </option>
-              ))}
-            </select>
-          </label>
+              {showAllDates ? 'View by date' : 'View all dates'}
+            </button>
+          </div>
+        )}
 
-          <FavoriteTeamFilter
-            teamName={favoriteTeamName}
-            value={teamFilter}
-            onChange={handleTeamFilterChange}
-          />
+        {isKnockoutTab && (
+          <div className="fixtures-controls">
+            <button
+              type="button"
+              className="fixtures-view-toggle"
+              onClick={() => setShowAllDates((value) => !value)}
+            >
+              {showAllDates ? 'View by date' : 'View all dates'}
+            </button>
+          </div>
+        )}
+      </header>
 
+      {knockoutMode && (
+        <div
+          className="fixtures-schedule-tabs home-fixtures-tabs"
+          role="tablist"
+          aria-label="Fixture schedule"
+        >
           <button
             type="button"
-            className="fixtures-view-toggle"
-            onClick={() => setShowAllDates((value) => !value)}
+            role="tab"
+            className={`home-fixtures-tab${
+              scheduleTab === 'knockout' ? ' active' : ''
+            }`}
+            aria-selected={scheduleTab === 'knockout'}
+            onClick={() => setScheduleTab('knockout')}
           >
-            {showAllDates ? 'View by date' : 'View all dates'}
+            Knockout
+          </button>
+          <button
+            type="button"
+            role="tab"
+            className={`home-fixtures-tab${
+              scheduleTab === 'groups' ? ' active' : ''
+            }`}
+            aria-selected={scheduleTab === 'groups'}
+            onClick={() => setScheduleTab('groups')}
+          >
+            Group stage
           </button>
         </div>
-      </header>
+      )}
 
       {!showAllDates && dates.length > 0 && (
         <DateNavigator

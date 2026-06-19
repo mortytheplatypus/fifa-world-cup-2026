@@ -77,7 +77,7 @@ export const KNOCKOUT_MATCHES = {
 export const KNOCKOUT_MATCH_IDS = Object.keys(KNOCKOUT_MATCHES);
 
 /** Official schedule dates (YYYY-MM-DD) for knockout matches M73–M104. */
-const KNOCKOUT_MATCH_DATES = {
+export const KNOCKOUT_MATCH_DATES = {
   M73: '2026-06-28',
   M74: '2026-06-29',
   M75: '2026-06-29',
