@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-16T14:54:00.000Z",
+  "lastUpdated": "2026-06-19T05:09:17.206Z",
   "matches": {
     "A-1": {
       "homeScore": 2,
@@ -397,6 +397,293 @@
       ],
       "cards": [
         { "team": "home", "type": "yellow" }
+      ]
+    },
+    "I-1": {
+      "homeScore": 3,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "66",
+          "scorer": "Kylian Mbappé",
+          "team": "home"
+        },
+        {
+          "minute": "82",
+          "scorer": "Bradley Barcola",
+          "team": "home"
+        },
+        {
+          "minute": "90+5",
+          "scorer": "Ibrahim Mbaye",
+          "team": "away"
+        },
+        {
+          "minute": "90+6",
+          "scorer": "Kylian Mbappé",
+          "team": "home"
+        }
+      ]
+    },
+    "J-1": {
+      "homeScore": 3,
+      "awayScore": 0,
+      "goals": [
+        {
+          "minute": "17",
+          "scorer": "Lionel Messi",
+          "team": "home"
+        },
+        {
+          "minute": "60",
+          "scorer": "Lionel Messi",
+          "team": "home"
+        },
+        {
+          "minute": "76",
+          "scorer": "Lionel Messi",
+          "team": "home"
+        }
+      ]
+    },
+    "I-2": {
+      "homeScore": 1,
+      "awayScore": 4,
+      "goals": [
+        {
+          "minute": "29",
+          "scorer": "Erling Haaland",
+          "team": "away"
+        },
+        {
+          "minute": "39",
+          "scorer": "Aymen Hussein",
+          "team": "home"
+        },
+        {
+          "minute": "43",
+          "scorer": "Erling Haaland",
+          "team": "away"
+        },
+        {
+          "minute": "76",
+          "scorer": "Leo Østigård",
+          "team": "away"
+        },
+        {
+          "minute": "90+6",
+          "scorer": "(OG) Aymen Hussein",
+          "team": "away"
+        }
+      ]
+    },
+    "J-2": {
+      "homeScore": 3,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "21",
+          "scorer": "Romano Schmid",
+          "team": "home"
+        },
+        {
+          "minute": "50",
+          "scorer": "Ali Olwan",
+          "team": "away"
+        },
+        {
+          "minute": "76",
+          "scorer": "(OG) Yazan Al-Arab",
+          "team": "home"
+        },
+        {
+          "minute": "90+12",
+          "scorer": "Marko Arnautović",
+          "team": "home"
+        }
+      ]
+    },
+    "K-1": {
+      "homeScore": 1,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "6",
+          "scorer": "João Neves",
+          "team": "home"
+        },
+        {
+          "minute": "45+5",
+          "scorer": "Yoane Wissa",
+          "team": "away"
+        }
+      ]
+    },
+    "L-1": {
+      "homeScore": 4,
+      "awayScore": 2,
+      "goals": [
+        {
+          "minute": "12",
+          "scorer": "Harry Kane (P)",
+          "team": "home"
+        },
+        {
+          "minute": "36",
+          "scorer": "Martin Baturina",
+          "team": "away"
+        },
+        {
+          "minute": "42",
+          "scorer": "Harry Kane",
+          "team": "home"
+        },
+        {
+          "minute": "45+5",
+          "scorer": "Petar Musa",
+          "team": "away"
+        },
+        {
+          "minute": "47",
+          "scorer": "Jude Bellingham",
+          "team": "home"
+        },
+        {
+          "minute": "85",
+          "scorer": "Marcus Rashford",
+          "team": "home"
+        }
+      ]
+    },
+    "L-2": {
+      "homeScore": 1,
+      "awayScore": 0,
+      "goals": [
+        {
+          "minute": "90+5",
+          "scorer": "Caleb Yirenkyi",
+          "team": "home"
+        }
+      ]
+    },
+    "K-2": {
+      "homeScore": 1,
+      "awayScore": 2,
+      "goals": [
+        {
+          "minute": "40",
+          "scorer": "Daniel Muñoz",
+          "team": "away"
+        },
+        {
+          "minute": "60",
+          "scorer": "Abbosbek Fayzullaev",
+          "team": "home"
+        },
+        {
+          "minute": "65",
+          "scorer": "Luis Díaz",
+          "team": "away"
+        },
+        {
+          "minute": "90+9",
+          "scorer": "Jaminton Campaz",
+          "team": "away"
+        }
+      ]
+    },
+    "A-4": {
+      "homeScore": 1,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "6",
+          "scorer": "Michal Sadílek",
+          "team": "away"
+        },
+        {
+          "minute": "83",
+          "scorer": "Teboho Mokoena (P)",
+          "team": "home"
+        }
+      ]
+    },
+    "A-3": {
+      "homeScore": 1,
+      "awayScore": 0,
+      "goals": [
+        {
+          "minute": "50",
+          "scorer": "Luis Romo",
+          "team": "home"
+        }
+      ]
+    },
+    "B-3": {
+      "homeScore": 4,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "74",
+          "scorer": "Johan Manzambi",
+          "team": "home"
+        },
+        {
+          "minute": "84",
+          "scorer": "Rubén Vargas",
+          "team": "home"
+        },
+        {
+          "minute": "90",
+          "scorer": "Johan Manzambi",
+          "team": "home"
+        },
+        {
+          "minute": "90+3",
+          "scorer": "Ermin Mahmić",
+          "team": "away"
+        },
+        {
+          "minute": "90+7",
+          "scorer": "Granit Xhaka (P)",
+          "team": "home"
+        }
+      ]
+    },
+    "B-4": {
+      "homeScore": 6,
+      "awayScore": 0,
+      "goals": [
+        {
+          "minute": "16",
+          "scorer": "Cyle Larin",
+          "team": "home"
+        },
+        {
+          "minute": "29",
+          "scorer": "Jonathan David",
+          "team": "home"
+        },
+        {
+          "minute": "45+3",
+          "scorer": "Jonathan David",
+          "team": "home"
+        },
+        {
+          "minute": "64",
+          "scorer": "Nathan Saliba",
+          "team": "home"
+        },
+        {
+          "minute": "75",
+          "scorer": "(OG) Mohammed Manai",
+          "team": "home"
+        },
+        {
+          "minute": "90+2",
+          "scorer": "Jonathan David",
+          "team": "home"
+        }
       ]
     }
   }
