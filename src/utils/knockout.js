@@ -74,6 +74,8 @@ export const KNOCKOUT_MATCHES = {
   M104: { id: 'M104', round: 'final', teamA: winnerOf('M101'), teamB: winnerOf('M102') },
 };
 
+export const KNOCKOUT_MATCH_IDS = Object.keys(KNOCKOUT_MATCHES);
+
 /** Official schedule dates (YYYY-MM-DD) for knockout matches M73–M104. */
 const KNOCKOUT_MATCH_DATES = {
   M73: '2026-06-28',
@@ -208,11 +210,37 @@ export function formatThirdPlaceLabel(group) {
   return `3rd Group ${group}`;
 }
 
+function withSlotScore(resolved, score) {
+  if (score == null || resolved.type !== 'team' || !resolved.team) {
+    return resolved;
+  }
+
+  return { ...resolved, score };
+}
+
+function getKnockoutResultSides(result) {
+  if (result?.homeScore == null || result?.awayScore == null) {
+    return null;
+  }
+
+  if (result.homeScore > result.awayScore) {
+    return { winner: 'A', loser: 'B' };
+  }
+
+  if (result.awayScore > result.homeScore) {
+    return { winner: 'B', loser: 'A' };
+  }
+
+  return null;
+}
+
 /**
  * Resolve a knockout slot to a team or placeholder.
- * @returns {{ type: 'team', team: object } | { type: 'third', label: string } | { type: 'placeholder', label: string }}
+ * @returns {{ type: 'team', team: object, score?: number } | { type: 'third', label: string } | { type: 'placeholder', label: string }}
  */
-export function resolveKnockoutSlot(slot, standingsByGroup, { revealTeams = false } = {}) {
+export function resolveKnockoutSlot(slot, standingsByGroup, options = {}) {
+  const { revealTeams = false, knockoutResults = {} } = options;
+
   if (slot.type === 'winner') {
     if (revealTeams) {
       const standing = standingsByGroup[slot.group]?.[0];
@@ -237,25 +265,43 @@ export function resolveKnockoutSlot(slot, standingsByGroup, { revealTeams = fals
     return { type: 'third', label: formatBestThirdLabel(slot.groups) };
   }
 
-  if (slot.type === 'winnerOf') {
-    return { type: 'placeholder', label: formatMatchRefLabel(slot.matchId, 'W') };
-  }
+  if (slot.type === 'winnerOf' || slot.type === 'loserOf') {
+    const feederMatch = resolveKnockoutMatch(slot.matchId, standingsByGroup, options);
+    const sides = getKnockoutResultSides(knockoutResults[slot.matchId]);
+    const sideKey = slot.type === 'winnerOf' ? sides?.winner : sides?.loser;
 
-  if (slot.type === 'loserOf') {
-    return { type: 'placeholder', label: formatMatchRefLabel(slot.matchId, 'L') };
+    if (feederMatch && sideKey) {
+      const resolvedSlot = sideKey === 'A' ? feederMatch.resolvedA : feederMatch.resolvedB;
+      const score =
+        sideKey === 'A'
+          ? knockoutResults[slot.matchId].homeScore
+          : knockoutResults[slot.matchId].awayScore;
+
+      if (resolvedSlot.type === 'team' && resolvedSlot.team) {
+        return withSlotScore(resolvedSlot, score);
+      }
+    }
+
+    const prefix = slot.type === 'winnerOf' ? 'W' : 'L';
+    return { type: 'placeholder', label: formatMatchRefLabel(slot.matchId, prefix) };
   }
 
   return { type: 'placeholder', label: 'TBD' };
 }
 
 export function resolveKnockoutMatch(matchId, standingsByGroup, options = {}) {
+  const { knockoutResults = {} } = options;
   const match = KNOCKOUT_MATCHES[matchId];
   if (!match) return null;
+
+  const result = knockoutResults[matchId];
+  const resolvedA = resolveKnockoutSlot(match.teamA, standingsByGroup, options);
+  const resolvedB = resolveKnockoutSlot(match.teamB, standingsByGroup, options);
 
   return {
     ...match,
     date: KNOCKOUT_MATCH_DATES[matchId] ?? null,
-    resolvedA: resolveKnockoutSlot(match.teamA, standingsByGroup, options),
-    resolvedB: resolveKnockoutSlot(match.teamB, standingsByGroup, options),
+    resolvedA: withSlotScore(resolvedA, result?.homeScore),
+    resolvedB: withSlotScore(resolvedB, result?.awayScore),
   };
 }

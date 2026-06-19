@@ -66,4 +66,24 @@ async function getResults() {
   };
 }
 
-module.exports = { getTeams, getFixtures, getResults };
+async function getKnockoutResult(matchId) {
+  const db = await getDb();
+  const result = await db.collection('knockouts').findOne({ _id: matchId });
+
+  if (!result) {
+    return null;
+  }
+
+  const { _id, updatedAt, homeScore, awayScore, goals, cards } = result;
+
+  return {
+    id: _id,
+    homeScore,
+    awayScore,
+    ...(goals?.length ? { goals } : {}),
+    ...(cards?.length ? { cards } : {}),
+    ...(updatedAt ? { lastUpdated: new Date(updatedAt).toISOString() } : {}),
+  };
+}
+
+module.exports = { getTeams, getFixtures, getResults, getKnockoutResult };

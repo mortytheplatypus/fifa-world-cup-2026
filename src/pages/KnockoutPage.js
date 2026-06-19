@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import KnockoutBracket from '../components/KnockoutBracket';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useGroupsData } from '../hooks/useGroupsData';
+import { useKnockoutResults } from '../hooks/useKnockoutResults';
 import { GROUP_LETTERS, getTeamDisplayName } from '../utils/data';
 import { isKnockoutTeamsRevealed } from '../utils/knockoutConfig';
 import { computeGroupStandings } from '../utils/standings';
@@ -12,6 +13,7 @@ const revealTeams = isKnockoutTeamsRevealed();
 
 function KnockoutPage() {
   const { groupedTeams, fixtures, loading, error } = useGroupsData();
+  const { knockoutResults } = useKnockoutResults();
 
   const standingsByGroup = useMemo(
     () =>
@@ -54,7 +56,7 @@ function KnockoutPage() {
         </Link>
       </header>
 
-      <KnockoutBracket standingsByGroup={standingsByGroup} />
+      <KnockoutBracket standingsByGroup={standingsByGroup} knockoutResults={knockoutResults} />
 
       {revealTeams && (
         <section className="knockout-third-summary" aria-labelledby="knockout-third-summary-heading">

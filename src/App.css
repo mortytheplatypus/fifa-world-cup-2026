@@ -3861,6 +3861,11 @@ textarea {
   font-size: 0.6rem;
 }
 
+.knockout-slot-score {
+  color: var(--text);
+  font-weight: 600;
+}
+
 .knockout-slot-label {
   font-size: 0.68rem;
   font-weight: 500;

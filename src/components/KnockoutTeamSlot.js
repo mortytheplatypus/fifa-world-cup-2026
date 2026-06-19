@@ -10,6 +10,7 @@ const resolvedSlotShape = PropTypes.shape({
   }),
   label: PropTypes.string,
   code: PropTypes.string,
+  score: PropTypes.number,
 });
 
 function KnockoutTeamSlot({ slot }) {
@@ -23,8 +24,14 @@ function KnockoutTeamSlot({ slot }) {
           width={22}
           height={16}
         />
-        <span className="knockout-slot-name">{getTeamDisplayName(slot.team.name)}</span>
-        {slot.code && <span className="knockout-slot-code">{slot.code}</span>}
+        <span className="knockout-slot-name">
+          {getTeamDisplayName(slot.team.name)}
+          {slot.score != null ? (
+            <span className="knockout-slot-score"> ({slot.score})</span>
+          ) : (
+            slot.code && <span className="knockout-slot-code"> {slot.code}</span>
+          )}
+        </span>
       </div>
     );
   }
