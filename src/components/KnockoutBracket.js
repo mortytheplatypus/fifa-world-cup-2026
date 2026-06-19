@@ -302,16 +302,17 @@ BracketHalfTreeView.propTypes = {
 };
 
 function BracketTreeView({ standingsByGroup, viewRound }) {
+  const startRound = viewRound === 'finals' ? 'qf' : viewRound;
   const { left, right, center } = BRACKET_TREE;
 
   return (
-    <div className={`knockout-bracket knockout-bracket--from-${viewRound}`}>
+    <div className={`knockout-bracket knockout-bracket--from-${startRound}`}>
       <div className="knockout-bracket-tree">
         <BracketHalf
           half={left}
           side="left"
           standingsByGroup={standingsByGroup}
-          startRound={viewRound}
+          startRound={startRound}
         />
 
         <div className="knockout-bracket-center">
@@ -327,7 +328,7 @@ function BracketTreeView({ standingsByGroup, viewRound }) {
           half={right}
           side="right"
           standingsByGroup={standingsByGroup}
-          startRound={viewRound}
+          startRound={startRound}
         />
       </div>
     </div>
@@ -336,7 +337,7 @@ function BracketTreeView({ standingsByGroup, viewRound }) {
 
 BracketTreeView.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
-  viewRound: PropTypes.oneOf(['qf', 'sf']).isRequired,
+  viewRound: PropTypes.oneOf(['finals']).isRequired,
 };
 
 function KnockoutBracket({ standingsByGroup }) {
@@ -348,7 +349,11 @@ function KnockoutBracket({ standingsByGroup }) {
   return (
     <div className="knockout-bracket-container">
       <div className="knockout-bracket-nav">
-        <div className="knockout-bracket-tabs" role="tablist" aria-label="Knockout round">
+        <div
+          className="knockout-bracket-tabs knockout-bracket-tabs--rounds"
+          role="tablist"
+          aria-label="Knockout round"
+        >
           {KNOCKOUT_ROUND_VIEWS.map((round) => (
             <button
               key={round}
@@ -367,14 +372,20 @@ function KnockoutBracket({ standingsByGroup }) {
         </div>
 
         {showHalfBracket && (
-          <div className="knockout-bracket-tabs knockout-bracket-tabs--side" role="tablist" aria-label="Bracket side">
+          <div
+            className="knockout-bracket-side-nav"
+            role="tablist"
+            aria-label="Bracket side"
+          >
             {BRACKET_SIDES.map((side) => (
               <button
                 key={side}
                 type="button"
                 role="tab"
                 id={`knockout-side-tab-${side}`}
-                className={`knockout-bracket-tab${bracketSide === side ? ' active' : ''}`}
+                className={`knockout-bracket-side-tab${
+                  bracketSide === side ? ' active' : ''
+                }`}
                 aria-selected={bracketSide === side}
                 aria-controls={`knockout-side-panel-${side}`}
                 onClick={() => setBracketSide(side)}

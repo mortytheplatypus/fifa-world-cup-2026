@@ -9,13 +9,14 @@
 export const KNOCKOUT_ROUND_LABELS = {
   r32: 'Round of 32',
   r16: 'Round of 16',
+  finals: 'Finals',
   qf: 'Quarter-finals',
   sf: 'Semi-finals',
   third: 'Third-place play-off',
   final: 'Final',
 };
 
-export const KNOCKOUT_ROUND_VIEWS = ['r32', 'r16', 'qf', 'sf'];
+export const KNOCKOUT_ROUND_VIEWS = ['r32', 'r16', 'finals'];
 
 function runnerUp(group) {
   return { type: 'runnerUp', group };
