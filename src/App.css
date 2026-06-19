@@ -635,7 +635,7 @@ textarea {
 
 .visitor-count {
   font-family: var(--font-mono);
-  font-size: 1.0625rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--text);
   font-variant-numeric: tabular-nums;
