@@ -116,6 +116,77 @@ async function syncResults(collection) {
   return count;
 }
 
+async function syncSquads(collection) {
+  const data = readJson('squads.json');
+  let count = 0;
+
+  for (const [teamId, squad] of Object.entries(data.squads ?? {})) {
+    const { coach, captain, playerIds } = squad;
+
+    await collection.replaceOne(
+      { _id: teamId },
+      { _id: teamId, coach, captain, playerIds },
+      { upsert: true }
+    );
+    count += 1;
+  }
+
+  return count;
+}
+
+async function syncPlayers(collection) {
+  const data = readJson('players.json');
+  let count = 0;
+
+  for (const [id, player] of Object.entries(data.players ?? {})) {
+    const { teamId, flagCode, name, position, shirtNumber, club, dateOfBirth, age, heightCm, foot, caps, internationalGoals, wcAppearances, wcGoals, worldCups } = player;
+
+    await collection.replaceOne(
+      { _id: id },
+      {
+        _id: id,
+        teamId,
+        flagCode,
+        name,
+        position,
+        ...(shirtNumber != null ? { shirtNumber } : {}),
+        ...(club ? { club } : {}),
+        ...(dateOfBirth ? { dateOfBirth } : {}),
+        ...(age != null ? { age } : {}),
+        ...(heightCm != null ? { heightCm } : {}),
+        ...(foot ? { foot } : {}),
+        ...(caps != null ? { caps } : {}),
+        ...(internationalGoals != null ? { internationalGoals } : {}),
+        ...(wcAppearances != null ? { wcAppearances } : {}),
+        ...(wcGoals != null ? { wcGoals } : {}),
+        ...(worldCups?.length ? { worldCups } : {}),
+      },
+      { upsert: true }
+    );
+    count += 1;
+  }
+
+  return count;
+}
+
+async function syncWcHistory(collection) {
+  const data = readJson('wc-history.json');
+  let count = 0;
+
+  for (const [teamId, history] of Object.entries(data.teams ?? {})) {
+    const { championships, bestFinish, appearances, tournaments } = history;
+
+    await collection.replaceOne(
+      { _id: teamId },
+      { _id: teamId, championships, bestFinish, appearances, tournaments },
+      { upsert: true }
+    );
+    count += 1;
+  }
+
+  return count;
+}
+
 async function main() {
   loadEnv();
 
@@ -131,15 +202,21 @@ async function main() {
     await client.connect();
     const db = client.db(dbName);
 
-    const [teams, fixtures, results] = await Promise.all([
+    const [teams, fixtures, results, squads, players, wcHistory] = await Promise.all([
       syncTeams(db.collection('teams')),
       syncFixtures(db.collection('fixtures')),
       syncResults(db.collection('results')),
+      syncSquads(db.collection('squads')),
+      syncPlayers(db.collection('players')),
+      syncWcHistory(db.collection('wcHistory')),
     ]);
 
     console.log(`Synced ${teams} teams from teams.json`);
     console.log(`Synced ${fixtures} fixtures from fixtures.json`);
     console.log(`Synced ${results} results from results.json`);
+    console.log(`Synced ${squads} squads from squads.json`);
+    console.log(`Synced ${players} players from players.json`);
+    console.log(`Synced ${wcHistory} WC history records from wc-history.json`);
   } finally {
     await client.close();
   }

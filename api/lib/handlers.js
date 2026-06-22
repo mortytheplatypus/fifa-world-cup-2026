@@ -8,14 +8,7 @@ async function getTeams() {
     .sort({ group: 1, name: 1 })
     .toArray();
 
-  return teams.map(({ _id, name, group, flagCode, colors, fifaRankingPreWc }) => ({
-    id: _id,
-    name,
-    group,
-    flagCode,
-    ...(colors?.length ? { colors } : {}),
-    ...(fifaRankingPreWc != null ? { fifaRankingPreWc } : {}),
-  }));
+  return teams.map(mapTeamDoc);
 }
 
 async function getFixtures() {
@@ -66,4 +59,87 @@ async function getResults() {
   };
 }
 
-module.exports = { getTeams, getFixtures, getResults };
+function mapTeamDoc({ _id, name, group, flagCode, colors, fifaRankingPreWc, confederation, founded, homeStadium }) {
+  return {
+    id: _id,
+    name,
+    group,
+    flagCode,
+    ...(colors?.length ? { colors } : {}),
+    ...(fifaRankingPreWc != null ? { fifaRankingPreWc } : {}),
+    ...(confederation ? { confederation } : {}),
+    ...(founded != null ? { founded } : {}),
+    ...(homeStadium ? { homeStadium } : {}),
+  };
+}
+
+async function getTeamById(teamId) {
+  const db = await getDb();
+  const team = await db.collection('teams').findOne({ _id: teamId });
+
+  if (!team) {
+    return null;
+  }
+
+  return mapTeamDoc(team);
+}
+
+async function getTeamByFlagCode(flagCode) {
+  const db = await getDb();
+  const team = await db
+    .collection('teams')
+    .findOne({ flagCode: flagCode.toLowerCase() });
+
+  if (!team) {
+    return null;
+  }
+
+  return mapTeamDoc(team);
+}
+
+async function getSquad(teamId) {
+  const db = await getDb();
+  const squad = await db.collection('squads').findOne({ _id: teamId });
+
+  if (!squad) {
+    return null;
+  }
+
+  const { _id, coach, captain, playerIds } = squad;
+  return { teamId: _id, coach, captain, playerIds };
+}
+
+async function getPlayer(playerId) {
+  const db = await getDb();
+  const player = await db.collection('players').findOne({ _id: playerId });
+
+  if (!player) {
+    return null;
+  }
+
+  const { _id, ...rest } = player;
+  return { id: _id, ...rest };
+}
+
+async function getWcHistory(teamId) {
+  const db = await getDb();
+  const history = await db.collection('wcHistory').findOne({ _id: teamId });
+
+  if (!history) {
+    return null;
+  }
+
+  const { _id, championships, bestFinish, appearances, tournaments } = history;
+  return { teamId: _id, championships, bestFinish, appearances, tournaments };
+}
+
+module.exports = {
+  getTeams,
+  getFixtures,
+  getResults,
+  getTeamById,
+  getTeamByFlagCode,
+  getSquad,
+  getPlayer,
+  getWcHistory,
+};

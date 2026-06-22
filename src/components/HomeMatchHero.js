@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { getTeamDisplayName } from '../utils/data';
+import { Link } from 'react-router-dom';
+import { getTeamDisplayName, getTeamPath } from '../utils/data';
 import CountdownTimer from './CountdownTimer';
 import { fixtureShape, teamShape } from '../propTypes';
 import {
@@ -34,7 +35,7 @@ function HomeMatchHero({
       </div>
 
       <div className="home-hero-teams">
-        <div className="home-hero-team">
+        <Link to={getTeamPath(homeTeam)} className="home-hero-team home-hero-team--link">
           <img
             className="home-hero-flag"
             src={`https://flagcdn.com/w160/${homeTeam.flagCode}.png`}
@@ -43,13 +44,13 @@ function HomeMatchHero({
             height={36}
           />
           <span className="home-hero-team-name">{getTeamDisplayName(homeTeam.name)}</span>
-        </div>
+        </Link>
 
         <span className="home-hero-vs" aria-hidden="true">
           vs
         </span>
 
-        <div className="home-hero-team">
+        <Link to={getTeamPath(awayTeam)} className="home-hero-team home-hero-team--link">
           <img
             className="home-hero-flag"
             src={`https://flagcdn.com/w160/${awayTeam.flagCode}.png`}
@@ -58,7 +59,7 @@ function HomeMatchHero({
             height={36}
           />
           <span className="home-hero-team-name">{getTeamDisplayName(awayTeam.name)}</span>
-        </div>
+        </Link>
       </div>
 
       <div className="home-hero-meta">

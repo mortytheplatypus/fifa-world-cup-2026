@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { GroupActivityBadges } from './GroupActivityBadge';
 import { fixtureShape, groupIdType } from '../propTypes';
-import { getTeamDisplayName } from '../utils/data';
+import { getTeamDisplayName, getTeamPath } from '../utils/data';
 import { THIRD_PLACE_HINT } from '../utils/qualification';
 import { computeConductScore } from '../utils/standings';
 
@@ -104,7 +104,7 @@ function StandingsTable({
               >
                 <td className="standings-col-pos">{index + 1}</td>
                 <td className="standings-col-team">
-                  <div className="standings-team">
+                  <Link to={getTeamPath(row.team)} className="standings-team standings-team--link">
                     <img
                       className="standings-team-flag"
                       src={`https://flagcdn.com/w40/${row.team.flagCode}.png`}
@@ -113,7 +113,7 @@ function StandingsTable({
                       height={18}
                     />
                     <span className="standings-team-name">{getTeamDisplayName(row.team.name)}</span>
-                  </div>
+                  </Link>
                 </td>
                 <td>{row.played}</td>
                 <td>{row.won}</td>
