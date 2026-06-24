@@ -3599,6 +3599,14 @@ textarea {
   min-width: 380px;
 }
 
+.knockout-bracket--semifinals-only {
+  min-width: 480px;
+}
+
+.knockout-bracket--final-stage {
+  min-width: 420px;
+}
+
 /* Round of 32 / R16 — one bracket half at a time */
 .knockout-bracket--half {
   min-width: 0;
@@ -4265,6 +4273,14 @@ textarea {
 
   .knockout-bracket--from-sf {
     min-width: 320px;
+  }
+
+  .knockout-bracket--semifinals-only {
+    min-width: 400px;
+  }
+
+  .knockout-bracket--final-stage {
+    min-width: 360px;
   }
 
   .knockout-bracket {

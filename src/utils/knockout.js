@@ -21,7 +21,7 @@ export const KNOCKOUT_ROUND_LABELS = {
   final: "Final",
 };
 
-export const KNOCKOUT_ROUND_VIEWS = ["r32", "r16", "finals"];
+export const KNOCKOUT_ROUND_VIEWS = ["r32", "r16", "finals", "final"];
 
 function runnerUp(group) {
   return { type: "runnerUp", group };

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import KnockoutBracket from '../components/KnockoutBracket';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -12,6 +12,7 @@ import { rankThirdPlaceTeams } from '../utils/thirdPlaceRanking';
 const revealTeams = isKnockoutTeamsRevealed();
 
 function KnockoutPage() {
+  const [viewRound, setViewRound] = useState('r32');
   const { groupedTeams, fixtures, loading, error } = useGroupsData();
   const { knockoutResults } = useKnockoutResults();
 
@@ -45,20 +46,22 @@ function KnockoutPage() {
       <header className="knockout-header">
         <div>
           <h1>Knockout</h1>
-          <p className="page-subtitle">
-            {revealTeams
-              ? 'Round of 32 through to the final - group winners and runners-up are filled from current standings'
-              : 'Round of 32 through to the final - slots shown as group-stage placeholders until teams are revealed'}
-          </p>
         </div>
-        <Link to="/knockout/third-place-rules" className="knockout-rules-link">
-          Third-place rules
-        </Link>
+        {viewRound === 'r32' && (
+          <Link to="/knockout/third-place-rules" className="knockout-rules-link">
+            Third-place Standings
+          </Link>
+        )}
       </header>
 
-      <KnockoutBracket standingsByGroup={standingsByGroup} knockoutResults={knockoutResults} />
+      <KnockoutBracket
+        standingsByGroup={standingsByGroup}
+        knockoutResults={knockoutResults}
+        viewRound={viewRound}
+        onViewRoundChange={setViewRound}
+      />
 
-      {revealTeams && (
+      {revealTeams && viewRound === 'r32' && (
         <section className="knockout-third-summary" aria-labelledby="knockout-third-summary-heading">
           <div className="knockout-third-summary-header">
             <h2 id="knockout-third-summary-heading">Best third-placed teams</h2>

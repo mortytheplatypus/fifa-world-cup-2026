@@ -282,18 +282,35 @@ function BracketHalf({
   standingsByGroup,
   knockoutResults,
   startRound,
+  feedsCenter,
 }) {
   const mirrored = side === "right";
 
   if (startRound === "sf") {
+    const sfCard = (
+      <KnockoutMatchCard
+        matchId={half.sf}
+        standingsByGroup={standingsByGroup}
+        knockoutResults={knockoutResults}
+        compact
+      />
+    );
+
+    if (!feedsCenter) {
+      return (
+        <div className={`knockout-bracket-half knockout-bracket-half--${side}`}>
+          {sfCard}
+        </div>
+      );
+    }
+
     return (
-      <div className={`knockout-bracket-half knockout-bracket-half--${side}`}>
-        <KnockoutMatchCard
-          matchId={half.sf}
-          standingsByGroup={standingsByGroup}
-          knockoutResults={knockoutResults}
-          compact
-        />
+      <div
+        className={`knockout-bracket-half knockout-bracket-half--${side}${
+          mirrored ? " knockout-bracket-half--mirrored" : ""
+        }`}
+      >
+        <div className="knockout-bracket-half-target">{sfCard}</div>
       </div>
     );
   }
@@ -347,6 +364,11 @@ BracketHalf.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
   knockoutResults: knockoutResultsShape.isRequired,
   startRound: PropTypes.oneOf(["r32", "r16", "qf", "sf"]).isRequired,
+  feedsCenter: PropTypes.bool,
+};
+
+BracketHalf.defaultProps = {
+  feedsCenter: false,
 };
 
 const BRACKET_SIDES = ["left", "right"];
@@ -399,11 +421,22 @@ BracketHalfTreeView.propTypes = {
 };
 
 function BracketTreeView({ standingsByGroup, knockoutResults, viewRound }) {
-  const startRound = viewRound === "finals" ? "qf" : viewRound;
+  const isFinalStage = viewRound === "final";
+  const isSemifinalsOnly = viewRound === "finals";
+  const startRound = isFinalStage ? "sf" : isSemifinalsOnly ? "qf" : viewRound;
   const { left, right, center } = BRACKET_TREE;
 
+  const bracketClassName = [
+    "knockout-bracket",
+    `knockout-bracket--from-${startRound}`,
+    isSemifinalsOnly && "knockout-bracket--semifinals-only",
+    isFinalStage && "knockout-bracket--final-stage",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div className={`knockout-bracket knockout-bracket--from-${startRound}`}>
+    <div className={bracketClassName}>
       <div className="knockout-bracket-tree">
         <BracketHalf
           half={left}
@@ -411,21 +444,24 @@ function BracketTreeView({ standingsByGroup, knockoutResults, viewRound }) {
           standingsByGroup={standingsByGroup}
           knockoutResults={knockoutResults}
           startRound={startRound}
+          feedsCenter={isFinalStage}
         />
 
-        <div className="knockout-bracket-center">
-          <KnockoutMatchCard
-            matchId={center.final}
-            standingsByGroup={standingsByGroup}
-            knockoutResults={knockoutResults}
-          />
-          <KnockoutMatchCard
-            matchId={center.third}
-            standingsByGroup={standingsByGroup}
-            knockoutResults={knockoutResults}
-            compact
-          />
-        </div>
+        {!isSemifinalsOnly && (
+          <div className="knockout-bracket-center">
+            <KnockoutMatchCard
+              matchId={center.final}
+              standingsByGroup={standingsByGroup}
+              knockoutResults={knockoutResults}
+            />
+            <KnockoutMatchCard
+              matchId={center.third}
+              standingsByGroup={standingsByGroup}
+              knockoutResults={knockoutResults}
+              compact
+            />
+          </div>
+        )}
 
         <BracketHalf
           half={right}
@@ -433,6 +469,7 @@ function BracketTreeView({ standingsByGroup, knockoutResults, viewRound }) {
           standingsByGroup={standingsByGroup}
           knockoutResults={knockoutResults}
           startRound={startRound}
+          feedsCenter={isFinalStage}
         />
       </div>
     </div>
@@ -442,11 +479,15 @@ function BracketTreeView({ standingsByGroup, knockoutResults, viewRound }) {
 BracketTreeView.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
   knockoutResults: knockoutResultsShape.isRequired,
-  viewRound: PropTypes.oneOf(["finals"]).isRequired,
+  viewRound: PropTypes.oneOf(["finals", "final"]).isRequired,
 };
 
-function KnockoutBracket({ standingsByGroup, knockoutResults }) {
-  const [viewRound, setViewRound] = useState("r32");
+function KnockoutBracket({
+  standingsByGroup,
+  knockoutResults,
+  viewRound,
+  onViewRoundChange,
+}) {
   const [bracketSide, setBracketSide] = useState("left");
 
   const showHalfBracket = HALF_BRACKET_ROUNDS.includes(viewRound);
@@ -469,7 +510,7 @@ function KnockoutBracket({ standingsByGroup, knockoutResults }) {
               aria-selected={viewRound === round}
               aria-controls={`knockout-panel-${round}`}
               title={KNOCKOUT_ROUND_LABELS[round]}
-              onClick={() => setViewRound(round)}
+              onClick={() => onViewRoundChange(round)}
             >
               {KNOCKOUT_ROUND_LABELS[round]}
             </button>
@@ -538,6 +579,8 @@ function KnockoutBracket({ standingsByGroup, knockoutResults }) {
 KnockoutBracket.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
   knockoutResults: knockoutResultsShape.isRequired,
+  viewRound: PropTypes.oneOf(KNOCKOUT_ROUND_VIEWS).isRequired,
+  onViewRoundChange: PropTypes.func.isRequired,
 };
 
 export default KnockoutBracket;
