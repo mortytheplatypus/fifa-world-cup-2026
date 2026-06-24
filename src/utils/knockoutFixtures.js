@@ -1,8 +1,7 @@
 import { GROUP_LETTERS } from './data';
 import {
-  KNOCKOUT_MATCH_DATES,
   KNOCKOUT_MATCH_IDS,
-  getKnockoutMatchTag,
+  getKnockoutSchedule,
   resolveKnockoutMatch,
 } from './knockout';
 import { isKnockoutTeamsRevealed } from './knockoutConfig';
@@ -27,8 +26,7 @@ function buildKnockoutFixture(matchId, resolvedMatch, schedule = {}) {
     return null;
   }
 
-  const date = schedule.date ?? KNOCKOUT_MATCH_DATES[matchId] ?? null;
-  if (!date) {
+  if (!schedule.date) {
     return null;
   }
 
@@ -37,12 +35,12 @@ function buildKnockoutFixture(matchId, resolvedMatch, schedule = {}) {
     matchday: 0,
     homeTeam: homeTeamId,
     awayTeam: awayTeamId,
-    date,
+    date: schedule.date,
     time: schedule.time ?? DEFAULT_KNOCKOUT_TIME,
     venue: schedule.venue ?? DEFAULT_KNOCKOUT_VENUE,
     city: schedule.city ?? DEFAULT_KNOCKOUT_CITY,
     round: resolvedMatch.round,
-    knockoutTag: schedule.tag ?? getKnockoutMatchTag(matchId),
+    knockoutTag: schedule.tag,
     isKnockout: true,
     homeScore: schedule.homeScore ?? null,
     awayScore: schedule.awayScore ?? null,
@@ -76,7 +74,7 @@ export function buildKnockoutFixtures(standingsByGroup, knockoutResults = {}) {
       continue;
     }
 
-    const schedule = knockoutResults[matchId] ?? {};
+    const schedule = getKnockoutSchedule(matchId, knockoutResults);
     const fixture = buildKnockoutFixture(matchId, resolvedMatch, schedule);
     if (fixture) {
       fixtures.push(fixture);

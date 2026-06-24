@@ -1,14 +1,17 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { useTimezone } from "../context/TimezoneContext";
 import {
   BRACKET_TREE,
   KNOCKOUT_ROUND_LABELS,
   KNOCKOUT_ROUND_VIEWS,
   getKnockoutMatchTag,
   formatKnockoutMatchDate,
+  hasKnockoutKickoffTime,
   resolveKnockoutMatch,
 } from "../utils/knockout";
 import { isKnockoutTeamsRevealed } from "../utils/knockoutConfig";
+import { formatFixtureTime, parseFixtureInstant } from "../utils/timezone";
 import KnockoutMatchLabel from "./KnockoutMatchLabel";
 import KnockoutTeamSlot from "./KnockoutTeamSlot";
 
@@ -39,6 +42,7 @@ function KnockoutMatchCard({
   knockoutResults,
   compact,
 }) {
+  const { timeZone } = useTimezone();
   const match = resolveKnockoutMatch(matchId, standingsByGroup, {
     revealTeams,
     knockoutResults,
@@ -46,7 +50,18 @@ function KnockoutMatchCard({
   if (!match) return null;
 
   const tag = getKnockoutMatchTag(match.id);
-  const dateLabel = formatKnockoutMatchDate(match.date);
+  const schedule = {
+    date: match.date,
+    time: match.time,
+    city: match.city,
+  };
+  const dateLabel = formatKnockoutMatchDate(schedule, timeZone);
+  const timeLabel = hasKnockoutKickoffTime(schedule)
+    ? formatFixtureTime(schedule, timeZone)
+    : null;
+  const dateTime = hasKnockoutKickoffTime(schedule)
+    ? parseFixtureInstant(schedule).toISOString()
+    : match.date;
 
   return (
     <div
@@ -57,8 +72,11 @@ function KnockoutMatchCard({
       <div className="knockout-match-header">
         <div className="knockout-match-meta">
           {dateLabel && (
-            <time className="knockout-match-date" dateTime={match.date}>
-              {dateLabel}
+            <time className="knockout-match-date" dateTime={dateTime}>
+              <span className="knockout-match-date-label">{dateLabel}</span>
+              {timeLabel && (
+                <span className="knockout-match-time">{timeLabel}</span>
+              )}
             </time>
           )}
         </div>

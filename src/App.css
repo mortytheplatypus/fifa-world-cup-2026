@@ -3905,12 +3905,23 @@ textarea {
 }
 
 .knockout-match-date {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
   color: var(--text);
   font-size: 0.62rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.knockout-match-time {
+  color: var(--text-muted);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 .knockout-match-tag {

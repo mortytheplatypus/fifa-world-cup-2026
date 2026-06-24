@@ -6,6 +6,11 @@
  * - Knockout results data to replace Wxx placeholders with advancing winners
  */
 
+import {
+  DISPLAY_TIMEZONE,
+  parseFixtureInstant,
+} from "./timezone";
+
 export const KNOCKOUT_ROUND_LABELS = {
   r32: "Round of 32",
   r16: "Round of 16",
@@ -337,12 +342,50 @@ export function formatKnockoutMatchTag(tag, matchId) {
   return label;
 }
 
-export function formatKnockoutMatchDate(dateKey) {
-  if (!dateKey) {
+/** Schedule fields from API / knockouts collection merged with static fallbacks. */
+export function getKnockoutSchedule(matchId, knockoutResults = {}) {
+  const schedule = knockoutResults[matchId] ?? {};
+
+  return {
+    date: schedule.date ?? KNOCKOUT_MATCH_DATES[matchId] ?? null,
+    time: schedule.time ?? null,
+    city: schedule.city ?? null,
+    venue: schedule.venue ?? null,
+    tag: schedule.tag ?? getKnockoutMatchTag(matchId),
+  };
+}
+
+export function hasKnockoutKickoffTime(fixture) {
+  return Boolean(fixture?.date && fixture?.time && fixture?.city);
+}
+
+/** Compact bracket date (e.g. "28 JUN") in the viewer's timezone when kickoff time is known. */
+export function formatKnockoutMatchDate(
+  fixture,
+  timeZone = DISPLAY_TIMEZONE,
+) {
+  if (!fixture?.date) {
     return null;
   }
 
-  const [year, month, day] = dateKey.split("-").map(Number);
+  if (hasKnockoutKickoffTime(fixture)) {
+    const instant = parseFixtureInstant(fixture);
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      day: "2-digit",
+      month: "short",
+    }).formatToParts(instant);
+    const day = parts.find((part) => part.type === "day")?.value;
+    const month = parts
+      .find((part) => part.type === "month")
+      ?.value?.toUpperCase();
+
+    if (day && month) {
+      return `${day} ${month}`;
+    }
+  }
+
+  const [year, month, day] = fixture.date.split("-").map(Number);
   const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
   const dayPart = String(day).padStart(2, "0");
   const monthPart = new Intl.DateTimeFormat("en-US", {
@@ -506,12 +549,13 @@ export function resolveKnockoutMatch(matchId, standingsByGroup, options = {}) {
   if (!match) return null;
 
   const result = knockoutResults[matchId];
+  const schedule = getKnockoutSchedule(matchId, knockoutResults);
   const resolvedA = resolveKnockoutSlot(match.teamA, standingsByGroup, options);
   const resolvedB = resolveKnockoutSlot(match.teamB, standingsByGroup, options);
 
   return {
     ...match,
-    date: KNOCKOUT_MATCH_DATES[matchId] ?? null,
+    ...schedule,
     resolvedA: withSlotScore(resolvedA, result?.homeScore),
     resolvedB: withSlotScore(resolvedB, result?.awayScore),
   };
