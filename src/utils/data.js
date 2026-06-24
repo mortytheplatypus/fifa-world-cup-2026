@@ -35,7 +35,7 @@ async function fetchData(key) {
     return cached;
   }
 
-  const path = `${API_BASE}/api/${key}.json`;
+  const path = `${API_BASE}/api/${key}`;
 
   const promise = fetch(path).then((response) => {
     if (!response.ok) throw new Error(`Failed to load ${path}`);
