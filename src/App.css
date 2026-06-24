@@ -3543,14 +3543,16 @@ textarea {
 }
 
 .knockout-bracket-side-nav {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0 0.15rem;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  gap: 0;
+  padding: 0;
 }
 
 .knockout-bracket-side-tab {
-  padding: 0.3rem 0.5rem;
+  flex: 1;
+  padding: 0.45rem 0.5rem;
   border: none;
   border-bottom: 2px solid transparent;
   border-radius: 0;
@@ -3559,6 +3561,7 @@ textarea {
   font-size: 0.75rem;
   font-weight: 500;
   line-height: 1.25;
+  text-align: center;
   white-space: nowrap;
   cursor: pointer;
   transition:
