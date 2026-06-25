@@ -4,7 +4,7 @@ export const GROUP_TIEBREAKER_RULES = {
     'If two or more teams are equal on points after all group matches, ranking is determined in the following order.',
   steps: [
     {
-      title: 'Step 1 — Head-to-head (matches between tied teams)',
+      title: 'Step 1: Head-to-head (matches between tied teams)',
       criteria: [
         'Greatest number of points obtained in matches between the teams concerned.',
         'Superior goal difference resulting from matches between the teams concerned.',
@@ -12,7 +12,7 @@ export const GROUP_TIEBREAKER_RULES = {
       ],
     },
     {
-      title: 'Step 2 — Overall group performance',
+      title: 'Step 2: Overall group performance',
       criteria: [
         'If teams are still tied, criteria (a) to (c) are re-applied only among the teams still equal.',
         'Superior goal difference in all group matches.',
@@ -21,7 +21,7 @@ export const GROUP_TIEBREAKER_RULES = {
       ],
     },
     {
-      title: 'Step 3 — FIFA ranking',
+      title: 'Step 3: FIFA ranking',
       criteria: [
         'Ranking according to the most recent published FIFA/Coca-Cola Men\'s World Ranking.',
         'If still equal, the ranking immediately preceding the most recent one, continuing backwards until a decision is made.',
@@ -59,6 +59,3 @@ export const THIRD_PLACE_QUALIFICATION_RULES = {
 
 export const RANKING_LIMITATION_NOTE =
   'This app ranks third-placed teams using points, goal difference, and goals scored only. Conduct score and FIFA ranking tiebreakers are not applied because that data is not available.';
-
-export const RANKING_VOLATILITY_WARNING =
-  'Rankings can change significantly as group-stage results come in — especially while teams have played fewer than three matches.';

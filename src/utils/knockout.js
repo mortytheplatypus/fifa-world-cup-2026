@@ -12,8 +12,8 @@ import {
 } from "./timezone";
 
 export const KNOCKOUT_ROUND_LABELS = {
-  r32: "Round of 32",
-  r16: "Round of 16",
+  r32: "R32",
+  r16: "R16",
   finals: "Finals",
   qf: "Quarter-finals",
   sf: "Semi-finals",
@@ -21,7 +21,7 @@ export const KNOCKOUT_ROUND_LABELS = {
   final: "Final",
 };
 
-export const KNOCKOUT_ROUND_VIEWS = ["r32", "r16", "finals", "final"];
+export const KNOCKOUT_ROUND_VIEWS = ["r32", "r16", "finals"];
 
 function runnerUp(group) {
   return { type: "runnerUp", group };
@@ -485,24 +485,20 @@ function getKnockoutResultSides(result) {
  * @returns {{ type: 'team', team: object, score?: number } | { type: 'third', label: string } | { type: 'placeholder', label: string }}
  */
 export function resolveKnockoutSlot(slot, standingsByGroup, options = {}) {
-  const { revealTeams = false, knockoutResults = {} } = options;
+  const { knockoutResults = {} } = options;
 
   if (slot.type === "winner") {
-    if (revealTeams) {
-      const standing = standingsByGroup[slot.group]?.[0];
-      if (standing?.team) {
-        return { type: "team", team: standing.team, code: `1${slot.group}` };
-      }
+    const standing = standingsByGroup[slot.group]?.[0];
+    if (standing?.team) {
+      return { type: "team", team: standing.team, code: `1${slot.group}` };
     }
     return { type: "placeholder", label: formatWinnerLabel(slot.group) };
   }
 
   if (slot.type === "runnerUp") {
-    if (revealTeams) {
-      const standing = standingsByGroup[slot.group]?.[1];
-      if (standing?.team) {
-        return { type: "team", team: standing.team, code: `2${slot.group}` };
-      }
+    const standing = standingsByGroup[slot.group]?.[1];
+    if (standing?.team) {
+      return { type: "team", team: standing.team, code: `2${slot.group}` };
     }
     return { type: "placeholder", label: formatRunnerUpLabel(slot.group) };
   }

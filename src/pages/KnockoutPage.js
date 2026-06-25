@@ -4,12 +4,8 @@ import KnockoutBracket from '../components/KnockoutBracket';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useGroupsData } from '../hooks/useGroupsData';
 import { useKnockoutResults } from '../hooks/useKnockoutResults';
-import { GROUP_LETTERS, getTeamDisplayName } from '../utils/data';
-import { isKnockoutTeamsRevealed } from '../utils/knockoutConfig';
+import { GROUP_LETTERS } from '../utils/data';
 import { computeGroupStandings } from '../utils/standings';
-import { rankThirdPlaceTeams } from '../utils/thirdPlaceRanking';
-
-const revealTeams = isKnockoutTeamsRevealed();
 
 function KnockoutPage() {
   const [viewRound, setViewRound] = useState('r32');
@@ -27,11 +23,6 @@ function KnockoutPage() {
       }, {}),
     [groupedTeams, fixtures]
   );
-
-  const qualifyingThirds = useMemo(() => {
-    if (!revealTeams) return [];
-    return rankThirdPlaceTeams(standingsByGroup).filter((entry) => entry.qualifies);
-  }, [standingsByGroup]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -61,43 +52,6 @@ function KnockoutPage() {
         onViewRoundChange={setViewRound}
       />
 
-      {revealTeams && viewRound === 'r32' && (
-        <section className="knockout-third-summary" aria-labelledby="knockout-third-summary-heading">
-          <div className="knockout-third-summary-header">
-            <h2 id="knockout-third-summary-heading">Best third-placed teams</h2>
-            <Link to="/knockout/third-place-rules" className="knockout-third-summary-link">
-              View full rules
-            </Link>
-          </div>
-          <p className="knockout-third-summary-note">
-            Top 8 of 12 third-placed teams by points, goal difference, and goals
-            scored. Slot assignment to specific Round of 32 matches is shown as
-            labels on the bracket.
-          </p>
-          <ol className="knockout-third-summary-list">
-            {qualifyingThirds.map((entry) => (
-              <li key={entry.team.id} className="knockout-third-summary-item">
-                <span className="knockout-third-summary-rank">{entry.rank}</span>
-                <img
-                  className="knockout-third-summary-flag"
-                  src={`https://flagcdn.com/w40/${entry.team.flagCode}.png`}
-                  alt=""
-                  width={24}
-                  height={18}
-                />
-                <span className="knockout-third-summary-name">
-                  {getTeamDisplayName(entry.team.name)}
-                </span>
-                <span className="knockout-third-summary-group">Group {entry.group}</span>
-                <span className="knockout-third-summary-stats">
-                  {entry.points} pts · {entry.goalDifference > 0 ? '+' : ''}
-                  {entry.goalDifference} GD · {entry.goalsFor} GF
-                </span>
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
     </section>
   );
 }

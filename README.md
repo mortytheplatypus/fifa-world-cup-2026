@@ -194,16 +194,15 @@ curl https://{vercel.host}/api/knockouts/M73
 
 ## Knockout schedule mode
 
-When the group stage ends, switch Home and Fixtures to knockout matches with two env flags (build-time — redeploy after changing):
+When the group stage ends, switch Home and Fixtures to knockout matches with a build-time env flag (redeploy after changing):
 
 | Variable | Purpose |
 |----------|---------|
 | `REACT_APP_KNOCKOUT_SCHEDULE=true` | Home upcoming/latest/hero and Fixtures default tab use knockout matches (M73–M104) |
-| `REACT_APP_KNOCKOUT_REVEAL_TEAMS=true` | Resolve bracket slots to real team names (required for schedule cards) |
 
 **Deploy-day checklist**
 
 1. **MongoDB** — in the `knockouts` collection, set `time`, `city`, and `venue` on each match document. Status labels (Upcoming / Live / FT) depend on kickoff time; update `homeScore` / `awayScore` as matches finish.
-2. **Env** — set both flags above on your host.
+2. **Env** — set `REACT_APP_KNOCKOUT_SCHEDULE=true` on your host.
 3. **Redeploy** the app.
 4. **Smoke test** — Home hero and upcoming/latest show knockout matches; Fixtures opens on the Knockout tab with a Group stage archive tab; `/knockout` bracket still works.

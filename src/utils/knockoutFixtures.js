@@ -4,7 +4,6 @@ import {
   getKnockoutSchedule,
   resolveKnockoutMatch,
 } from './knockout';
-import { isKnockoutTeamsRevealed } from './knockoutConfig';
 import { computeGroupStandings } from './standings';
 
 const DEFAULT_KNOCKOUT_TIME = '12:00';
@@ -64,8 +63,7 @@ export function buildStandingsByGroup(groupedTeams, fixturesByGroup) {
  * Only includes matches where both sides resolve to a team.
  */
 export function buildKnockoutFixtures(standingsByGroup, knockoutResults = {}) {
-  const revealTeams = isKnockoutTeamsRevealed();
-  const options = { revealTeams, knockoutResults };
+  const options = { knockoutResults };
   const fixtures = [];
 
   for (const matchId of KNOCKOUT_MATCH_IDS) {

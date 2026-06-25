@@ -3,14 +3,11 @@ import { Link } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useGroupsData } from '../hooks/useGroupsData';
 import { GROUP_LETTERS, getTeamDisplayName } from '../utils/data';
-import { isKnockoutTeamsRevealed } from '../utils/knockoutConfig';
-import { computeGroupStandings } from '../utils/standings';
+import { computeGroupStandings, computeConductScore } from '../utils/standings';
 import { rankThirdPlaceTeams } from '../utils/thirdPlaceRanking';
 import {
   CONDUCT_SCORE_RULES,
   GROUP_TIEBREAKER_RULES,
-  RANKING_LIMITATION_NOTE,
-  RANKING_VOLATILITY_WARNING,
   THIRD_PLACE_QUALIFICATION_RULES,
 } from '../utils/thirdPlaceRules';
 
@@ -22,7 +19,6 @@ function getGoalDifferenceClass(goalDifference) {
 
 function ThirdPlaceRulesPage() {
   const [activeTab, setActiveTab] = useState('ranking');
-  const revealTeams = isKnockoutTeamsRevealed();
   const { groupedTeams, fixtures, loading, error } = useGroupsData();
 
   const standingsByGroup = useMemo(
@@ -55,11 +51,11 @@ function ThirdPlaceRulesPage() {
       <nav className="breadcrumb">
         <Link to="/knockout">Knockout</Link>
         <span aria-hidden="true">/</span>
-        <span>Third-place rules</span>
+        <span>Third-place Standings</span>
       </nav>
 
       <header className="third-place-rules-header">
-        <h1>Third-place rules</h1>
+        <h1>Third-place standings and rules</h1>
         <p className="page-subtitle">
           How ties are broken and the eight best third-placed teams are ranked
         </p>
@@ -103,14 +99,6 @@ function ThirdPlaceRulesPage() {
       >
         <section className="rules-section" aria-labelledby="third-place-ranking-heading">
           <h2 id="third-place-ranking-heading">Current third-place ranking</h2>
-          <div className="rules-notice" role="note">
-            {!revealTeams && (
-              <p className="rules-notice-text rules-notice-text--warning">
-                {RANKING_VOLATILITY_WARNING}
-              </p>
-            )}
-            <p className="rules-notice-text">{RANKING_LIMITATION_NOTE}</p>
-          </div>
           <div className="standings-table-wrap">
             <table className="standings-table third-place-ranking-table">
               <thead>
@@ -126,10 +114,23 @@ function ThirdPlaceRulesPage() {
                   <th scope="col">GA</th>
                   <th scope="col">GD</th>
                   <th scope="col" className="standings-col-pts">Pts</th>
+                  <th
+                    scope="col"
+                    className="standings-col-conduct"
+                    title="Fair play conduct score (tie-breaker)"
+                  >
+                    Conduct
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {thirdPlaceRanking.map((row) => (
+                {thirdPlaceRanking.map((row) => {
+                  const conductScore = computeConductScore(
+                    row.team.id,
+                    fixtures[row.group] ?? []
+                  );
+
+                  return (
                   <tr
                     key={row.team.id}
                     className={
@@ -166,8 +167,18 @@ function ThirdPlaceRulesPage() {
                         : row.goalDifference}
                     </td>
                     <td className="standings-col-pts">{row.points}</td>
+                    <td
+                      className={
+                        conductScore < 0
+                          ? 'standings-col-conduct standings-negative'
+                          : 'standings-col-conduct'
+                      }
+                    >
+                      {conductScore}
+                    </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>

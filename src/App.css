@@ -4300,6 +4300,95 @@ textarea {
     max-width: 9rem;
   }
 
+  .knockout-bracket--half {
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .knockout-bracket--half .knockout-bracket-tree--half {
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .knockout-bracket--half .knockout-match,
+  .knockout-bracket--half .knockout-match--compact {
+    min-width: 0;
+    max-width: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .knockout-bracket--half .knockout-bracket-feeder {
+    min-width: 0;
+  }
+
+  .knockout-bracket--half .knockout-match-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .knockout-bracket--half .knockout-match-meta {
+    width: 100%;
+  }
+
+  .knockout-bracket--half .knockout-match-date {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.35rem;
+    white-space: normal;
+  }
+
+  .knockout-bracket--half .knockout-match-date-label,
+  .knockout-bracket--half .knockout-match-time {
+    white-space: nowrap;
+  }
+
+  .knockout-bracket--half .knockout-bracket-label.knockout-match-label {
+    align-self: flex-start;
+    margin: 0;
+  }
+
+  .knockout-bracket--half .knockout-bracket-label.knockout-match-label--compact {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0;
+    padding: 0.1rem 0.35rem 0.1rem 0;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--highlight) 10%, var(--surface));
+    color: var(--accent);
+    font-size: 0.58rem;
+    font-weight: 600;
+    line-height: 1.35;
+    white-space: normal;
+    word-break: break-word;
+    text-align: left;
+  }
+
+  .knockout-bracket--half-from-qf .knockout-bracket-half {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    --knockout-feeder-gap: 0.5rem;
+    --knockout-merge-width: 0;
+  }
+
+  .knockout-bracket--half-from-qf .knockout-bracket-half-feeders {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    width: 100%;
+  }
+
+  .knockout-bracket--half-from-qf .knockout-bracket-feeder::after,
+  .knockout-bracket--half-from-qf .knockout-bracket-merge,
+  .knockout-bracket--half-from-qf .knockout-bracket-half-target::before {
+    display: none;
+  }
+
   .knockout-third-summary-item {
     gap: 0.5rem;
     padding: 0.5rem 0.6rem;
