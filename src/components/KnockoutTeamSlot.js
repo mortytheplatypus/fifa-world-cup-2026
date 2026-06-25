@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import ThirdPlaceSlotInfo from './ThirdPlaceSlotInfo';
 import { getTeamDisplayName } from '../utils/data';
 
 const resolvedSlotShape = PropTypes.shape({
@@ -11,6 +12,9 @@ const resolvedSlotShape = PropTypes.shape({
   label: PropTypes.string,
   code: PropTypes.string,
   score: PropTypes.number,
+  thirdPlaceInfo: PropTypes.shape({
+    candidateGroups: PropTypes.arrayOf(PropTypes.string),
+  }),
 });
 
 function KnockoutTeamSlot({ slot }) {
@@ -32,6 +36,9 @@ function KnockoutTeamSlot({ slot }) {
             slot.code && <span className="knockout-slot-code"> {slot.code}</span>
           )}
         </span>
+        {slot.thirdPlaceInfo?.candidateGroups?.length > 0 && (
+          <ThirdPlaceSlotInfo candidateGroups={slot.thirdPlaceInfo.candidateGroups} />
+        )}
       </div>
     );
   }

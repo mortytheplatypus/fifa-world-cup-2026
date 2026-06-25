@@ -1,15 +1,15 @@
 /**
  * Knockout stage bracket definition (M73–M104).
  *
- * Future extensions:
- * - Annex C 495-scenario matrix to assign specific 3rd-place teams to slots
- * - Knockout results data to replace Wxx placeholders with advancing winners
+ * Third-place R32 slots use FIFA Annex C (see thirdPlaceAssignment.js).
+ * Knockout results replace Wxx placeholders with advancing winners.
  */
 
 import {
   DISPLAY_TIMEZONE,
   parseFixtureInstant,
 } from "./timezone";
+import { buildThirdPlaceByWinner } from "./thirdPlaceAssignment";
 
 export const KNOCKOUT_ROUND_LABELS = {
   r32: "R32",
@@ -464,6 +464,21 @@ function withSlotScore(resolved, score) {
   return { ...resolved, score };
 }
 
+function getFixedWinnerForThird(slot, opposingSlot) {
+  if (slot.type !== "bestThird" || opposingSlot?.type !== "winner") {
+    return undefined;
+  }
+
+  return opposingSlot.group;
+}
+
+function getKnockoutResolverOptions(standingsByGroup, options = {}) {
+  const thirdPlaceByWinner =
+    options.thirdPlaceByWinner ?? buildThirdPlaceByWinner(standingsByGroup);
+
+  return { ...options, thirdPlaceByWinner };
+}
+
 function getKnockoutResultSides(result) {
   if (result?.homeScore == null || result?.awayScore == null) {
     return null;
@@ -482,10 +497,11 @@ function getKnockoutResultSides(result) {
 
 /**
  * Resolve a knockout slot to a team or placeholder.
- * @returns {{ type: 'team', team: object, score?: number } | { type: 'third', label: string } | { type: 'placeholder', label: string }}
+ * @returns {{ type: 'team', team: object, score?: number, thirdPlaceInfo?: { candidateGroups: string[] } } | { type: 'third', label: string } | { type: 'placeholder', label: string }}
  */
 export function resolveKnockoutSlot(slot, standingsByGroup, options = {}) {
-  const { knockoutResults = {} } = options;
+  const { knockoutResults = {}, thirdPlaceByWinner, fixedWinnerForThird } =
+    options;
 
   if (slot.type === "winner") {
     const standing = standingsByGroup[slot.group]?.[0];
@@ -504,6 +520,19 @@ export function resolveKnockoutSlot(slot, standingsByGroup, options = {}) {
   }
 
   if (slot.type === "bestThird") {
+    if (thirdPlaceByWinner && fixedWinnerForThird) {
+      const assigned = thirdPlaceByWinner[fixedWinnerForThird];
+
+      if (assigned?.team) {
+        return {
+          type: "team",
+          team: assigned.team,
+          code: `3${assigned.group}`,
+          thirdPlaceInfo: { candidateGroups: slot.groups },
+        };
+      }
+    }
+
     return { type: "third", label: formatBestThirdLabel(slot.groups) };
   }
 
@@ -544,10 +573,18 @@ export function resolveKnockoutMatch(matchId, standingsByGroup, options = {}) {
   const match = KNOCKOUT_MATCHES[matchId];
   if (!match) return null;
 
+  const resolverOptions = getKnockoutResolverOptions(standingsByGroup, options);
   const result = knockoutResults[matchId];
   const schedule = getKnockoutSchedule(matchId, knockoutResults);
-  const resolvedA = resolveKnockoutSlot(match.teamA, standingsByGroup, options);
-  const resolvedB = resolveKnockoutSlot(match.teamB, standingsByGroup, options);
+  const resolvedA = resolveKnockoutSlot(
+    match.teamA,
+    standingsByGroup,
+    resolverOptions,
+  );
+  const resolvedB = resolveKnockoutSlot(match.teamB, standingsByGroup, {
+    ...resolverOptions,
+    fixedWinnerForThird: getFixedWinnerForThird(match.teamB, match.teamA),
+  });
 
   return {
     ...match,
