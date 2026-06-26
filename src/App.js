@@ -11,6 +11,8 @@ import PointsTablesPage from './pages/PointsTablesPage';
 import GroupFixturesPage from './pages/GroupFixturesPage';
 import GroupPage from './pages/GroupPage';
 import GroupsPage from './pages/GroupsPage';
+import TeamPage from './pages/TeamPage';
+import PlayerPage from './pages/PlayerPage';
 
 function AppRoutes() {
   useVisitTracker();
@@ -32,6 +34,8 @@ function AppRoutes() {
             path="groups/:groupId/fixtures/:view"
             element={<GroupFixturesPage />}
           />
+          <Route path="teams/:flagCode" element={<TeamPage />} />
+          <Route path="players/:playerId" element={<PlayerPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,0 +1,74 @@
+import { useState } from 'react';
+import PropTypes from 'prop-types';
+import { fetchPlayersByIds, resolvePlayers } from '../utils/data';
+import { wcTournamentShape } from '../propTypes';
+import WcHistorySquad from './WcHistorySquad';
+import WcStageBadge from './WcStageBadge';
+
+function WcHistoryList({ tournaments }) {
+  const [expandedYear, setExpandedYear] = useState(null);
+  const [playersMap, setPlayersMap] = useState(null);
+
+  if (!tournaments?.length) {
+    return <p className="status-message">No previous World Cup appearances.</p>;
+  }
+
+  const sorted = [...tournaments].sort((a, b) => b.year - a.year);
+
+  async function handleToggle(year, squadPlayerIds) {
+    if (expandedYear === year) {
+      setExpandedYear(null);
+      return;
+    }
+
+    setExpandedYear(year);
+
+    const players = await fetchPlayersByIds(squadPlayerIds);
+    setPlayersMap((current) => ({ ...(current ?? {}), ...players }));
+  }
+
+  return (
+    <ul className="wc-history-list">
+      {sorted.map((tournament) => {
+        const isExpanded = expandedYear === tournament.year;
+        const squadPlayers = playersMap
+          ? resolvePlayers(tournament.squadPlayerIds, playersMap)
+          : [];
+        const isLoadingSquad =
+          isExpanded &&
+          tournament.squadPlayerIds?.some((playerId) => !playersMap?.[playerId]);
+
+        return (
+          <li key={tournament.year} className="wc-history-item">
+            <button
+              type="button"
+              className={`wc-history-item-header${isExpanded ? ' wc-history-item-header--expanded' : ''}`}
+              onClick={() => handleToggle(tournament.year, tournament.squadPlayerIds)}
+              aria-expanded={isExpanded}
+            >
+              <span className="wc-history-year">{tournament.year}</span>
+              <span className="wc-history-host">{tournament.host}</span>
+              <WcStageBadge stage={tournament.stage} label={tournament.stageLabel} />
+              <span className="wc-history-toggle" aria-hidden="true">
+                {isExpanded ? '−' : '+'}
+              </span>
+            </button>
+            {isExpanded && (
+              <WcHistorySquad
+                year={tournament.year}
+                players={squadPlayers}
+                loading={isLoadingSquad}
+              />
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+WcHistoryList.propTypes = {
+  tournaments: PropTypes.arrayOf(wcTournamentShape),
+};
+
+export default WcHistoryList;
