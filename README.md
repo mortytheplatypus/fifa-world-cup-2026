@@ -13,7 +13,7 @@ Static JSON files in this folder drive the site. To update scores and points tab
 After editing any of these files, push changes to MongoDB:
 
 ```bash
-npm run sync:db
+npm run seed:db
 ```
 
 Requires `MONGODB_URI` (and optionally `MONGODB_DB_NAME`) in `.env`. The live API reads from MongoDB, not the JSON files directly.

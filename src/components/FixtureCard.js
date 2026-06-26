@@ -1,16 +1,12 @@
-import PropTypes from "prop-types";
-import { useTimezone } from "../context/TimezoneContext";
-import { useNow } from "../hooks/useNow";
-import { getTeamDisplayName } from "../utils/data";
-import KnockoutMatchLabel from "./KnockoutMatchLabel";
-import { fixtureShape, teamShape } from "../propTypes";
-import { getFixtureStatus } from "../utils/fixtures";
-import {
-  getCardDisplay,
-  getCardPlayerName,
-  getCardsBySide,
-  getGoalsBySide,
-} from "../utils/results";
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { useTimezone } from '../context/TimezoneContext';
+import { useNow } from '../hooks/useNow';
+import { getTeamDisplayName, getTeamPath } from '../utils/data';
+import KnockoutMatchLabel from './KnockoutMatchLabel';
+import { fixtureShape, teamShape } from '../propTypes';
+import { getFixtureStatus } from '../utils/fixtures';
+import { getCardDisplay, getCardPlayerName, getCardsBySide, getGoalsBySide } from '../utils/results';
 import {
   formatFixtureDate,
   formatFixtureTime,
@@ -82,7 +78,7 @@ function FixtureCard({
 
       <div className="fixture-teams">
         <div className="fixture-team-side fixture-team-side--home">
-          <div className="fixture-team-label">
+          <Link to={getTeamPath(homeTeam)} className="fixture-team-label fixture-team-label--link">
             <img
               className="fixture-team-flag fixture-team-flag--home"
               src={`https://flagcdn.com/w40/${homeTeam.flagCode}.png`}
@@ -93,7 +89,7 @@ function FixtureCard({
             <span className="fixture-team-name fixture-team-name--home">
               {getTeamDisplayName(homeTeam.name)}
             </span>
-          </div>
+          </Link>
           {showScorers && homeGoals.length > 0 && (
             <ul
               className="fixture-team-scorers fixture-team-scorers--home"
@@ -140,7 +136,7 @@ function FixtureCard({
         )}
 
         <div className="fixture-team-side fixture-team-side--away">
-          <div className="fixture-team-label">
+          <Link to={getTeamPath(awayTeam)} className="fixture-team-label fixture-team-label--link">
             <img
               className="fixture-team-flag fixture-team-flag--away"
               src={`https://flagcdn.com/w40/${awayTeam.flagCode}.png`}
@@ -151,7 +147,7 @@ function FixtureCard({
             <span className="fixture-team-name fixture-team-name--away">
               {getTeamDisplayName(awayTeam.name)}
             </span>
-          </div>
+          </Link>
           {showScorers && awayGoals.length > 0 && (
             <ul
               className="fixture-team-scorers fixture-team-scorers--away"

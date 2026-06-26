@@ -14,6 +14,8 @@ import GroupsLayout from './pages/GroupsLayout';
 import GroupsPage from './pages/GroupsPage';
 import KnockoutPage from './pages/KnockoutPage';
 import ThirdPlaceRulesPage from './pages/ThirdPlaceRulesPage';
+import TeamPage from './pages/TeamPage';
+import PlayerPage from './pages/PlayerPage';
 
 function AppRoutes() {
   useVisitTracker();
@@ -45,6 +47,8 @@ function AppRoutes() {
             path="knockout/third-place-rules"
             element={<ThirdPlaceRulesPage />}
           />
+          <Route path="teams/:flagCode" element={<TeamPage />} />
+          <Route path="players/:playerId" element={<PlayerPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

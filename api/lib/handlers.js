@@ -1,5 +1,19 @@
 const { getDb } = require('./db');
 
+function mapTeamDoc({ _id, name, group, flagCode, colors, fifaRankingPreWc, confederation, founded, homeStadium }) {
+  return {
+    id: _id,
+    name,
+    group,
+    flagCode,
+    ...(colors?.length ? { colors } : {}),
+    ...(fifaRankingPreWc != null ? { fifaRankingPreWc } : {}),
+    ...(confederation ? { confederation } : {}),
+    ...(founded != null ? { founded } : {}),
+    ...(homeStadium ? { homeStadium } : {}),
+  };
+}
+
 async function getTeams() {
   const db = await getDb();
   const teams = await db
@@ -8,14 +22,7 @@ async function getTeams() {
     .sort({ group: 1, name: 1 })
     .toArray();
 
-  return teams.map(({ _id, name, group, flagCode, colors, fifaRankingPreWc }) => ({
-    id: _id,
-    name,
-    group,
-    flagCode,
-    ...(colors?.length ? { colors } : {}),
-    ...(fifaRankingPreWc != null ? { fifaRankingPreWc } : {}),
-  }));
+  return teams.map(mapTeamDoc);
 }
 
 async function getFixtures() {
@@ -136,10 +143,55 @@ async function getKnockoutResults() {
   };
 }
 
+async function getSquads() {
+  const db = await getDb();
+  const squads = await db.collection('squads').find({}).toArray();
+
+  return {
+    lastUpdated: null,
+    squads: Object.fromEntries(
+      squads.map(({ _id, coach, captain, playerIds }) => [
+        _id,
+        { coach, captain, playerIds },
+      ])
+    ),
+  };
+}
+
+async function getPlayers() {
+  const db = await getDb();
+  const players = await db.collection('players').find({}).toArray();
+
+  return {
+    lastUpdated: null,
+    players: Object.fromEntries(
+      players.map(({ _id, ...rest }) => [_id, { id: _id, ...rest }])
+    ),
+  };
+}
+
+async function getWcHistories() {
+  const db = await getDb();
+  const histories = await db.collection('wcHistory').find({}).toArray();
+
+  return {
+    lastUpdated: null,
+    wcHistory: Object.fromEntries(
+      histories.map(({ _id, championships, bestFinish, appearances, tournaments }) => [
+        _id,
+        { championships, bestFinish, appearances, tournaments },
+      ])
+    ),
+  };
+}
+
 module.exports = {
   getTeams,
   getFixtures,
   getResults,
   getKnockoutResult,
   getKnockoutResults,
+  getSquads,
+  getPlayers,
+  getWcHistories,
 };
