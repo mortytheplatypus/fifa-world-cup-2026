@@ -97,6 +97,48 @@ async function getTeamByFlagCode(flagCode) {
   return mapTeamDoc(team);
 }
 
+async function getSquads() {
+  const db = await getDb();
+  const squads = await db.collection('squads').find({}).toArray();
+
+  return {
+    lastUpdated: null,
+    squads: Object.fromEntries(
+      squads.map(({ _id, coach, captain, playerIds }) => [
+        _id,
+        { coach, captain, playerIds },
+      ])
+    ),
+  };
+}
+
+async function getPlayers() {
+  const db = await getDb();
+  const players = await db.collection('players').find({}).toArray();
+
+  return {
+    lastUpdated: null,
+    players: Object.fromEntries(
+      players.map(({ _id, ...rest }) => [_id, { id: _id, ...rest }])
+    ),
+  };
+}
+
+async function getWcHistories() {
+  const db = await getDb();
+  const histories = await db.collection('wcHistory').find({}).toArray();
+
+  return {
+    lastUpdated: null,
+    wcHistory: Object.fromEntries(
+      histories.map(({ _id, championships, bestFinish, appearances, tournaments }) => [
+        _id,
+        { championships, bestFinish, appearances, tournaments },
+      ])
+    ),
+  };
+}
+
 async function getSquad(teamId) {
   const db = await getDb();
   const squad = await db.collection('squads').findOne({ _id: teamId });
@@ -137,6 +179,9 @@ module.exports = {
   getTeams,
   getFixtures,
   getResults,
+  getSquads,
+  getPlayers,
+  getWcHistories,
   getTeamById,
   getTeamByFlagCode,
   getSquad,
