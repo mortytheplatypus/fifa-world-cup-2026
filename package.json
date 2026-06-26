@@ -19,9 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "sync:db": "node scripts/sync-mongodb.js",
     "seed:db": "node scripts/seed-mongodb.js",
-    "generate:team-data": "node scripts/generate-team-data.js",
     "validate:data": "node scripts/validate-data.js"
   },
   "eslintConfig": {
