@@ -73,30 +73,6 @@ function mapTeamDoc({ _id, name, group, flagCode, colors, fifaRankingPreWc, conf
   };
 }
 
-async function getTeamById(teamId) {
-  const db = await getDb();
-  const team = await db.collection('teams').findOne({ _id: teamId });
-
-  if (!team) {
-    return null;
-  }
-
-  return mapTeamDoc(team);
-}
-
-async function getTeamByFlagCode(flagCode) {
-  const db = await getDb();
-  const team = await db
-    .collection('teams')
-    .findOne({ flagCode: flagCode.toLowerCase() });
-
-  if (!team) {
-    return null;
-  }
-
-  return mapTeamDoc(team);
-}
-
 async function getSquads() {
   const db = await getDb();
   const squads = await db.collection('squads').find({}).toArray();
@@ -139,42 +115,6 @@ async function getWcHistories() {
   };
 }
 
-async function getSquad(teamId) {
-  const db = await getDb();
-  const squad = await db.collection('squads').findOne({ _id: teamId });
-
-  if (!squad) {
-    return null;
-  }
-
-  const { _id, coach, captain, playerIds } = squad;
-  return { teamId: _id, coach, captain, playerIds };
-}
-
-async function getPlayer(playerId) {
-  const db = await getDb();
-  const player = await db.collection('players').findOne({ _id: playerId });
-
-  if (!player) {
-    return null;
-  }
-
-  const { _id, ...rest } = player;
-  return { id: _id, ...rest };
-}
-
-async function getWcHistory(teamId) {
-  const db = await getDb();
-  const history = await db.collection('wcHistory').findOne({ _id: teamId });
-
-  if (!history) {
-    return null;
-  }
-
-  const { _id, championships, bestFinish, appearances, tournaments } = history;
-  return { teamId: _id, championships, bestFinish, appearances, tournaments };
-}
-
 module.exports = {
   getTeams,
   getFixtures,
@@ -182,9 +122,4 @@ module.exports = {
   getSquads,
   getPlayers,
   getWcHistories,
-  getTeamById,
-  getTeamByFlagCode,
-  getSquad,
-  getPlayer,
-  getWcHistory,
 };
