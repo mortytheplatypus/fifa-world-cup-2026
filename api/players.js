@@ -1,4 +1,4 @@
-const { getPlayers } = require('../server/lib/handlers');
+const { getPlayers } = require('./lib/handlers');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {

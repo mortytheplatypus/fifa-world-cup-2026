@@ -1,4 +1,4 @@
-const { getWcHistories } = require('../server/lib/handlers');
+const { getWcHistories } = require('./lib/handlers');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {

@@ -1,4 +1,4 @@
-const { getDb } = require('../server/lib/db');
+const { getDb } = require('./lib/db');
 
 const COUNTER_ID = 'visitor_count';
 const COLLECTION = 'site_stats';

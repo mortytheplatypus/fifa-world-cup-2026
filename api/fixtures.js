@@ -1,4 +1,4 @@
-const { getFixtures } = require('../server/lib/handlers');
+const { getFixtures } = require('./lib/handlers');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {

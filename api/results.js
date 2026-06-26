@@ -1,4 +1,4 @@
-const { getResults } = require('../server/lib/handlers');
+const { getResults } = require('./lib/handlers');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {
