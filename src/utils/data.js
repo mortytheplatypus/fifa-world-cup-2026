@@ -29,50 +29,42 @@ function getCached(key) {
   return entry.promise;
 }
 
-async function fetchData(key) {
+const COLLECTION_KEYS = {
+  results: 'matches',
+  squads: 'squads',
+  players: 'players',
+  wcHistory: 'wcHistory',
+};
+
+async function fetchData(key, { id, notFoundValue = null } = {}) {
+  if (id) {
+    const data = await fetchData(key);
+    const collectionKey = COLLECTION_KEYS[key];
+    const record = collectionKey ? data[collectionKey]?.[id] : data[id];
+
+    if (!record) {
+      return notFoundValue;
+    }
+
+    if (key === 'squads' || key === 'wcHistory') {
+      return { teamId: id, ...record };
+    }
+
+    return record;
+  }
+
   const cached = getCached(key);
   if (cached) {
     return cached;
   }
 
   const path = `${API_BASE}/api/${key}`;
-
   const promise = fetch(path).then((response) => {
     if (!response.ok) throw new Error(`Failed to load ${path}`);
     return response.json();
   });
 
   cache.set(key, { promise, expiresAt: Date.now() + getCacheTtl(key) });
-  promise.catch(() => cache.delete(key));
-
-  return promise;
-}
-
-async function fetchApiPath(path, { cacheKey, cacheTtlKey, notFoundValue = null } = {}) {
-  const key = cacheKey ?? path;
-  const cached = getCached(key);
-
-  if (cached) {
-    return cached;
-  }
-
-  const url = `${API_BASE}${path}`;
-  const promise = fetch(url).then(async (response) => {
-    if (response.status === 404) {
-      return notFoundValue;
-    }
-
-    if (!response.ok) {
-      throw new Error(`Failed to load ${url}`);
-    }
-
-    return response.json();
-  });
-
-  cache.set(key, {
-    promise,
-    expiresAt: Date.now() + getCacheTtl(cacheTtlKey ?? key),
-  });
   promise.catch(() => cache.delete(key));
 
   return promise;
@@ -95,12 +87,7 @@ export async function fetchSquad(teamId) {
     return null;
   }
 
-  const id = encodeURIComponent(teamId.toUpperCase());
-
-  return fetchApiPath(`/api/squads/${id}`, {
-    cacheKey: `squads:${id}`,
-    cacheTtlKey: 'squads',
-  });
+  return fetchData('squads', { id: teamId.toUpperCase() });
 }
 
 export async function fetchPlayer(playerId) {
@@ -108,12 +95,7 @@ export async function fetchPlayer(playerId) {
     return null;
   }
 
-  const id = encodeURIComponent(playerId);
-
-  return fetchApiPath(`/api/players/${id}`, {
-    cacheKey: `players:${id}`,
-    cacheTtlKey: 'players',
-  });
+  return fetchData('players', { id: playerId });
 }
 
 export async function fetchPlayersByIds(playerIds) {
@@ -133,12 +115,7 @@ export async function fetchWcHistory(teamId) {
     return null;
   }
 
-  const id = encodeURIComponent(teamId.toUpperCase());
-
-  return fetchApiPath(`/api/wcHistory/${id}`, {
-    cacheKey: `wcHistory:${id}`,
-    cacheTtlKey: 'wcHistory',
-  });
+  return fetchData('wcHistory', { id: teamId.toUpperCase() });
 }
 
 export async function fetchTeamColors() {

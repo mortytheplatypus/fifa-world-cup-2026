@@ -228,7 +228,7 @@ function buildWcHistoryDocs(data) {
     });
   }
 
-  return Object.entries(data.teams ?? {}).map(([teamId, history]) => {
+  return Object.entries(data.wcHistory ?? {}).map(([teamId, history]) => {
     const { championships, bestFinish, appearances, tournaments } = history;
 
     return {

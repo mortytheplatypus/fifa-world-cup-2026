@@ -15,7 +15,7 @@ const teams = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'teams.json'), 'utf
 const teamById = Object.fromEntries(teams.map((team) => [team.id, team]));
 const playersMap = {};
 const squadsOut = { lastUpdated: new Date().toISOString(), squads: {} };
-const wcHistoryOut = { lastUpdated: new Date().toISOString(), teams: {} };
+const wcHistoryOut = { lastUpdated: new Date().toISOString(), wcHistory: {} };
 
 function upsertPlayer(player) {
   const existing = playersMap[player.id];
@@ -91,7 +91,7 @@ for (const team of teams) {
     };
   });
 
-  wcHistoryOut.teams[team.id] = {
+  wcHistoryOut.wcHistory[team.id] = {
     championships: wcData.championships,
     bestFinish: wcData.bestFinish,
     appearances: tournaments.length,
@@ -106,10 +106,10 @@ const playersOut = {
 
 fs.writeFileSync(path.join(DATA_DIR, 'squads.json'), JSON.stringify(squadsOut, null, 2));
 fs.writeFileSync(path.join(DATA_DIR, 'players.json'), JSON.stringify(playersOut, null, 2));
-fs.writeFileSync(path.join(DATA_DIR, 'wc-history.json'), JSON.stringify(wcHistoryOut, null, 2));
+fs.writeFileSync(path.join(DATA_DIR, 'wcHistory.json'), JSON.stringify(wcHistoryOut, null, 2));
 
 console.log(`Generated squads for ${Object.keys(squadsOut.squads).length} teams`);
 console.log(`Generated ${Object.keys(playersOut.players).length} players`);
 console.log(
-  `Generated WC history with ${Object.values(wcHistoryOut.teams).reduce((sum, t) => sum + t.tournaments.length, 0)} tournaments`
+  `Generated WC history with ${Object.values(wcHistoryOut.wcHistory).reduce((sum, t) => sum + t.tournaments.length, 0)} tournaments`
 );

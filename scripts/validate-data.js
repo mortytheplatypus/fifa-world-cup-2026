@@ -24,7 +24,7 @@ function validate() {
   const teams = readJson('teams.json');
   const squads = readJson('squads.json');
   const players = readJson('players.json');
-  const wcHistory = readJson('wc-history.json');
+  const wcHistory = readJson('wcHistory.json');
 
   const teamIds = new Set(teams.map((team) => team.id));
   const playerIds = new Set(Object.keys(players.players ?? {}));
@@ -37,15 +37,15 @@ function validate() {
     errors.push('players.json: missing players object');
   }
 
-  if (!wcHistory.teams) {
-    errors.push('wc-history.json: missing teams object');
+  if (!wcHistory.wcHistory) {
+    errors.push('wcHistory.json: missing wcHistory object');
   }
 
   for (const team of teams) {
     if (!squads.squads?.[team.id]) {
       errors.push(`Missing squad for team ${team.id}`);
     }
-    if (!wcHistory.teams?.[team.id]) {
+    if (!wcHistory.wcHistory?.[team.id]) {
       errors.push(`Missing WC history for team ${team.id}`);
     }
   }
@@ -94,7 +94,7 @@ function validate() {
     }
   }
 
-  for (const [teamId, history] of Object.entries(wcHistory.teams ?? {})) {
+  for (const [teamId, history] of Object.entries(wcHistory.wcHistory ?? {})) {
     if (!teamIds.has(teamId)) {
       errors.push(`WC history references unknown team ${teamId}`);
     }
@@ -144,7 +144,7 @@ function validate() {
   console.log(`  Squads: ${Object.keys(squads.squads).length}`);
   console.log(`  Players: ${Object.keys(players.players).length}`);
   console.log(
-    `  WC tournaments: ${Object.values(wcHistory.teams).reduce((sum, t) => sum + t.tournaments.length, 0)}`
+    `  WC tournaments: ${Object.values(wcHistory.wcHistory).reduce((sum, t) => sum + t.tournaments.length, 0)}`
   );
 }
 
