@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 function loadEnv() {
-  const envPath = path.join(__dirname, '..', '.env');
+  const envPath = path.join(__dirname, '..', '..', '.env');
   if (!fs.existsSync(envPath)) {
     return;
   }
@@ -132,6 +132,20 @@ function buildResultDocs(data) {
 }
 
 function buildSquadDocs(data) {
+  if (Array.isArray(data)) {
+    return data.map((squad) => {
+      const { _id, coach, captain, playerIds } = squad;
+
+      return {
+        replaceOne: {
+          filter: { _id },
+          replacement: { _id, coach, captain, playerIds },
+          upsert: true,
+        },
+      };
+    });
+  }
+
   return Object.entries(data.squads ?? {}).map(([teamId, squad]) => {
     const { coach, captain, playerIds } = squad;
 
@@ -146,8 +160,13 @@ function buildSquadDocs(data) {
 }
 
 function buildPlayerDocs(data) {
-  return Object.entries(data.players ?? {}).map(([id, player]) => {
+  const players = Array.isArray(data)
+    ? data
+    : Object.entries(data.players ?? {}).map(([id, player]) => ({ _id: id, ...player }));
+
+  return players.map((player) => {
     const {
+      _id: id,
       teamId,
       flagCode,
       name,
@@ -195,6 +214,20 @@ function buildPlayerDocs(data) {
 }
 
 function buildWcHistoryDocs(data) {
+  if (Array.isArray(data)) {
+    return data.map((history) => {
+      const { _id, championships, bestFinish, appearances, tournaments } = history;
+
+      return {
+        replaceOne: {
+          filter: { _id },
+          replacement: { _id, championships, bestFinish, appearances, tournaments },
+          upsert: true,
+        },
+      };
+    });
+  }
+
   return Object.entries(data.teams ?? {}).map(([teamId, history]) => {
     const { championships, bestFinish, appearances, tournaments } = history;
 
@@ -240,7 +273,7 @@ const COLLECTIONS = {
     transform: (data) => data,
   },
   wcHistory: {
-    file: 'wc-history.json',
+    file: 'wcHistory.json',
     collection: 'wcHistory',
     build: (data) => buildWcHistoryDocs(data),
     transform: (data) => data,

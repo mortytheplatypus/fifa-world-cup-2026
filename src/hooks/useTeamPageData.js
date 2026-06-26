@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
-  fetchPlayers,
-  fetchSquads,
+  fetchPlayer,
+  fetchPlayersByIds,
+  fetchSquad,
   fetchTeams,
   fetchWcHistory,
   getTeamByFlagCode,
@@ -25,12 +26,7 @@ export function useTeamPageData(flagCode) {
       setState((prev) => ({ ...prev, loading: true, error: null }));
 
       try {
-        const [teams, squads, playersMap, wcHistoryMap] = await Promise.all([
-          fetchTeams(),
-          fetchSquads(),
-          fetchPlayers(),
-          fetchWcHistory(),
-        ]);
+        const teams = await fetchTeams();
 
         if (cancelled) return;
 
@@ -48,9 +44,15 @@ export function useTeamPageData(flagCode) {
           return;
         }
 
-        const squad = squads[team.id] ?? null;
+        const [squad, wcHistory] = await Promise.all([
+          fetchSquad(team.id),
+          fetchWcHistory(team.id),
+        ]);
+
+        if (cancelled) return;
+
+        const playersMap = await fetchPlayersByIds(squad?.playerIds);
         const squadPlayers = resolvePlayers(squad?.playerIds, playersMap);
-        const wcHistory = wcHistoryMap[team.id] ?? null;
 
         setState({
           team,
@@ -97,11 +99,10 @@ export function usePlayerPageData(playerId) {
       setState((prev) => ({ ...prev, loading: true, error: null }));
 
       try {
-        const [teams, playersMap] = await Promise.all([fetchTeams(), fetchPlayers()]);
+        const [player, teams] = await Promise.all([fetchPlayer(playerId), fetchTeams()]);
 
         if (cancelled) return;
 
-        const player = playersMap[playerId] ?? null;
         const team = player ? teams.find((entry) => entry.id === player.teamId) ?? null : null;
 
         setState({

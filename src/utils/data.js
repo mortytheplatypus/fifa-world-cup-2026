@@ -10,7 +10,7 @@ const CACHE_TTL_BY_KEY = {
   fixtures: STATIC_CACHE_TTL_MS,
   squads: STATIC_CACHE_TTL_MS,
   players: STATIC_CACHE_TTL_MS,
-  'wc-history': STATIC_CACHE_TTL_MS,
+  wcHistory: STATIC_CACHE_TTL_MS,
 };
 
 const cache = new Map();
@@ -48,6 +48,36 @@ async function fetchData(key) {
   return promise;
 }
 
+async function fetchApiPath(path, { cacheKey, cacheTtlKey, notFoundValue = null } = {}) {
+  const key = cacheKey ?? path;
+  const cached = getCached(key);
+
+  if (cached) {
+    return cached;
+  }
+
+  const url = `${API_BASE}${path}`;
+  const promise = fetch(url).then(async (response) => {
+    if (response.status === 404) {
+      return notFoundValue;
+    }
+
+    if (!response.ok) {
+      throw new Error(`Failed to load ${url}`);
+    }
+
+    return response.json();
+  });
+
+  cache.set(key, {
+    promise,
+    expiresAt: Date.now() + getCacheTtl(cacheTtlKey ?? key),
+  });
+  promise.catch(() => cache.delete(key));
+
+  return promise;
+}
+
 export async function fetchTeams() {
   return fetchData('teams');
 }
@@ -60,19 +90,55 @@ export async function fetchResults() {
   return fetchData('results');
 }
 
-export async function fetchSquads() {
-  const data = await fetchData('squads');
-  return data.squads ?? {};
+export async function fetchSquad(teamId) {
+  if (!teamId) {
+    return null;
+  }
+
+  const id = encodeURIComponent(teamId.toUpperCase());
+
+  return fetchApiPath(`/api/squads/${id}`, {
+    cacheKey: `squads:${id}`,
+    cacheTtlKey: 'squads',
+  });
 }
 
-export async function fetchPlayers() {
-  const data = await fetchData('players');
-  return data.players ?? {};
+export async function fetchPlayer(playerId) {
+  if (!playerId) {
+    return null;
+  }
+
+  const id = encodeURIComponent(playerId);
+
+  return fetchApiPath(`/api/players/${id}`, {
+    cacheKey: `players:${id}`,
+    cacheTtlKey: 'players',
+  });
 }
 
-export async function fetchWcHistory() {
-  const data = await fetchData('wc-history');
-  return data.teams ?? {};
+export async function fetchPlayersByIds(playerIds) {
+  const ids = [...new Set((playerIds ?? []).filter(Boolean))];
+
+  if (!ids.length) {
+    return {};
+  }
+
+  const players = await Promise.all(ids.map((id) => fetchPlayer(id)));
+
+  return Object.fromEntries(players.filter(Boolean).map((player) => [player.id, player]));
+}
+
+export async function fetchWcHistory(teamId) {
+  if (!teamId) {
+    return null;
+  }
+
+  const id = encodeURIComponent(teamId.toUpperCase());
+
+  return fetchApiPath(`/api/wcHistory/${id}`, {
+    cacheKey: `wcHistory:${id}`,
+    cacheTtlKey: 'wcHistory',
+  });
 }
 
 export async function fetchTeamColors() {

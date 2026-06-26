@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { fetchPlayers, resolvePlayers } from '../utils/data';
+import { fetchPlayersByIds, resolvePlayers } from '../utils/data';
 import { wcTournamentShape } from '../propTypes';
 import WcHistorySquad from './WcHistorySquad';
 import WcStageBadge from './WcStageBadge';
@@ -15,18 +15,16 @@ function WcHistoryList({ tournaments }) {
 
   const sorted = [...tournaments].sort((a, b) => b.year - a.year);
 
-  async function handleToggle(year) {
+  async function handleToggle(year, squadPlayerIds) {
     if (expandedYear === year) {
       setExpandedYear(null);
       return;
     }
 
-    if (!playersMap) {
-      const players = await fetchPlayers();
-      setPlayersMap(players);
-    }
-
     setExpandedYear(year);
+
+    const players = await fetchPlayersByIds(squadPlayerIds);
+    setPlayersMap((current) => ({ ...(current ?? {}), ...players }));
   }
 
   return (
@@ -36,13 +34,16 @@ function WcHistoryList({ tournaments }) {
         const squadPlayers = playersMap
           ? resolvePlayers(tournament.squadPlayerIds, playersMap)
           : [];
+        const isLoadingSquad =
+          isExpanded &&
+          tournament.squadPlayerIds?.some((playerId) => !playersMap?.[playerId]);
 
         return (
           <li key={tournament.year} className="wc-history-item">
             <button
               type="button"
               className={`wc-history-item-header${isExpanded ? ' wc-history-item-header--expanded' : ''}`}
-              onClick={() => handleToggle(tournament.year)}
+              onClick={() => handleToggle(tournament.year, tournament.squadPlayerIds)}
               aria-expanded={isExpanded}
             >
               <span className="wc-history-year">{tournament.year}</span>
@@ -56,7 +57,7 @@ function WcHistoryList({ tournaments }) {
               <WcHistorySquad
                 year={tournament.year}
                 players={squadPlayers}
-                loading={!playersMap}
+                loading={isLoadingSquad}
               />
             )}
           </li>
