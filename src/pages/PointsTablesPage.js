@@ -113,7 +113,6 @@ function PointsTablesPage() {
               key={letter}
               groupId={letter}
               standings={standingsByGroup[letter]}
-              activities={groupActivity.get(letter) ?? []}
               showQualification
             />
           ))}

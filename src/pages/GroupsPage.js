@@ -77,7 +77,6 @@ function GroupsPage() {
               key={letter}
               groupId={letter}
               teams={groupedTeams[letter]}
-              activities={groupActivity.get(letter) ?? []}
             />
           ))}
         </div>

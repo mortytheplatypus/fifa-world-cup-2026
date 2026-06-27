@@ -1,16 +1,9 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { GroupActivityBadges } from './GroupActivityBadge';
 import { fixtureShape, groupIdType } from '../propTypes';
 import { getTeamDisplayName, getTeamPath } from '../utils/data';
 import { THIRD_PLACE_HINT } from '../utils/qualification';
 import { computeConductScore } from '../utils/standings';
-
-const activityShape = PropTypes.shape({
-  variant: PropTypes.oneOf(['upcoming', 'results', 'live']).isRequired,
-  label: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-});
 
 function getQualificationRowClass(index, showQualification) {
   if (!showQualification) {
@@ -33,18 +26,11 @@ function StandingsTable({
   standings,
   title,
   embedded,
-  activities = [],
   showQualification = false,
   showConduct = false,
   fixtures = [],
 }) {
   const heading = title ?? `Group ${groupId}`;
-  const titleContent = (
-    <>
-      <span>{heading}</span>
-      <GroupActivityBadges activities={activities} />
-    </>
-  );
 
   return (
     <section className={embedded ? 'standings-embedded' : 'standings-card'}>
@@ -54,10 +40,10 @@ function StandingsTable({
             to={`/groups/${groupId}`}
             className="standings-group-title standings-group-title--link"
           >
-            {titleContent}
+            {heading}
           </Link>
         ) : (
-          <h2 className="standings-group-title">{titleContent}</h2>
+          <h2 className="standings-group-title">{heading}</h2>
         )
       )}
       <div className="standings-table-wrap">
@@ -150,7 +136,6 @@ StandingsTable.propTypes = {
   groupId: groupIdType,
   title: PropTypes.string,
   embedded: PropTypes.bool,
-  activities: PropTypes.arrayOf(activityShape),
   showQualification: PropTypes.bool,
   showConduct: PropTypes.bool,
   fixtures: PropTypes.arrayOf(fixtureShape),
