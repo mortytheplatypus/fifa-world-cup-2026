@@ -40,10 +40,7 @@ function AppRoutes() {
             <Route path=":groupId/fixtures/*" element={<GroupFixturesRedirect />} />
           </Route>
           <Route path="tables" element={<Navigate to="/groups/tables" replace />} />
-          <Route
-            path="knockout/third-place-rules"
-            element={<ThirdPlaceRulesPage />}
-          />
+          <Route path="knockout/group-third-place" element={<ThirdPlaceRulesPage />} />
           <Route path="teams/:flagCode" element={<TeamPage />} />
           <Route path="players/:playerId" element={<PlayerPage />} />
         </Route>
