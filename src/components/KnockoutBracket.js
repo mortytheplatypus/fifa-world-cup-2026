@@ -396,8 +396,8 @@ function BracketHalfTreeView({
   return (
     <div
       className={`knockout-bracket knockout-bracket--half${
-        startRound === "qf" ? " knockout-bracket--half-from-qf" : ""
-      }${isRight ? " knockout-bracket--half-right" : ""}`}
+        isRight ? " knockout-bracket--half-right" : ""
+      }`}
     >
       <div
         className={`knockout-bracket-tree knockout-bracket-tree--half${
