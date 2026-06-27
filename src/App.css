@@ -4276,27 +4276,6 @@ textarea {
     text-align: left;
   }
 
-  .knockout-bracket--half-from-qf .knockout-bracket-half {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-    --knockout-feeder-gap: 0.5rem;
-    --knockout-merge-width: 0;
-  }
-
-  .knockout-bracket--half-from-qf .knockout-bracket-half-feeders {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
-    width: 100%;
-  }
-
-  .knockout-bracket--half-from-qf .knockout-bracket-feeder::after,
-  .knockout-bracket--half-from-qf .knockout-bracket-merge,
-  .knockout-bracket--half-from-qf .knockout-bracket-half-target::before {
-    display: none;
-  }
-
   .knockout-third-summary-item {
     gap: 0.5rem;
     padding: 0.5rem 0.6rem;
