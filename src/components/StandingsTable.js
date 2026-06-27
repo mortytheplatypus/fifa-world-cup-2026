@@ -2,10 +2,15 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { fixtureShape, groupIdType } from '../propTypes';
 import { getTeamDisplayName, getTeamPath } from '../utils/data';
-import { THIRD_PLACE_HINT } from '../utils/qualification';
+import { getThirdPlaceQualificationHint } from '../utils/qualification';
 import { computeConductScore } from '../utils/standings';
 
-function getQualificationRowClass(index, showQualification) {
+const thirdPlaceQualificationShape = PropTypes.shape({
+  rank: PropTypes.number.isRequired,
+  qualifies: PropTypes.bool.isRequired,
+});
+
+function getQualificationRowClass(index, showQualification, thirdPlaceQualification) {
   if (!showQualification) {
     return undefined;
   }
@@ -14,11 +19,19 @@ function getQualificationRowClass(index, showQualification) {
     return 'standings-row--qualified';
   }
 
-  if (index === 2) {
-    return 'standings-row--third';
+  if (index === 2 && thirdPlaceQualification?.qualifies) {
+    return 'standings-row--qualified';
   }
 
   return undefined;
+}
+
+function getThirdPlaceRowHint(thirdPlaceQualification) {
+  if (!thirdPlaceQualification) {
+    return undefined;
+  }
+
+  return getThirdPlaceQualificationHint(thirdPlaceQualification);
 }
 
 function StandingsTable({
@@ -29,6 +42,7 @@ function StandingsTable({
   showQualification = false,
   showConduct = false,
   fixtures = [],
+  thirdPlaceQualification = null,
 }) {
   const heading = title ?? `Group ${groupId}`;
 
@@ -76,17 +90,21 @@ function StandingsTable({
               const conductScore = showConduct
                 ? computeConductScore(row.team.id, fixtures)
                 : null;
+              const thirdPlaceHint =
+                showQualification && index === 2
+                  ? getThirdPlaceRowHint(thirdPlaceQualification)
+                  : undefined;
 
               return (
               <tr
                 key={row.team.id}
-                className={getQualificationRowClass(index, showQualification)}
-                title={
-                  showQualification && index === 2 ? THIRD_PLACE_HINT : undefined
-                }
-                aria-label={
-                  showQualification && index === 2 ? THIRD_PLACE_HINT : undefined
-                }
+                className={getQualificationRowClass(
+                  index,
+                  showQualification,
+                  thirdPlaceQualification
+                )}
+                title={thirdPlaceHint}
+                aria-label={thirdPlaceHint}
               >
                 <td className="standings-col-pos">{index + 1}</td>
                 <td className="standings-col-team">
@@ -139,6 +157,7 @@ StandingsTable.propTypes = {
   showQualification: PropTypes.bool,
   showConduct: PropTypes.bool,
   fixtures: PropTypes.arrayOf(fixtureShape),
+  thirdPlaceQualification: thirdPlaceQualificationShape,
   standings: PropTypes.arrayOf(
     PropTypes.shape({
       team: PropTypes.shape({

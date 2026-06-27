@@ -16,6 +16,7 @@ import {
   getActivityFilterEmptyMessage,
   getGroupActivityIndicators,
 } from '../utils/fixtures';
+import { buildThirdPlaceQualificationByGroup } from '../utils/qualification';
 import { computeGroupStandings } from '../utils/standings';
 
 function PointsTablesPage() {
@@ -44,16 +45,30 @@ function PointsTablesPage() {
     return filterGroupsByActivity(groups, groupActivity, activityFilter);
   }, [selectedGroup, groupActivity, activityFilter]);
 
-  const standingsByGroup = useMemo(
+  const allStandingsByGroup = useMemo(
     () =>
-      visibleGroups.reduce((acc, letter) => {
+      GROUP_LETTERS.reduce((acc, letter) => {
         acc[letter] = computeGroupStandings(
           groupedTeams[letter] ?? [],
           fixtures[letter] ?? []
         );
         return acc;
       }, {}),
-    [visibleGroups, groupedTeams, fixtures]
+    [groupedTeams, fixtures]
+  );
+
+  const thirdPlaceQualificationByGroup = useMemo(
+    () => buildThirdPlaceQualificationByGroup(allStandingsByGroup),
+    [allStandingsByGroup]
+  );
+
+  const standingsByGroup = useMemo(
+    () =>
+      visibleGroups.reduce((acc, letter) => {
+        acc[letter] = allStandingsByGroup[letter] ?? [];
+        return acc;
+      }, {}),
+    [visibleGroups, allStandingsByGroup]
   );
 
   if (loading) {
@@ -113,6 +128,7 @@ function PointsTablesPage() {
               key={letter}
               groupId={letter}
               standings={standingsByGroup[letter]}
+              thirdPlaceQualification={thirdPlaceQualificationByGroup.get(letter)}
               showQualification
             />
           ))}
