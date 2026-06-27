@@ -39,7 +39,7 @@ function KnockoutPage() {
           <h1>Knockout</h1>
         </div>
         {viewRound === 'r32' && (
-          <Link to="/knockout/third-place-rules" className="knockout-rules-link">
+          <Link to="/knockout/group-third-place" className="knockout-rules-link">
             Third-place Standings
           </Link>
         )}
