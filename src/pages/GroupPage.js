@@ -1,19 +1,31 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import FixtureCard from '../components/FixtureCard';
 import GroupTeamGrid from '../components/GroupTeamGrid';
 import LoadingSpinner from '../components/LoadingSpinner';
 import StandingsTable from '../components/StandingsTable';
+import { useTimezone } from '../context/TimezoneContext';
 import { useGroupsData } from '../hooks/useGroupsData';
-import { getTeamById, GROUP_LETTERS, isValidGroup } from '../utils/data';
-import { splitFixturesByDate } from '../utils/fixtures';
+import { getTeamById, getTeamDisplayName, GROUP_LETTERS, isValidGroup } from '../utils/data';
+import {
+  formatDateHeading,
+  getDateKeys,
+  groupFixturesByDate,
+  sortFixtures,
+} from '../utils/fixtures';
 import { computeGroupStandings } from '../utils/standings';
 
 function GroupPage() {
   const navigate = useNavigate();
+  const { timeZone } = useTimezone();
   const { groupId: rawGroupId } = useParams();
   const groupId = rawGroupId?.toUpperCase();
   const { groupedTeams, teams, fixtures, loading, error } = useGroupsData();
+  const [teamFilter, setTeamFilter] = useState('all');
+
+  useEffect(() => {
+    setTeamFilter('all');
+  }, [groupId]);
 
   const standings = useMemo(
     () =>
@@ -24,10 +36,28 @@ function GroupPage() {
     [groupedTeams, fixtures, groupId]
   );
 
-  const recentResults = useMemo(() => {
-    const { past } = splitFixturesByDate(fixtures[groupId] ?? []);
-    return past;
-  }, [fixtures, groupId]);
+  const groupFixtures = useMemo(
+    () => sortFixtures(fixtures[groupId] ?? []),
+    [fixtures, groupId]
+  );
+
+  const filteredFixtures = useMemo(() => {
+    if (teamFilter === 'all') {
+      return groupFixtures;
+    }
+
+    return groupFixtures.filter(
+      (fixture) =>
+        fixture.homeTeam === teamFilter || fixture.awayTeam === teamFilter
+    );
+  }, [groupFixtures, teamFilter]);
+
+  const fixturesByDate = useMemo(
+    () => groupFixturesByDate({ [groupId]: filteredFixtures }, timeZone),
+    [filteredFixtures, groupId, timeZone]
+  );
+
+  const dates = useMemo(() => getDateKeys(fixturesByDate), [fixturesByDate]);
 
   if (!isValidGroup(groupId)) {
     return <Navigate to="/groups" replace />;
@@ -89,38 +119,51 @@ function GroupPage() {
         </div>
       </div>
 
-      <div className="group-page-actions">
-        <Link
-          to={`/groups/${groupId}/fixtures/upcoming`}
-          className="link-button"
-        >
-          Upcoming matches
-        </Link>
-        <Link
-          to={`/groups/${groupId}/fixtures/all`}
-          className="link-button secondary"
-        >
-          All matches
-        </Link>
-      </div>
-
-      <section className="group-recent-results">
-        <h2 className="group-section-title">Recent results</h2>
-        {recentResults.length === 0 ? (
-          <p className="status-message group-recent-results-empty">
-            No recent results yet.
+      <section className="group-matches">
+        <div className="group-matches-toolbar">
+          <h2 className="group-section-title">All Results</h2>
+          <label className="fixtures-group-filter group-matches-filter">
+            <span className="fixtures-group-filter-label">Team</span>
+            <select
+              className="fixtures-group-select"
+              value={teamFilter}
+              onChange={(event) => setTeamFilter(event.target.value)}
+              aria-label="Filter matches by team"
+            >
+              <option value="all">All teams</option>
+              {groupTeams.map((team) => (
+                <option key={team.id} value={team.id}>
+                  {getTeamDisplayName(team.name)}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        {dates.length === 0 ? (
+          <p className="status-message group-matches-empty">
+            {teamFilter === 'all'
+              ? 'No matches available.'
+              : 'No matches for this team.'}
           </p>
         ) : (
-          <div className="fixture-list group-recent-results-list">
-            {recentResults.map((fixture) => (
-              <FixtureCard
-                key={fixture.id}
-                fixture={fixture}
-                homeTeam={getTeamById(teams, fixture.homeTeam)}
-                awayTeam={getTeamById(teams, fixture.awayTeam)}
-                showDate
-                stackedLayout
-              />
+          <div className="fixtures-by-date">
+            {dates.map((dateKey) => (
+              <section key={dateKey} className="fixtures-date-section">
+                <h3 className="fixtures-date-title">
+                  {formatDateHeading(dateKey)}
+                </h3>
+                <div className="fixture-list">
+                  {fixturesByDate[dateKey].map((fixture) => (
+                    <FixtureCard
+                      key={fixture.id}
+                      fixture={fixture}
+                      homeTeam={getTeamById(teams, fixture.homeTeam)}
+                      awayTeam={getTeamById(teams, fixture.awayTeam)}
+                      showDate={false}
+                    />
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         )}

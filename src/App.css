@@ -1464,8 +1464,31 @@ textarea {
   padding: 0.25rem 0;
 }
 
-.group-recent-results {
+.group-matches {
   margin-top: 1.5rem;
+}
+
+.group-matches-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  min-width: 0;
+}
+
+.group-matches-toolbar .group-section-title {
+  margin-bottom: 0;
+}
+
+.group-matches-filter {
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.group-matches .fixtures-by-date {
+  margin-top: 0;
 }
 
 .group-section-title {
@@ -1476,20 +1499,8 @@ textarea {
   color: var(--text);
 }
 
-.group-recent-results-empty {
+.group-matches-empty {
   margin: 0;
-}
-
-.group-recent-results-list {
-  margin-top: 0;
-}
-
-.group-page-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
 }
 
 .group-fixtures-tabs {
@@ -2610,6 +2621,22 @@ textarea {
     width: 100%;
   }
 
+  .groups-page-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .group-matches-filter.fixtures-group-filter {
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+  }
+
+  .group-matches-filter .fixtures-group-select {
+    width: auto;
+    min-width: 7rem;
+  }
+
   .fixtures-group-filter {
     flex-direction: column;
     align-items: stretch;
@@ -2693,7 +2720,8 @@ textarea {
 
   .site-main,
   .site-main:has(.groups-page),
-  .site-main:has(.points-tables-page) {
+  .site-main:has(.points-tables-page),
+  .site-main:has(.group-page) {
     padding: 1.25rem 1rem 2rem;
   }
 
@@ -2831,8 +2859,46 @@ textarea {
     width: 100%;
   }
 
+  .group-matches-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .group-matches-filter.fixtures-group-filter {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .group-matches-filter .fixtures-group-select {
+    width: 100%;
+    min-height: 2.75rem;
+    font-size: 1rem;
+  }
+
+  .group-matches-toolbar .group-section-title {
+    font-size: 0.9375rem;
+  }
+
+  .group-matches .fixtures-by-date {
+    gap: 1.5rem;
+  }
+
+  .group-matches .fixtures-date-title {
+    font-size: 1rem;
+  }
+
+  .group-matches .fixtures-date-section .fixture-list {
+    margin-top: 0.75rem;
+    gap: 0.75rem;
+  }
+
   .group-overview-teams {
     padding: 1rem;
+  }
+
+  .group-overview-standings {
+    min-width: 0;
   }
 
   .group-team-grid-name {
@@ -3170,10 +3236,6 @@ textarea {
     text-align: center;
   }
 
-  .group-page-actions {
-    justify-content: stretch;
-  }
-
   .group-grid-card {
     gap: 1rem;
     flex-direction: column;
@@ -3197,6 +3259,15 @@ textarea {
   .groups-page-header .fixtures-controls,
   .groups-page-toolbar-filters {
     gap: 0.5rem;
+  }
+
+  .groups-page-toolbar .group-fixtures-tabs {
+    width: 100%;
+  }
+
+  .groups-page-toolbar .group-fixtures-tab {
+    flex: 1;
+    text-align: center;
   }
 
   .breadcrumb {
