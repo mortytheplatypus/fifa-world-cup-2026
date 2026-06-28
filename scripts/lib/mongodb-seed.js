@@ -240,7 +240,7 @@ const COLLECTIONS = {
     transform: (data) => data,
   },
   wcHistory: {
-    file: 'wc-history.json',
+    file: 'wcHistory.json',
     collection: 'wcHistory',
     build: (data) => buildWcHistoryDocs(data),
     transform: (data) => data,
