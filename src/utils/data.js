@@ -36,6 +36,10 @@ const COLLECTION_KEYS = {
   wcHistory: 'wcHistory',
 };
 
+const DATA_FILES = {
+  wcHistory: 'wc-history',
+};
+
 async function fetchData(key, { id, notFoundValue = null } = {}) {
   if (id) {
     const data = await fetchData(key);
@@ -58,8 +62,9 @@ async function fetchData(key, { id, notFoundValue = null } = {}) {
     return cached;
   }
 
-  // const path = `/data/${key}.json`;
+  const dataFile = DATA_FILES[key] ?? key;
   const path = `${API_BASE}/api/${key}`;
+  // const path = `/data/${dataFile}.json`;
   const promise = fetch(path).then((response) => {
     if (!response.ok) throw new Error(`Failed to load ${path}`);
     return response.json();
