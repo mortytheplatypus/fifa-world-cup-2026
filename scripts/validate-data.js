@@ -24,7 +24,7 @@ function validate() {
   const teams = readJson('teams.json');
   const squads = readJson('squads.json');
   const players = readJson('players.json');
-  const wcHistory = readJson('wc-history.json');
+  const wcHistory = readJson('wcHistory.json');
 
   const teamIds = new Set(teams.map((team) => team.id));
   const playerIds = new Set(Object.keys(players.players ?? {}));
@@ -38,7 +38,7 @@ function validate() {
   }
 
   if (!wcHistory.wcHistory) {
-    errors.push('wc-history.json: missing wcHistory object');
+    errors.push('wcHistory.json: missing wcHistory object');
   }
 
   for (const team of teams) {
