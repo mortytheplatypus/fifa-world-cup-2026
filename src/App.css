@@ -4434,6 +4434,11 @@ textarea {
     display: none;
   }
 
+  .knockout-list-row-team-name {
+    font-family: var(--font-mono);
+    letter-spacing: 0.03em;
+  }
+
   .knockout-bracket--from-r16 {
     min-width: 700px;
   }

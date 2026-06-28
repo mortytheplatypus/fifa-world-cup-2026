@@ -122,9 +122,12 @@ const resolvedSlotShape = PropTypes.shape({
 
 function KnockoutListTeam({ slot, side }) {
   const isHome = side === "home";
+  const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
 
   if (slot.type === "team" && slot.team) {
-    const name = getTeamDisplayName(slot.team.name);
+    const name = isMobile
+      ? slot.team.id
+      : getTeamDisplayName(slot.team.name);
     const flag = (
       <img
         className="knockout-list-row-flag"
@@ -142,7 +145,7 @@ function KnockoutListTeam({ slot, side }) {
         {isHome ? (
           <>
             <span className="knockout-list-row-team-name">{name}</span>
-            {slot.code && (
+            {!isMobile && slot.code && (
               <span className="knockout-list-row-team-code">{slot.code}</span>
             )}
             {flag}
@@ -151,7 +154,7 @@ function KnockoutListTeam({ slot, side }) {
           <>
             {flag}
             <span className="knockout-list-row-team-name">{name}</span>
-            {slot.code && (
+            {!isMobile && slot.code && (
               <span className="knockout-list-row-team-code">{slot.code}</span>
             )}
           </>
