@@ -1,5 +1,7 @@
 export const GROUP_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
+const API_BASE = process.env.REACT_APP_API_URL ?? '';
+
 const STATIC_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // teams & fixtures
 const DEFAULT_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
