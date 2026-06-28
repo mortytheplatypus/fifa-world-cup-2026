@@ -12,6 +12,7 @@ const {
   normalizeName,
   playerId,
 } = require('./lib/player-utils');
+const { flattenPlayers, writePlayersData } = require('./lib/players-data');
 
 const DATA_DIR = path.join(__dirname, '..', 'public', 'data');
 const WIKI_URL = 'https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads';
@@ -280,9 +281,9 @@ async function main() {
 
   const teamById = Object.fromEntries(teams.map((team) => [team.id, team]));
   const wikiSquads = await loadWikiSquads();
-  const playerLookup = buildPlayerLookup(playersData.players);
+  const playerLookup = buildPlayerLookup(flattenPlayers(playersData));
   const updatedSquads = { ...squadsData.squads };
-  const updatedPlayers = { ...playersData.players };
+  const updatedPlayers = { ...flattenPlayers(playersData) };
 
   let teamsUpdated = 0;
   let playersCreated = 0;
@@ -345,10 +346,6 @@ async function main() {
     lastUpdated: new Date().toISOString(),
     squads: updatedSquads,
   };
-  const playersOut = {
-    lastUpdated: new Date().toISOString(),
-    players: updatedPlayers,
-  };
 
   if (dryRun) {
     console.log(`\nDry run: would update ${teamsUpdated} squads, ${playersCreated} new players, ${playersUpdated} updated players`);
@@ -356,7 +353,7 @@ async function main() {
   }
 
   fs.writeFileSync(path.join(DATA_DIR, 'squads.json'), `${JSON.stringify(squadsOut, null, 2)}\n`);
-  fs.writeFileSync(path.join(DATA_DIR, 'players.json'), `${JSON.stringify(playersOut, null, 2)}\n`);
+  writePlayersData(updatedPlayers, squadsOut.lastUpdated);
   console.log(`\nWrote squads.json and players.json (${teamsUpdated} teams)`);
 }
 

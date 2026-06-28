@@ -92,24 +92,102 @@ export async function fetchSquad(teamId) {
   return fetchData('squads', { id: teamId.toUpperCase() });
 }
 
+export function getTeamIdFromPlayerId(playerId) {
+  if (!playerId) {
+    return null;
+  }
+
+  return playerId.split('-')[0].toUpperCase();
+}
+
+async function fetchJson(path) {
+  const response = await fetch(path);
+  if (!response.ok) {
+    throw new Error(`Failed to load ${path}`);
+  }
+  return response.json();
+}
+
+async function loadPlayersData() {
+  const cached = getCached('players');
+  if (cached) {
+    return cached;
+  }
+
+  const path = API_BASE ? `${API_BASE}/api/players` : `/data/players.json`;
+  const promise = fetchJson(path);
+  cache.set('players', { promise, expiresAt: Date.now() + getCacheTtl('players') });
+  promise.catch(() => cache.delete('players'));
+
+  return promise;
+}
+
+function getTeamPlayersFromData(data, teamId) {
+  const root = data.players ?? {};
+  const normalizedTeamId = teamId.toUpperCase();
+  const teamPlayers = root[normalizedTeamId];
+
+  if (teamPlayers && typeof teamPlayers === 'object' && !teamPlayers.id) {
+    return teamPlayers;
+  }
+
+  return Object.fromEntries(
+    Object.entries(root).filter(([, player]) => player?.teamId === normalizedTeamId)
+  );
+}
+
+export async function fetchTeamPlayers(teamId) {
+  if (!teamId) {
+    return {};
+  }
+
+  const data = await loadPlayersData();
+  return getTeamPlayersFromData(data, teamId);
+}
+
 export async function fetchPlayer(playerId) {
   if (!playerId) {
     return null;
   }
 
-  return fetchData('players', { id: playerId });
+  const teamId = getTeamIdFromPlayerId(playerId);
+  const players = await fetchTeamPlayers(teamId);
+  return players[playerId] ?? null;
 }
 
-export async function fetchPlayersByIds(playerIds) {
+export async function fetchPlayersByIds(playerIds, teamId) {
   const ids = [...new Set((playerIds ?? []).filter(Boolean))];
 
   if (!ids.length) {
     return {};
   }
 
-  const players = await Promise.all(ids.map((id) => fetchPlayer(id)));
+  if (teamId) {
+    const players = await fetchTeamPlayers(teamId);
+    return Object.fromEntries(
+      ids.map((id) => [id, players[id]]).filter(([, player]) => player)
+    );
+  }
 
-  return Object.fromEntries(players.filter(Boolean).map((player) => [player.id, player]));
+  const byTeam = ids.reduce((acc, id) => {
+    const idTeam = getTeamIdFromPlayerId(id);
+    if (!acc[idTeam]) {
+      acc[idTeam] = [];
+    }
+    acc[idTeam].push(id);
+    return acc;
+  }, {});
+
+  const teamMaps = await Promise.all(
+    Object.entries(byTeam).map(async ([idTeam, teamIds]) => {
+      const players = await fetchTeamPlayers(idTeam);
+      return Object.fromEntries(
+        teamIds.map((id) => [id, players[id]]).filter(([, player]) => player)
+      );
+    })
+  );
+
+  return Object.assign({}, ...teamMaps);
 }
 
 export async function fetchWcHistory(teamId) {

@@ -5,7 +5,7 @@ import { wcTournamentShape } from '../propTypes';
 import WcHistorySquad from './WcHistorySquad';
 import WcStageBadge from './WcStageBadge';
 
-function WcHistoryList({ tournaments }) {
+function WcHistoryList({ tournaments, teamId }) {
   const [expandedYear, setExpandedYear] = useState(null);
   const [playersMap, setPlayersMap] = useState(null);
 
@@ -23,7 +23,7 @@ function WcHistoryList({ tournaments }) {
 
     setExpandedYear(year);
 
-    const players = await fetchPlayersByIds(squadPlayerIds);
+    const players = await fetchPlayersByIds(squadPlayerIds, teamId);
     setPlayersMap((current) => ({ ...(current ?? {}), ...players }));
   }
 
@@ -69,6 +69,7 @@ function WcHistoryList({ tournaments }) {
 
 WcHistoryList.propTypes = {
   tournaments: PropTypes.arrayOf(wcTournamentShape),
+  teamId: PropTypes.string,
 };
 
 export default WcHistoryList;

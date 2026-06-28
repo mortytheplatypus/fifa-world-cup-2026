@@ -49,7 +49,7 @@ export function useTeamPageData(flagCode) {
 
         if (cancelled) return;
 
-        const playersMap = await fetchPlayersByIds(squad?.playerIds);
+        const playersMap = await fetchPlayersByIds(squad?.playerIds, team.id);
         const squadPlayers = resolvePlayers(squad?.playerIds, playersMap);
 
         setState({

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { flattenPlayers } = require('./players-data');
 
 function loadEnv() {
   const envPath = path.join(__dirname, '..', '..', '.env');
@@ -146,7 +147,9 @@ function buildSquadDocs(data) {
 }
 
 function buildPlayerDocs(data) {
-  return Object.entries(data.players ?? {}).map(([id, player]) => {
+  const flatPlayers = flattenPlayers(data);
+
+  return Object.entries(flatPlayers).map(([id, player]) => {
     const {
       teamId,
       flagCode,
