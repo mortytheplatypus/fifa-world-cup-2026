@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { useTimezone } from "../context/TimezoneContext";
 import {
   BRACKET_TREE,
+  BRACKET_PATHS,
+  BRACKET_PATH_LABELS,
   KNOCKOUT_ROUND_LABELS,
   KNOCKOUT_ROUND_VIEWS,
   getKnockoutMatchIdsForView,
@@ -485,10 +487,13 @@ function BracketHalf({
   standingsByGroup,
   knockoutResults,
   startRound,
+  includeSf,
   feedsCenter,
   onMatchClick,
 }) {
   const mirrored = side === "right";
+  const showSf =
+    includeSf ?? (startRound === "qf" || startRound === "sf");
 
   if (startRound === "sf") {
     const sfCard = (
@@ -548,16 +553,20 @@ function BracketHalf({
           />
         </div>
       </div>
-      <BracketMergeConnector mirrored={mirrored} />
-      <div className="knockout-bracket-half-target">
-        <KnockoutMatchCard
-          matchId={half.sf}
-          standingsByGroup={standingsByGroup}
-          knockoutResults={knockoutResults}
-          compact
-          onMatchClick={onMatchClick}
-        />
-      </div>
+      {showSf && (
+        <>
+          <BracketMergeConnector mirrored={mirrored} />
+          <div className="knockout-bracket-half-target">
+            <KnockoutMatchCard
+              matchId={half.sf}
+              standingsByGroup={standingsByGroup}
+              knockoutResults={knockoutResults}
+              compact
+              onMatchClick={onMatchClick}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -572,6 +581,7 @@ BracketHalf.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
   knockoutResults: knockoutResultsShape.isRequired,
   startRound: PropTypes.oneOf(["r32", "r16", "qf", "sf"]).isRequired,
+  includeSf: PropTypes.bool,
   feedsCenter: PropTypes.bool,
   onMatchClick: PropTypes.func,
 };
@@ -580,33 +590,28 @@ BracketHalf.defaultProps = {
   feedsCenter: false,
 };
 
-const BRACKET_SIDES = ["left", "right"];
-
-const BRACKET_SIDE_LABELS = {
-  left: "Left bracket",
-  right: "Right bracket",
-};
-
 const HALF_BRACKET_ROUNDS = ["r32", "r16"];
 const HALF_BRACKET_START_ROUNDS = [...HALF_BRACKET_ROUNDS, "qf"];
 
 function BracketHalfTreeView({
   standingsByGroup,
   knockoutResults,
-  bracketSide,
+  bracketPath,
   startRound,
   onMatchClick,
 }) {
   const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
-  const half = BRACKET_TREE[bracketSide];
-  const layoutSide = isMobile ? "left" : bracketSide;
-  const isRight = !isMobile && bracketSide === "right";
+  const half = BRACKET_TREE[bracketPath];
+  const layoutSide =
+    isMobile ? "left" : bracketPath === "right" ? "right" : "left";
+  const isRight = !isMobile && bracketPath === "right";
+  const includeSf = startRound === "qf";
 
   return (
     <div
       className={`knockout-bracket knockout-bracket--half${
-        isRight ? " knockout-bracket--half-right" : ""
-      }`}
+        startRound === "qf" ? " knockout-bracket--half-from-qf" : ""
+      }${isRight ? " knockout-bracket--half-right" : ""}`}
     >
       <div
         className={`knockout-bracket-tree knockout-bracket-tree--half${
@@ -619,6 +624,7 @@ function BracketHalfTreeView({
           standingsByGroup={standingsByGroup}
           knockoutResults={knockoutResults}
           startRound={startRound}
+          includeSf={includeSf}
           onMatchClick={onMatchClick}
         />
       </div>
@@ -629,13 +635,13 @@ function BracketHalfTreeView({
 BracketHalfTreeView.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
   knockoutResults: knockoutResultsShape.isRequired,
-  bracketSide: PropTypes.oneOf(BRACKET_SIDES).isRequired,
+  bracketPath: PropTypes.oneOf(BRACKET_PATHS).isRequired,
   startRound: PropTypes.oneOf(HALF_BRACKET_START_ROUNDS).isRequired,
   onMatchClick: PropTypes.func,
 };
 
 function BracketTreeView({ standingsByGroup, knockoutResults, onMatchClick }) {
-  const { left, right } = BRACKET_TREE;
+  const { left, right, center } = BRACKET_TREE;
 
   return (
     <div className="knockout-bracket knockout-bracket--from-qf knockout-bracket--semifinals-only">
@@ -646,8 +652,25 @@ function BracketTreeView({ standingsByGroup, knockoutResults, onMatchClick }) {
           standingsByGroup={standingsByGroup}
           knockoutResults={knockoutResults}
           startRound="qf"
+          includeSf
           onMatchClick={onMatchClick}
         />
+
+        <div className="knockout-bracket-center">
+          <KnockoutMatchCard
+            matchId={center.final}
+            standingsByGroup={standingsByGroup}
+            knockoutResults={knockoutResults}
+            onMatchClick={onMatchClick}
+          />
+          <KnockoutMatchCard
+            matchId={center.third}
+            standingsByGroup={standingsByGroup}
+            knockoutResults={knockoutResults}
+            compact
+            onMatchClick={onMatchClick}
+          />
+        </div>
 
         <BracketHalf
           half={right}
@@ -655,6 +678,7 @@ function BracketTreeView({ standingsByGroup, knockoutResults, onMatchClick }) {
           standingsByGroup={standingsByGroup}
           knockoutResults={knockoutResults}
           startRound="qf"
+          includeSf
           onMatchClick={onMatchClick}
         />
       </div>
@@ -848,7 +872,7 @@ function renderBracketContent({
   showHalfBracket,
   standingsByGroup,
   knockoutResults,
-  bracketSide,
+  bracketPath,
   halfBracketStartRound,
   viewRound,
   onMatchClick,
@@ -869,7 +893,7 @@ function renderBracketContent({
       <BracketHalfTreeView
         standingsByGroup={standingsByGroup}
         knockoutResults={knockoutResults}
-        bracketSide={bracketSide}
+        bracketPath={bracketPath}
         startRound={halfBracketStartRound}
         onMatchClick={onMatchClick}
       />
@@ -891,7 +915,7 @@ function KnockoutBracket({
   viewRound,
   onViewRoundChange,
 }) {
-  const [bracketSide, setBracketSide] = useState("left");
+  const [bracketPath, setBracketPath] = useState("left");
   const [viewMode, setViewMode] = useState(readStoredKnockoutViewMode);
   const [selectedMatchId, setSelectedMatchId] = useState(null);
   const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
@@ -964,22 +988,22 @@ function KnockoutBracket({
           <div
             className="knockout-bracket-side-nav"
             role="tablist"
-            aria-label="Bracket side"
+            aria-label="Bracket path"
           >
-            {BRACKET_SIDES.map((side) => (
+            {BRACKET_PATHS.map((path) => (
               <button
-                key={side}
+                key={path}
                 type="button"
                 role="tab"
-                id={`knockout-side-tab-${side}`}
+                id={`knockout-path-tab-${path}`}
                 className={`knockout-bracket-side-tab${
-                  bracketSide === side ? " active" : ""
+                  bracketPath === path ? " active" : ""
                 }`}
-                aria-selected={bracketSide === side}
-                aria-controls={`knockout-side-panel-${side}`}
-                onClick={() => setBracketSide(side)}
+                aria-selected={bracketPath === path}
+                aria-controls={`knockout-path-panel-${path}`}
+                onClick={() => setBracketPath(path)}
               >
-                {BRACKET_SIDE_LABELS[side]}
+                {BRACKET_PATH_LABELS[path]}
               </button>
             ))}
           </div>
@@ -993,12 +1017,12 @@ function KnockoutBracket({
         role="tabpanel"
         id={
           showHalfBracket
-            ? `knockout-side-panel-${bracketSide}`
+            ? `knockout-path-panel-${bracketPath}`
             : `knockout-panel-${viewRound}`
         }
         aria-labelledby={
           showHalfBracket
-            ? `knockout-side-tab-${bracketSide}`
+            ? `knockout-path-tab-${bracketPath}`
             : `knockout-tab-${viewRound}`
         }
       >
@@ -1007,7 +1031,7 @@ function KnockoutBracket({
           showHalfBracket,
           standingsByGroup,
           knockoutResults,
-          bracketSide,
+          bracketPath,
           halfBracketStartRound,
           viewRound,
           onMatchClick: setSelectedMatchId,

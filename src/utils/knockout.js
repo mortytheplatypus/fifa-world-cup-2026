@@ -461,9 +461,19 @@ export function formatKnockoutMatchDate(
   return `${dayPart} ${monthPart}`;
 }
 
+/** Bracket path keys for tree navigation (left → SF1, right → SF2). */
+export const BRACKET_PATHS = ["left", "right"];
+
+export const BRACKET_PATH_LABELS = {
+  left: "Left bracket",
+  right: "Right bracket",
+};
+
 /**
  * Bracket tree for visual rendering.
  * Each leaf is an R32 match id; inner nodes are later-round match ids.
+ * Paths follow SF feeders (M101 = W97+W98, M102 = W99+W100), not geographic halves.
+ * At quarter level, `r16` holds the QF match id (feeds from the two R16 pair targets).
  */
 export const BRACKET_TREE = {
   left: {
@@ -473,17 +483,17 @@ export const BRACKET_TREE = {
       pair2: { r16: "M89", r32: ["M74", "M77"] },
     },
     quarter2: {
-      r16: "M99",
-      pair1: { r16: "M91", r32: ["M76", "M78"] },
-      pair2: { r16: "M92", r32: ["M79", "M80"] },
+      r16: "M98",
+      pair1: { r16: "M93", r32: ["M83", "M84"] },
+      pair2: { r16: "M94", r32: ["M81", "M82"] },
     },
     sf: "M101",
   },
   right: {
     quarter1: {
-      r16: "M98",
-      pair1: { r16: "M93", r32: ["M83", "M84"] },
-      pair2: { r16: "M94", r32: ["M81", "M82"] },
+      r16: "M99",
+      pair1: { r16: "M91", r32: ["M76", "M78"] },
+      pair2: { r16: "M92", r32: ["M79", "M80"] },
     },
     quarter2: {
       r16: "M100",
