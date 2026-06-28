@@ -4,7 +4,7 @@ import {
   fetchPlayersByIds,
   fetchSquad,
   fetchTeams,
-  fetchWcHistory,
+  // fetchWcHistory,
   getTeamByFlagCode,
   resolvePlayers,
 } from '../utils/data';
@@ -44,10 +44,8 @@ export function useTeamPageData(flagCode) {
           return;
         }
 
-        const [squad, wcHistory] = await Promise.all([
-          fetchSquad(team.id),
-          fetchWcHistory(team.id),
-        ]);
+        const squad = await fetchSquad(team.id);
+        // const wcHistory = await fetchWcHistory(team.id);
 
         if (cancelled) return;
 
@@ -58,7 +56,7 @@ export function useTeamPageData(flagCode) {
           team,
           squad,
           squadPlayers,
-          wcHistory,
+          wcHistory: null, // hidden for now — was: wcHistory,
           playersMap,
           loading: false,
           error: null,

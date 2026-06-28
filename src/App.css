@@ -5001,8 +5001,18 @@ textarea {
   font-size: 0.85rem;
 }
 
-.team-page-coach {
+.team-page-staff {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
   margin-bottom: 1.25rem;
+}
+
+.team-page-staff-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
   padding: 0.75rem 1rem;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -5011,13 +5021,16 @@ textarea {
   line-height: 1.5;
 }
 
-.team-page-coach-label {
+.team-page-staff-label {
   color: var(--text-muted);
-  margin-right: 0.35rem;
 }
 
-.team-page-coach-name {
+.team-page-staff-name {
   font-weight: 600;
+}
+
+.team-page-staff-meta {
+  color: var(--text-muted);
 }
 
 .team-page-tabs {
@@ -5322,7 +5335,11 @@ textarea {
     justify-content: center;
   }
 
-  .team-page-coach {
+  .team-page-staff {
+    grid-template-columns: 1fr;
+  }
+
+  .team-page-staff-card {
     font-size: 0.85rem;
   }
 
