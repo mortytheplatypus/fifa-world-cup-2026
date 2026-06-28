@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-26T05:39:53.957Z",
+  "lastUpdated": "2026-06-28T04:47:08.879Z",
   "matches": {
     "A-1": {
       "homeScore": 2,
@@ -2223,6 +2223,528 @@
         {
           "minute": "77",
           "player": "Diego Gómez",
+          "team": "home",
+          "type": "yellow"
+        }
+      ]
+    },
+    "I-5": {
+      "homeScore": 1,
+      "awayScore": 4,
+      "goals": [
+        {
+          "minute": "7",
+          "scorer": "Ousmane Dembélé",
+          "team": "away"
+        },
+        {
+          "minute": "20",
+          "scorer": "Ousmane Dembélé",
+          "team": "away"
+        },
+        {
+          "minute": "21",
+          "scorer": "Thelo Aasgaard",
+          "team": "home"
+        },
+        {
+          "minute": "32",
+          "scorer": "Ousmane Dembélé",
+          "team": "away"
+        },
+        {
+          "minute": "90+4",
+          "scorer": "Désiré Doué",
+          "team": "away"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "10",
+          "player": "Patrick Berg",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "74",
+          "player": "Aurélien Tchouaméni",
+          "team": "away",
+          "type": "yellow"
+        }
+      ]
+    },
+    "I-6": {
+      "homeScore": 5,
+      "awayScore": 0,
+      "goals": [
+        {
+          "minute": "4",
+          "scorer": "Habib Diarra",
+          "team": "home"
+        },
+        {
+          "minute": "56",
+          "scorer": "Ismaïla Sarr",
+          "team": "home"
+        },
+        {
+          "minute": "59",
+          "scorer": "Pape Gueye",
+          "team": "home"
+        },
+        {
+          "minute": "71",
+          "scorer": "Pape Gueye",
+          "team": "home"
+        },
+        {
+          "minute": "82",
+          "scorer": "Iliman Ndiaye",
+          "team": "home"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "13",
+          "player": "Rebin Sulaka",
+          "team": "away",
+          "type": "directRed"
+        },
+        {
+          "minute": "18",
+          "player": "Abdoulaye Seck",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "75",
+          "player": "Amir Al-Ammari",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "81",
+          "player": "Pape Gueye",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "90",
+          "player": "Merchas Doski",
+          "team": "away",
+          "type": "yellow"
+        }
+      ]
+    },
+    "H-6": {
+      "homeScore": 0,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "42",
+          "scorer": "Álex Baena",
+          "team": "away"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "46",
+          "player": "Álex Baena",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "54",
+          "player": "Juan Manuel Sanabria",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "58",
+          "player": "Guillermo Varela",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+3",
+          "player": "Nicolás de la Cruz",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+5",
+          "player": "Agustín Canobbio",
+          "team": "home",
+          "type": "directRed"
+        }
+      ]
+    },
+    "H-5": {
+      "homeScore": 0,
+      "awayScore": 0,
+      "cards": [
+        {
+          "minute": "4",
+          "player": "Saud Abdulhamid",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "8",
+          "player": "Wagner Pina",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "67",
+          "player": "Nasser Al-Dawsari",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+3",
+          "player": "Feras Al-Brikan",
+          "team": "away",
+          "type": "yellow"
+        }
+      ]
+    },
+    "G-5": {
+      "homeScore": 1,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "5",
+          "scorer": "Mahmoud Saber",
+          "team": "home"
+        },
+        {
+          "minute": "14",
+          "scorer": "Ramin Rezaeian",
+          "team": "away"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "19",
+          "player": "Hossein Kanani",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "20",
+          "player": "Mahmoud Saber",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "42",
+          "player": "Yasser Ibrahim",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "43",
+          "player": "Ali Nemati",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "79",
+          "player": "Saeid Ezatolahi",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+2",
+          "player": "Mohanad Lashin",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+4",
+          "player": "Shoja Khalilzadeh",
+          "team": "away",
+          "type": "yellow"
+        }
+      ]
+    },
+    "G-6": {
+      "homeScore": 1,
+      "awayScore": 5,
+      "goals": [
+        {
+          "minute": "28",
+          "scorer": "Leandro Trossard",
+          "team": "away"
+        },
+        {
+          "minute": "50",
+          "scorer": "Leandro Trossard",
+          "team": "away"
+        },
+        {
+          "minute": "66",
+          "scorer": "Kevin De Bruyne",
+          "team": "away"
+        },
+        {
+          "minute": "84",
+          "scorer": "Elijah Just",
+          "team": "home"
+        },
+        {
+          "minute": "86",
+          "scorer": "Romelu Lukaku",
+          "team": "away"
+        },
+        {
+          "minute": "90+4",
+          "scorer": "Alexis Saelemaekers",
+          "team": "away"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "46",
+          "player": "Marko Stamenic",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "56",
+          "player": "Elijah Just",
+          "team": "home",
+          "type": "yellow"
+        }
+      ]
+    },
+    "L-5": {
+      "homeScore": 0,
+      "awayScore": 2,
+      "goals": [
+        {
+          "minute": "62",
+          "scorer": "Jude Bellingham",
+          "team": "away"
+        },
+        {
+          "minute": "67",
+          "scorer": "Harry Kane",
+          "team": "away"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "53",
+          "player": "José Fajardo",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "60",
+          "player": "Jarell Quansah",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "84",
+          "player": "Andrés Andrade",
+          "team": "home",
+          "type": "yellow"
+        }
+      ]
+    },
+    "L-6": {
+      "homeScore": 2,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "31",
+          "scorer": "Petar Sucic",
+          "team": "home"
+        },
+        {
+          "minute": "73",
+          "scorer": "Derrick Luckassen",
+          "team": "away"
+        },
+        {
+          "minute": "83",
+          "scorer": "Nikola Vlasic",
+          "team": "home"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "68",
+          "player": "Ivan Perisic",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+4",
+          "player": "Kojo Peprah Oppong",
+          "team": "away",
+          "type": "yellow"
+        }
+      ]
+    },
+    "K-5": {
+      "homeScore": 0,
+      "awayScore": 0,
+      "cards": [
+        {
+          "minute": "86",
+          "player": "Gustavo Puerta",
+          "team": "home",
+          "type": "yellow"
+        }
+      ]
+    },
+    "K-6": {
+      "homeScore": 3,
+      "awayScore": 1,
+      "goals": [
+        {
+          "minute": "10",
+          "scorer": "Eldor Shomurodov",
+          "team": "away"
+        },
+        {
+          "minute": "68",
+          "scorer": "Yoane Wissa (P)",
+          "team": "home"
+        },
+        {
+          "minute": "78",
+          "scorer": "Fiston Mayele",
+          "team": "home"
+        },
+        {
+          "minute": "90+1",
+          "scorer": "Yoane Wissa",
+          "team": "home"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "21",
+          "player": "Noah Sadiki",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "43",
+          "player": "Abdukodir Khusanov",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "45+5",
+          "player": "Nathanaël Mbuku",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "48",
+          "player": "Sherzod Nasrullaev",
+          "team": "away",
+          "type": "yellow"
+        },
+        {
+          "minute": "62",
+          "player": "Samuel Moutoussamy",
+          "team": "home",
+          "type": "yellow"
+        }
+      ]
+    },
+    "J-5": {
+      "homeScore": 3,
+      "awayScore": 3,
+      "goals": [
+        {
+          "minute": "28",
+          "scorer": "Marko Arnautovic",
+          "team": "away"
+        },
+        {
+          "minute": "45",
+          "scorer": "Rafik Belghali",
+          "team": "home"
+        },
+        {
+          "minute": "55",
+          "scorer": "Marcel Sabitzer",
+          "team": "away"
+        },
+        {
+          "minute": "60",
+          "scorer": "Riyad Mahrez",
+          "team": "home"
+        },
+        {
+          "minute": "90+3",
+          "scorer": "Riyad Mahrez",
+          "team": "home"
+        },
+        {
+          "minute": "90+6",
+          "scorer": "Sasa Kalajdzic",
+          "team": "away"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "11",
+          "player": "Marko Arnautovic",
+          "team": "away",
+          "type": "yellow"
+        }
+      ]
+    },
+    "J-6": {
+      "homeScore": 1,
+      "awayScore": 3,
+      "goals": [
+        {
+          "minute": "19",
+          "scorer": "Giovani Lo Celso",
+          "team": "away"
+        },
+        {
+          "minute": "31",
+          "scorer": "Lautaro Martínez (P)",
+          "team": "away"
+        },
+        {
+          "minute": "55",
+          "scorer": "Mousa Al-Tamari",
+          "team": "home"
+        },
+        {
+          "minute": "80",
+          "scorer": "Lionel Messi",
+          "team": "away"
+        }
+      ],
+      "cards": [
+        {
+          "minute": "17",
+          "player": "Mohannad Abu Taha",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "64",
+          "player": "Yazan Al-Arab",
+          "team": "home",
+          "type": "yellow"
+        },
+        {
+          "minute": "90+5",
+          "player": "Mohammed Abu Zraiq",
           "team": "home",
           "type": "yellow"
         }
