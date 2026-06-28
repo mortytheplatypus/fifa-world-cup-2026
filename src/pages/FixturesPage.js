@@ -122,7 +122,7 @@ function FixturesPage() {
         fixture={fixture}
         homeTeam={getTeamById(teams, fixture.homeTeam)}
         awayTeam={getTeamById(teams, fixture.awayTeam)}
-        showGroup={isKnockoutTab || !isGroupFiltered}
+        showGroup={!isKnockoutTab && !isGroupFiltered}
         showDate={false}
         stackedLayout={stackedLayout}
       />
@@ -224,14 +224,14 @@ function FixturesPage() {
 
       {knockoutMode && (
         <div
-          className="fixtures-schedule-tabs home-fixtures-tabs"
+          className="fixtures-schedule-tabs knockout-bracket-tabs knockout-bracket-tabs--rounds"
           role="tablist"
           aria-label="Fixture schedule"
         >
           <button
             type="button"
             role="tab"
-            className={`home-fixtures-tab${
+            className={`knockout-bracket-tab${
               scheduleTab === 'knockout' ? ' active' : ''
             }`}
             aria-selected={scheduleTab === 'knockout'}
@@ -242,7 +242,7 @@ function FixturesPage() {
           <button
             type="button"
             role="tab"
-            className={`home-fixtures-tab${
+            className={`knockout-bracket-tab${
               scheduleTab === 'groups' ? ' active' : ''
             }`}
             aria-selected={scheduleTab === 'groups'}

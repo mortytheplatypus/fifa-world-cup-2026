@@ -1609,6 +1609,8 @@ textarea {
 .fixtures-schedule-tabs {
   margin-top: 0.5rem;
   margin-bottom: 1.25rem;
+  width: 100%;
+  max-width: 22rem;
 }
 
 .fixture-knockout-label.knockout-match-label,
@@ -4678,6 +4680,10 @@ textarea {
 
   .knockout-bracket-tabs--view-mode .knockout-bracket-tab {
     flex: 1;
+  }
+
+  .fixtures-schedule-tabs {
+    max-width: none;
   }
 
   .knockout-list-row {
