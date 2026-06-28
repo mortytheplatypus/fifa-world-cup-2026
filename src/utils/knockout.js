@@ -287,6 +287,50 @@ export function getKnockoutMatchIdsForView(viewRound) {
   return KNOCKOUT_MATCHES_BY_VIEW[viewRound] ?? [];
 }
 
+function getKnockoutMatchSortInstant(matchId, knockoutResults = {}) {
+  const schedule = getKnockoutSchedule(matchId, knockoutResults);
+
+  if (!schedule.date) {
+    return null;
+  }
+
+  if (hasKnockoutKickoffTime(schedule)) {
+    return parseFixtureInstant(schedule).getTime();
+  }
+
+  const [year, month, day] = schedule.date.split("-").map(Number);
+  return Date.UTC(year, month - 1, day, 12, 0, 0);
+}
+
+/** Sort match ids by kickoff time for list view. */
+export function sortKnockoutMatchIdsBySchedule(
+  matchIds,
+  knockoutResults = {},
+) {
+  return [...matchIds].sort((a, b) => {
+    const aTime = getKnockoutMatchSortInstant(a, knockoutResults);
+    const bTime = getKnockoutMatchSortInstant(b, knockoutResults);
+
+    if (aTime == null && bTime == null) {
+      return a.localeCompare(b);
+    }
+
+    if (aTime == null) {
+      return 1;
+    }
+
+    if (bTime == null) {
+      return -1;
+    }
+
+    if (aTime !== bTime) {
+      return aTime - bTime;
+    }
+
+    return a.localeCompare(b);
+  });
+}
+
 /** Short slot tags shown beside match ids (e.g. M90 → R16-2, M97 → QF1). */
 export const KNOCKOUT_MATCH_TAGS = Object.fromEntries([
   ...R32_MATCH_ORDER.map((id, i) => [id, `R32-${i + 1}`]),

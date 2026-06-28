@@ -6,17 +6,35 @@ import {
   KNOCKOUT_ROUND_LABELS,
   KNOCKOUT_ROUND_VIEWS,
   getKnockoutMatchIdsForView,
+  sortKnockoutMatchIdsBySchedule,
   KNOCKOUT_FINALS_LIST_SECTIONS,
   getKnockoutMatchTag,
   formatKnockoutMatchDate,
+  formatKnockoutMatchTag,
   hasKnockoutKickoffTime,
   resolveKnockoutMatch,
 } from "../utils/knockout";
 import { formatFixtureTime, parseFixtureInstant } from "../utils/timezone";
 import { getTeamDisplayName } from "../utils/data";
 import { useMediaQuery } from "../hooks/useMediaQuery";
+import KnockoutMatchDetailModal from "./KnockoutMatchDetailModal";
 import KnockoutMatchLabel from "./KnockoutMatchLabel";
 import KnockoutTeamSlot from "./KnockoutTeamSlot";
+
+function shouldIgnoreMatchClick(event) {
+  return (
+    event.target instanceof Element &&
+    event.target.closest(".qualification-info, button, a")
+  );
+}
+
+function handleMatchOpen(event, matchId, onMatchClick) {
+  if (shouldIgnoreMatchClick(event) || !onMatchClick) {
+    return;
+  }
+
+  onMatchClick(matchId);
+}
 
 const KNOCKOUT_MOBILE_MEDIA_QUERY = "(max-width: 720px)";
 
@@ -44,6 +62,7 @@ function KnockoutMatchCard({
   standingsByGroup,
   knockoutResults,
   compact,
+  onMatchClick,
 }) {
   const { timeZone } = useTimezone();
   const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
@@ -70,7 +89,17 @@ function KnockoutMatchCard({
     <div
       className={`knockout-match knockout-match--${match.round}${
         compact ? " knockout-match--compact" : ""
-      }`}
+      } knockout-match--clickable`}
+      role="button"
+      tabIndex={0}
+      onClick={(event) => handleMatchOpen(event, match.id, onMatchClick)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onMatchClick?.(match.id);
+        }
+      }}
+      aria-label={`View details for ${tag ? formatKnockoutMatchTag(tag, match.id) : match.id}`}
     >
       <div className="knockout-match-header">
         <div className="knockout-match-meta">
@@ -106,6 +135,7 @@ KnockoutMatchCard.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
   knockoutResults: knockoutResultsShape.isRequired,
   compact: PropTypes.bool,
+  onMatchClick: PropTypes.func,
 };
 
 const resolvedSlotShape = PropTypes.shape({
@@ -179,7 +209,12 @@ KnockoutListTeam.propTypes = {
   side: PropTypes.oneOf(["home", "away"]).isRequired,
 };
 
-function KnockoutListRow({ matchId, standingsByGroup, knockoutResults }) {
+function KnockoutListRow({
+  matchId,
+  standingsByGroup,
+  knockoutResults,
+  onMatchClick,
+}) {
   const { timeZone } = useTimezone();
   const match = resolveKnockoutMatch(matchId, standingsByGroup, {
     knockoutResults,
@@ -204,7 +239,19 @@ function KnockoutListRow({ matchId, standingsByGroup, knockoutResults }) {
     result?.homeScore != null && result?.awayScore != null;
 
   return (
-    <div className={`knockout-list-row knockout-list-row--${match.round}`}>
+    <div
+      className={`knockout-list-row knockout-list-row--${match.round} knockout-list-row--clickable`}
+      role="button"
+      tabIndex={0}
+      onClick={(event) => handleMatchOpen(event, match.id, onMatchClick)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onMatchClick?.(match.id);
+        }
+      }}
+      aria-label={`View details for ${tag ? formatKnockoutMatchTag(tag, match.id) : match.id}`}
+    >
       {dateLabel && (
         <time className="knockout-list-row-date" dateTime={dateTime}>
           {dateLabel}
@@ -245,6 +292,7 @@ KnockoutListRow.propTypes = {
   matchId: PropTypes.string.isRequired,
   standingsByGroup: standingsByGroupShape.isRequired,
   knockoutResults: knockoutResultsShape.isRequired,
+  onMatchClick: PropTypes.func,
 };
 
 function BracketMergeConnector({ mirrored = false }) {
@@ -284,6 +332,7 @@ function BracketPair({
   knockoutResults,
   startRound,
   mirrored,
+  onMatchClick,
 }) {
   if (startRound === "qf" || startRound === "sf") return null;
 
@@ -293,6 +342,7 @@ function BracketPair({
         matchId={pair.r16}
         standingsByGroup={standingsByGroup}
         knockoutResults={knockoutResults}
+        onMatchClick={onMatchClick}
       />
     );
   }
@@ -308,6 +358,7 @@ function BracketPair({
             standingsByGroup={standingsByGroup}
             knockoutResults={knockoutResults}
             compact
+            onMatchClick={onMatchClick}
           />
         </div>
         <div className="knockout-bracket-feeder">
@@ -316,6 +367,7 @@ function BracketPair({
             standingsByGroup={standingsByGroup}
             knockoutResults={knockoutResults}
             compact
+            onMatchClick={onMatchClick}
           />
         </div>
       </div>
@@ -326,6 +378,7 @@ function BracketPair({
           standingsByGroup={standingsByGroup}
           knockoutResults={knockoutResults}
           compact
+          onMatchClick={onMatchClick}
         />
       </div>
     </div>
@@ -341,6 +394,7 @@ BracketPair.propTypes = {
   knockoutResults: knockoutResultsShape.isRequired,
   startRound: PropTypes.oneOf(["r32", "r16", "qf", "sf"]).isRequired,
   mirrored: PropTypes.bool,
+  onMatchClick: PropTypes.func,
 };
 
 BracketPair.defaultProps = {
@@ -353,6 +407,7 @@ function BracketQuarter({
   knockoutResults,
   startRound,
   mirrored,
+  onMatchClick,
 }) {
   if (startRound === "sf") return null;
 
@@ -362,6 +417,7 @@ function BracketQuarter({
         matchId={quarter.r16}
         standingsByGroup={standingsByGroup}
         knockoutResults={knockoutResults}
+        onMatchClick={onMatchClick}
       />
     );
   }
@@ -378,6 +434,7 @@ function BracketQuarter({
             knockoutResults={knockoutResults}
             startRound={startRound}
             mirrored={mirrored}
+            onMatchClick={onMatchClick}
           />
         </div>
         <div className="knockout-bracket-feeder">
@@ -387,6 +444,7 @@ function BracketQuarter({
             knockoutResults={knockoutResults}
             startRound={startRound}
             mirrored={mirrored}
+            onMatchClick={onMatchClick}
           />
         </div>
       </div>
@@ -397,6 +455,7 @@ function BracketQuarter({
           standingsByGroup={standingsByGroup}
           knockoutResults={knockoutResults}
           compact
+          onMatchClick={onMatchClick}
         />
       </div>
     </div>
@@ -413,6 +472,7 @@ BracketQuarter.propTypes = {
   knockoutResults: knockoutResultsShape.isRequired,
   startRound: PropTypes.oneOf(["r32", "r16", "qf", "sf"]).isRequired,
   mirrored: PropTypes.bool,
+  onMatchClick: PropTypes.func,
 };
 
 BracketQuarter.defaultProps = {
@@ -426,6 +486,7 @@ function BracketHalf({
   knockoutResults,
   startRound,
   feedsCenter,
+  onMatchClick,
 }) {
   const mirrored = side === "right";
 
@@ -436,6 +497,7 @@ function BracketHalf({
         standingsByGroup={standingsByGroup}
         knockoutResults={knockoutResults}
         compact
+        onMatchClick={onMatchClick}
       />
     );
 
@@ -472,6 +534,7 @@ function BracketHalf({
             knockoutResults={knockoutResults}
             startRound={startRound}
             mirrored={mirrored}
+            onMatchClick={onMatchClick}
           />
         </div>
         <div className="knockout-bracket-feeder">
@@ -481,6 +544,7 @@ function BracketHalf({
             knockoutResults={knockoutResults}
             startRound={startRound}
             mirrored={mirrored}
+            onMatchClick={onMatchClick}
           />
         </div>
       </div>
@@ -491,6 +555,7 @@ function BracketHalf({
           standingsByGroup={standingsByGroup}
           knockoutResults={knockoutResults}
           compact
+          onMatchClick={onMatchClick}
         />
       </div>
     </div>
@@ -508,6 +573,7 @@ BracketHalf.propTypes = {
   knockoutResults: knockoutResultsShape.isRequired,
   startRound: PropTypes.oneOf(["r32", "r16", "qf", "sf"]).isRequired,
   feedsCenter: PropTypes.bool,
+  onMatchClick: PropTypes.func,
 };
 
 BracketHalf.defaultProps = {
@@ -529,6 +595,7 @@ function BracketHalfTreeView({
   knockoutResults,
   bracketSide,
   startRound,
+  onMatchClick,
 }) {
   const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
   const half = BRACKET_TREE[bracketSide];
@@ -552,6 +619,7 @@ function BracketHalfTreeView({
           standingsByGroup={standingsByGroup}
           knockoutResults={knockoutResults}
           startRound={startRound}
+          onMatchClick={onMatchClick}
         />
       </div>
     </div>
@@ -563,9 +631,10 @@ BracketHalfTreeView.propTypes = {
   knockoutResults: knockoutResultsShape.isRequired,
   bracketSide: PropTypes.oneOf(BRACKET_SIDES).isRequired,
   startRound: PropTypes.oneOf(HALF_BRACKET_START_ROUNDS).isRequired,
+  onMatchClick: PropTypes.func,
 };
 
-function BracketTreeView({ standingsByGroup, knockoutResults }) {
+function BracketTreeView({ standingsByGroup, knockoutResults, onMatchClick }) {
   const { left, right } = BRACKET_TREE;
 
   return (
@@ -577,6 +646,7 @@ function BracketTreeView({ standingsByGroup, knockoutResults }) {
           standingsByGroup={standingsByGroup}
           knockoutResults={knockoutResults}
           startRound="qf"
+          onMatchClick={onMatchClick}
         />
 
         <BracketHalf
@@ -585,6 +655,7 @@ function BracketTreeView({ standingsByGroup, knockoutResults }) {
           standingsByGroup={standingsByGroup}
           knockoutResults={knockoutResults}
           startRound="qf"
+          onMatchClick={onMatchClick}
         />
       </div>
     </div>
@@ -594,6 +665,7 @@ function BracketTreeView({ standingsByGroup, knockoutResults }) {
 BracketTreeView.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
   knockoutResults: knockoutResultsShape.isRequired,
+  onMatchClick: PropTypes.func,
 };
 
 const KNOCKOUT_VIEW_MODES = ["tree", "list"];
@@ -680,6 +752,7 @@ function KnockoutListTable({
   standingsByGroup,
   knockoutResults,
   section,
+  onMatchClick,
 }) {
   const rows = matchIds.map((matchId) => (
     <KnockoutListRow
@@ -687,6 +760,7 @@ function KnockoutListTable({
       matchId={matchId}
       standingsByGroup={standingsByGroup}
       knockoutResults={knockoutResults}
+      onMatchClick={onMatchClick}
     />
   ));
 
@@ -721,32 +795,43 @@ KnockoutListTable.propTypes = {
     round: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
   }),
+  onMatchClick: PropTypes.func,
 };
 
-function BracketListView({ standingsByGroup, knockoutResults, viewRound }) {
+function BracketListView({
+  standingsByGroup,
+  knockoutResults,
+  viewRound,
+  onMatchClick,
+}) {
   if (viewRound === "finals") {
     return (
       <div className="knockout-list-grouped">
         {KNOCKOUT_FINALS_LIST_SECTIONS.map(({ round, label, matchIds }) => (
           <KnockoutListTable
             key={round}
-            matchIds={matchIds}
+            matchIds={sortKnockoutMatchIdsBySchedule(matchIds, knockoutResults)}
             standingsByGroup={standingsByGroup}
             knockoutResults={knockoutResults}
             section={{ round, label }}
+            onMatchClick={onMatchClick}
           />
         ))}
       </div>
     );
   }
 
-  const matchIds = getKnockoutMatchIdsForView(viewRound);
+  const matchIds = sortKnockoutMatchIdsBySchedule(
+    getKnockoutMatchIdsForView(viewRound),
+    knockoutResults,
+  );
 
   return (
     <KnockoutListTable
       matchIds={matchIds}
       standingsByGroup={standingsByGroup}
       knockoutResults={knockoutResults}
+      onMatchClick={onMatchClick}
     />
   );
 }
@@ -755,6 +840,7 @@ BracketListView.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
   knockoutResults: knockoutResultsShape.isRequired,
   viewRound: PropTypes.oneOf(KNOCKOUT_ROUND_VIEWS).isRequired,
+  onMatchClick: PropTypes.func,
 };
 
 function renderBracketContent({
@@ -765,6 +851,7 @@ function renderBracketContent({
   bracketSide,
   halfBracketStartRound,
   viewRound,
+  onMatchClick,
 }) {
   if (!isTreeView) {
     return (
@@ -772,6 +859,7 @@ function renderBracketContent({
         standingsByGroup={standingsByGroup}
         knockoutResults={knockoutResults}
         viewRound={viewRound}
+        onMatchClick={onMatchClick}
       />
     );
   }
@@ -783,6 +871,7 @@ function renderBracketContent({
         knockoutResults={knockoutResults}
         bracketSide={bracketSide}
         startRound={halfBracketStartRound}
+        onMatchClick={onMatchClick}
       />
     );
   }
@@ -791,6 +880,7 @@ function renderBracketContent({
     <BracketTreeView
       standingsByGroup={standingsByGroup}
       knockoutResults={knockoutResults}
+      onMatchClick={onMatchClick}
     />
   );
 }
@@ -803,6 +893,7 @@ function KnockoutBracket({
 }) {
   const [bracketSide, setBracketSide] = useState("left");
   const [viewMode, setViewMode] = useState(readStoredKnockoutViewMode);
+  const [selectedMatchId, setSelectedMatchId] = useState(null);
   const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
 
   const isTreeView = viewMode === "tree";
@@ -919,8 +1010,18 @@ function KnockoutBracket({
           bracketSide,
           halfBracketStartRound,
           viewRound,
+          onMatchClick: setSelectedMatchId,
         })}
       </div>
+
+      {selectedMatchId && (
+        <KnockoutMatchDetailModal
+          matchId={selectedMatchId}
+          standingsByGroup={standingsByGroup}
+          knockoutResults={knockoutResults}
+          onClose={() => setSelectedMatchId(null)}
+        />
+      )}
     </div>
   );
 }
