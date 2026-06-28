@@ -5,12 +5,14 @@ import {
   BRACKET_TREE,
   KNOCKOUT_ROUND_LABELS,
   KNOCKOUT_ROUND_VIEWS,
+  getKnockoutMatchIdsForView,
   getKnockoutMatchTag,
   formatKnockoutMatchDate,
   hasKnockoutKickoffTime,
   resolveKnockoutMatch,
 } from "../utils/knockout";
 import { formatFixtureTime, parseFixtureInstant } from "../utils/timezone";
+import { getTeamDisplayName } from "../utils/data";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import KnockoutMatchLabel from "./KnockoutMatchLabel";
 import KnockoutTeamSlot from "./KnockoutTeamSlot";
@@ -103,6 +105,142 @@ KnockoutMatchCard.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
   knockoutResults: knockoutResultsShape.isRequired,
   compact: PropTypes.bool,
+};
+
+const resolvedSlotShape = PropTypes.shape({
+  type: PropTypes.oneOf(["team", "third", "placeholder"]).isRequired,
+  team: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    flagCode: PropTypes.string,
+  }),
+  label: PropTypes.string,
+  code: PropTypes.string,
+  score: PropTypes.number,
+});
+
+function KnockoutListTeam({ slot, side }) {
+  const isHome = side === "home";
+
+  if (slot.type === "team" && slot.team) {
+    const name = getTeamDisplayName(slot.team.name);
+    const flag = (
+      <img
+        className="knockout-list-row-flag"
+        src={`https://flagcdn.com/w20/${slot.team.flagCode}.png`}
+        alt=""
+        width={18}
+        height={13}
+      />
+    );
+
+    return (
+      <span
+        className={`knockout-list-row-team knockout-list-row-team--${side}`}
+      >
+        {isHome ? (
+          <>
+            <span className="knockout-list-row-team-name">{name}</span>
+            {slot.code && (
+              <span className="knockout-list-row-team-code">{slot.code}</span>
+            )}
+            {flag}
+          </>
+        ) : (
+          <>
+            {flag}
+            <span className="knockout-list-row-team-name">{name}</span>
+            {slot.code && (
+              <span className="knockout-list-row-team-code">{slot.code}</span>
+            )}
+          </>
+        )}
+      </span>
+    );
+  }
+
+  const label = slot.label ?? "TBD";
+
+  return (
+    <span
+      className={`knockout-list-row-team knockout-list-row-team--${side} knockout-list-row-team--placeholder`}
+    >
+      <span className="knockout-list-row-team-name">{label}</span>
+    </span>
+  );
+}
+
+KnockoutListTeam.propTypes = {
+  slot: resolvedSlotShape.isRequired,
+  side: PropTypes.oneOf(["home", "away"]).isRequired,
+};
+
+function KnockoutListRow({ matchId, standingsByGroup, knockoutResults }) {
+  const { timeZone } = useTimezone();
+  const match = resolveKnockoutMatch(matchId, standingsByGroup, {
+    knockoutResults,
+  });
+  if (!match) return null;
+
+  const tag = getKnockoutMatchTag(match.id);
+  const schedule = {
+    date: match.date,
+    time: match.time,
+    city: match.city,
+  };
+  const dateLabel = formatKnockoutMatchDate(schedule, timeZone);
+  const timeLabel = hasKnockoutKickoffTime(schedule)
+    ? formatFixtureTime(schedule, timeZone)
+    : null;
+  const dateTime = hasKnockoutKickoffTime(schedule)
+    ? parseFixtureInstant(schedule).toISOString()
+    : match.date;
+  const result = knockoutResults[matchId];
+  const hasScore =
+    result?.homeScore != null && result?.awayScore != null;
+
+  return (
+    <div className={`knockout-list-row knockout-list-row--${match.round}`}>
+      {dateLabel && (
+        <time className="knockout-list-row-date" dateTime={dateTime}>
+          {dateLabel}
+          {timeLabel && (
+            <>
+              {" · "}
+              {timeLabel}
+            </>
+          )}
+        </time>
+      )}
+
+      <div className="knockout-list-row-teams">
+        <KnockoutListTeam slot={match.resolvedA} side="home" />
+        {hasScore ? (
+          <span className="knockout-list-row-score">
+            {result.homeScore}–{result.awayScore}
+          </span>
+        ) : (
+          <span className="knockout-list-row-vs">vs</span>
+        )}
+        <KnockoutListTeam slot={match.resolvedB} side="away" />
+      </div>
+
+      {tag && (
+        <KnockoutMatchLabel
+          tag={tag}
+          matchId={match.id}
+          variant="compact"
+          className="knockout-list-row-label"
+        />
+      )}
+    </div>
+  );
+}
+
+KnockoutListRow.propTypes = {
+  matchId: PropTypes.string.isRequired,
+  standingsByGroup: standingsByGroupShape.isRequired,
+  knockoutResults: knockoutResultsShape.isRequired,
 };
 
 function BracketMergeConnector({ mirrored = false }) {
@@ -454,6 +592,74 @@ BracketTreeView.propTypes = {
   knockoutResults: knockoutResultsShape.isRequired,
 };
 
+const KNOCKOUT_VIEW_MODES = ["tree", "list"];
+
+const KNOCKOUT_VIEW_MODE_LABELS = {
+  tree: "Tree",
+  list: "List",
+};
+
+function BracketListView({ standingsByGroup, knockoutResults, viewRound }) {
+  const matchIds = getKnockoutMatchIdsForView(viewRound);
+
+  return (
+    <div className="knockout-list">
+      {matchIds.map((matchId) => (
+        <KnockoutListRow
+          key={matchId}
+          matchId={matchId}
+          standingsByGroup={standingsByGroup}
+          knockoutResults={knockoutResults}
+        />
+      ))}
+    </div>
+  );
+}
+
+BracketListView.propTypes = {
+  standingsByGroup: standingsByGroupShape.isRequired,
+  knockoutResults: knockoutResultsShape.isRequired,
+  viewRound: PropTypes.oneOf(KNOCKOUT_ROUND_VIEWS).isRequired,
+};
+
+function renderBracketContent({
+  isTreeView,
+  showHalfBracket,
+  standingsByGroup,
+  knockoutResults,
+  bracketSide,
+  halfBracketStartRound,
+  viewRound,
+}) {
+  if (!isTreeView) {
+    return (
+      <BracketListView
+        standingsByGroup={standingsByGroup}
+        knockoutResults={knockoutResults}
+        viewRound={viewRound}
+      />
+    );
+  }
+
+  if (showHalfBracket) {
+    return (
+      <BracketHalfTreeView
+        standingsByGroup={standingsByGroup}
+        knockoutResults={knockoutResults}
+        bracketSide={bracketSide}
+        startRound={halfBracketStartRound}
+      />
+    );
+  }
+
+  return (
+    <BracketTreeView
+      standingsByGroup={standingsByGroup}
+      knockoutResults={knockoutResults}
+    />
+  );
+}
+
 function KnockoutBracket({
   standingsByGroup,
   knockoutResults,
@@ -461,36 +667,63 @@ function KnockoutBracket({
   onViewRoundChange,
 }) {
   const [bracketSide, setBracketSide] = useState("left");
+  const [viewMode, setViewMode] = useState("tree");
   const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
 
+  const isTreeView = viewMode === "tree";
   const showHalfBracket =
-    HALF_BRACKET_ROUNDS.includes(viewRound) ||
-    (isMobile && viewRound === "finals");
+    isTreeView &&
+    (HALF_BRACKET_ROUNDS.includes(viewRound) ||
+      (isMobile && viewRound === "finals"));
   const halfBracketStartRound = viewRound === "finals" ? "qf" : viewRound;
 
   return (
     <div className="knockout-bracket-container">
       <div className="knockout-bracket-nav">
-        <div
-          className="knockout-bracket-tabs knockout-bracket-tabs--rounds"
-          role="tablist"
-          aria-label="Knockout round"
-        >
-          {KNOCKOUT_ROUND_VIEWS.map((round) => (
-            <button
-              key={round}
-              type="button"
-              role="tab"
-              id={`knockout-tab-${round}`}
-              className={`knockout-bracket-tab${viewRound === round ? " active" : ""}`}
-              aria-selected={viewRound === round}
-              aria-controls={`knockout-panel-${round}`}
-              title={KNOCKOUT_ROUND_LABELS[round]}
-              onClick={() => onViewRoundChange(round)}
-            >
-              {KNOCKOUT_ROUND_LABELS[round]}
-            </button>
-          ))}
+        <div className="knockout-bracket-nav-row">
+          <div
+            className="knockout-bracket-tabs knockout-bracket-tabs--rounds"
+            role="tablist"
+            aria-label="Knockout round"
+          >
+            {KNOCKOUT_ROUND_VIEWS.map((round) => (
+              <button
+                key={round}
+                type="button"
+                role="tab"
+                id={`knockout-tab-${round}`}
+                className={`knockout-bracket-tab${viewRound === round ? " active" : ""}`}
+                aria-selected={viewRound === round}
+                aria-controls={`knockout-panel-${round}`}
+                title={KNOCKOUT_ROUND_LABELS[round]}
+                onClick={() => onViewRoundChange(round)}
+              >
+                {KNOCKOUT_ROUND_LABELS[round]}
+              </button>
+            ))}
+          </div>
+
+          <div
+            className="knockout-bracket-tabs knockout-bracket-tabs--view-mode"
+            role="tablist"
+            aria-label="View mode"
+          >
+            {KNOCKOUT_VIEW_MODES.map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                role="tab"
+                className={`knockout-bracket-tab${
+                  viewMode === mode ? " active" : ""
+                }`}
+                aria-selected={viewMode === mode}
+                title={KNOCKOUT_VIEW_MODE_LABELS[mode]}
+                onClick={() => setViewMode(mode)}
+              >
+                {KNOCKOUT_VIEW_MODE_LABELS[mode]}
+              </button>
+            ))}
+          </div>
         </div>
 
         {showHalfBracket && (
@@ -520,7 +753,9 @@ function KnockoutBracket({
       </div>
 
       <div
-        className="knockout-bracket-scroll"
+        className={`knockout-bracket-scroll${
+          isTreeView ? "" : " knockout-bracket-scroll--list"
+        }`}
         role="tabpanel"
         id={
           showHalfBracket
@@ -533,19 +768,15 @@ function KnockoutBracket({
             : `knockout-tab-${viewRound}`
         }
       >
-        {showHalfBracket ? (
-          <BracketHalfTreeView
-            standingsByGroup={standingsByGroup}
-            knockoutResults={knockoutResults}
-            bracketSide={bracketSide}
-            startRound={halfBracketStartRound}
-          />
-        ) : (
-          <BracketTreeView
-            standingsByGroup={standingsByGroup}
-            knockoutResults={knockoutResults}
-          />
-        )}
+        {renderBracketContent({
+          isTreeView,
+          showHalfBracket,
+          standingsByGroup,
+          knockoutResults,
+          bracketSide,
+          halfBracketStartRound,
+          viewRound,
+        })}
       </div>
     </div>
   );

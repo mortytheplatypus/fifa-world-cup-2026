@@ -268,6 +268,17 @@ const R16_MATCH_ORDER = [
 const QF_MATCH_ORDER = ["M97", "M98", "M99", "M100"];
 const SF_MATCH_ORDER = ["M101", "M102"];
 
+const KNOCKOUT_MATCHES_BY_VIEW = {
+  r32: R32_MATCH_ORDER,
+  r16: R16_MATCH_ORDER,
+  finals: [...QF_MATCH_ORDER, ...SF_MATCH_ORDER, "M103", "M104"],
+};
+
+/** Ordered match ids for a knockout round tab (R32, R16, or Finals). */
+export function getKnockoutMatchIdsForView(viewRound) {
+  return KNOCKOUT_MATCHES_BY_VIEW[viewRound] ?? [];
+}
+
 /** Short slot tags shown beside match ids (e.g. M90 → R16-2, M97 → QF1). */
 export const KNOCKOUT_MATCH_TAGS = Object.fromEntries([
   ...R32_MATCH_ORDER.map((id, i) => [id, `R32-${i + 1}`]),
