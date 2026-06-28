@@ -71,7 +71,7 @@ Collections:
   results    <- results.json
   squads     <- squads.json
   players    <- players.json
-  wcHistory  <- wcHistory.json
+  wcHistory  <- wc-history.json
 `);
 }
 
