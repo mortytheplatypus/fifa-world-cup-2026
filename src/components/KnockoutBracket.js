@@ -6,6 +6,7 @@ import {
   KNOCKOUT_ROUND_LABELS,
   KNOCKOUT_ROUND_VIEWS,
   getKnockoutMatchIdsForView,
+  KNOCKOUT_FINALS_LIST_SECTIONS,
   getKnockoutMatchTag,
   formatKnockoutMatchDate,
   hasKnockoutKickoffTime,
@@ -594,25 +595,156 @@ BracketTreeView.propTypes = {
 
 const KNOCKOUT_VIEW_MODES = ["tree", "list"];
 
+const KNOCKOUT_VIEW_MODE_STORAGE_KEY = "knockout-view-mode";
+
 const KNOCKOUT_VIEW_MODE_LABELS = {
   tree: "Tree",
   list: "List",
 };
 
+function readStoredKnockoutViewMode() {
+  try {
+    const value = localStorage.getItem(KNOCKOUT_VIEW_MODE_STORAGE_KEY);
+    return KNOCKOUT_VIEW_MODES.includes(value) ? value : "tree";
+  } catch {
+    return "tree";
+  }
+}
+
+function writeStoredKnockoutViewMode(mode) {
+  try {
+    localStorage.setItem(KNOCKOUT_VIEW_MODE_STORAGE_KEY, mode);
+  } catch {
+    // Ignore storage failures
+  }
+}
+
+function TreeViewIcon() {
+  return (
+    <svg
+      className="knockout-view-mode-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="3" y="4" width="6" height="4" rx="1" />
+      <rect x="15" y="4" width="6" height="4" rx="1" />
+      <rect x="9" y="16" width="6" height="4" rx="1" />
+      <path d="M6 8v2.5a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V8" />
+    </svg>
+  );
+}
+
+function ListViewIcon() {
+  return (
+    <svg
+      className="knockout-view-mode-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M8 6h13" />
+      <path d="M8 12h13" />
+      <path d="M8 18h13" />
+      <path d="M3 6h.01" />
+      <path d="M3 12h.01" />
+      <path d="M3 18h.01" />
+    </svg>
+  );
+}
+
+const KNOCKOUT_VIEW_MODE_ICONS = {
+  tree: TreeViewIcon,
+  list: ListViewIcon,
+};
+
+function KnockoutListTable({
+  matchIds,
+  standingsByGroup,
+  knockoutResults,
+  section,
+}) {
+  const rows = matchIds.map((matchId) => (
+    <KnockoutListRow
+      key={matchId}
+      matchId={matchId}
+      standingsByGroup={standingsByGroup}
+      knockoutResults={knockoutResults}
+    />
+  ));
+
+  if (section) {
+    const { round, label } = section;
+
+    return (
+      <section
+        className={`knockout-list knockout-list-section knockout-list-section--${round}`}
+        aria-labelledby={`knockout-list-section-${round}`}
+      >
+        <header
+          id={`knockout-list-section-${round}`}
+          className="knockout-list-section-header"
+          title={KNOCKOUT_ROUND_LABELS[round]}
+        >
+          {label}
+        </header>
+        {rows}
+      </section>
+    );
+  }
+
+  return <div className="knockout-list">{rows}</div>;
+}
+
+KnockoutListTable.propTypes = {
+  matchIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  standingsByGroup: standingsByGroupShape.isRequired,
+  knockoutResults: knockoutResultsShape.isRequired,
+  section: PropTypes.shape({
+    round: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+  }),
+};
+
 function BracketListView({ standingsByGroup, knockoutResults, viewRound }) {
+  if (viewRound === "finals") {
+    return (
+      <div className="knockout-list-grouped">
+        {KNOCKOUT_FINALS_LIST_SECTIONS.map(({ round, label, matchIds }) => (
+          <KnockoutListTable
+            key={round}
+            matchIds={matchIds}
+            standingsByGroup={standingsByGroup}
+            knockoutResults={knockoutResults}
+            section={{ round, label }}
+          />
+        ))}
+      </div>
+    );
+  }
+
   const matchIds = getKnockoutMatchIdsForView(viewRound);
 
   return (
-    <div className="knockout-list">
-      {matchIds.map((matchId) => (
-        <KnockoutListRow
-          key={matchId}
-          matchId={matchId}
-          standingsByGroup={standingsByGroup}
-          knockoutResults={knockoutResults}
-        />
-      ))}
-    </div>
+    <KnockoutListTable
+      matchIds={matchIds}
+      standingsByGroup={standingsByGroup}
+      knockoutResults={knockoutResults}
+    />
   );
 }
 
@@ -667,7 +799,7 @@ function KnockoutBracket({
   onViewRoundChange,
 }) {
   const [bracketSide, setBracketSide] = useState("left");
-  const [viewMode, setViewMode] = useState("tree");
+  const [viewMode, setViewMode] = useState(readStoredKnockoutViewMode);
   const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
 
   const isTreeView = viewMode === "tree";
@@ -708,21 +840,29 @@ function KnockoutBracket({
             role="tablist"
             aria-label="View mode"
           >
-            {KNOCKOUT_VIEW_MODES.map((mode) => (
-              <button
-                key={mode}
-                type="button"
-                role="tab"
-                className={`knockout-bracket-tab${
-                  viewMode === mode ? " active" : ""
-                }`}
-                aria-selected={viewMode === mode}
-                title={KNOCKOUT_VIEW_MODE_LABELS[mode]}
-                onClick={() => setViewMode(mode)}
-              >
-                {KNOCKOUT_VIEW_MODE_LABELS[mode]}
-              </button>
-            ))}
+            {KNOCKOUT_VIEW_MODES.map((mode) => {
+              const Icon = KNOCKOUT_VIEW_MODE_ICONS[mode];
+
+              return (
+                <button
+                  key={mode}
+                  type="button"
+                  role="tab"
+                  className={`knockout-bracket-tab knockout-bracket-tab--icon${
+                    viewMode === mode ? " active" : ""
+                  }`}
+                  aria-selected={viewMode === mode}
+                  aria-label={KNOCKOUT_VIEW_MODE_LABELS[mode]}
+                  title={KNOCKOUT_VIEW_MODE_LABELS[mode]}
+                  onClick={() => {
+                    setViewMode(mode);
+                    writeStoredKnockoutViewMode(mode);
+                  }}
+                >
+                  <Icon />
+                </button>
+              );
+            })}
           </div>
         </div>
 

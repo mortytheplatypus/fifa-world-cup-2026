@@ -3394,8 +3394,15 @@ textarea {
 }
 
 .knockout-bracket-tabs--view-mode .knockout-bracket-tab {
-  min-width: 3.5rem;
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  padding: 0.45rem 0.55rem;
+}
+
+.knockout-view-mode-icon {
+  display: block;
 }
 
 .knockout-bracket-tabs {
@@ -3499,6 +3506,70 @@ textarea {
 
 .knockout-bracket-scroll--list {
   overflow-x: visible;
+}
+
+.knockout-list-grouped {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.knockout-list-section-header {
+  margin: 0;
+  padding: 0.45rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.knockout-list-section--qf {
+  border-color: color-mix(in srgb, #d4b86a 45%, var(--border));
+}
+
+.knockout-list-section--qf .knockout-list-section-header {
+  background: color-mix(in srgb, #d4b86a 28%, var(--surface));
+  border-bottom-color: color-mix(in srgb, #d4b86a 35%, var(--border));
+  color: color-mix(in srgb, #f5ecd8 92%, var(--text));
+}
+
+.knockout-list-section--sf {
+  border-color: color-mix(in srgb, #9b84d4 48%, var(--border));
+}
+
+.knockout-list-section--sf .knockout-list-section-header {
+  background: color-mix(in srgb, #9b84d4 30%, var(--surface));
+  border-bottom-color: color-mix(in srgb, #9b84d4 38%, var(--border));
+  color: color-mix(in srgb, #e4daf8 92%, var(--text));
+}
+
+.knockout-list-section--third {
+  border-color: color-mix(in srgb, var(--text-muted) 38%, var(--border));
+}
+
+.knockout-list-section--third .knockout-list-section-header {
+  background: color-mix(in srgb, var(--text-muted) 22%, var(--surface));
+  border-bottom-color: color-mix(in srgb, var(--text-muted) 30%, var(--border));
+  color: color-mix(in srgb, var(--text-muted) 88%, var(--text));
+}
+
+.knockout-list-section--final {
+  border-color: color-mix(in srgb, var(--highlight) 55%, var(--border));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--highlight) 18%, transparent);
+}
+
+.knockout-list-section--final .knockout-list-section-header {
+  background: color-mix(in srgb, var(--highlight) 32%, var(--surface));
+  border-bottom-color: color-mix(in srgb, var(--highlight) 40%, var(--border));
+  color: var(--highlight-text);
+  font-size: 0.78rem;
+}
+
+.knockout-list-section--final .knockout-list-row {
+  background: color-mix(in srgb, var(--highlight) 8%, var(--surface));
 }
 
 .knockout-list {

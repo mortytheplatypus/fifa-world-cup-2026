@@ -274,6 +274,14 @@ const KNOCKOUT_MATCHES_BY_VIEW = {
   finals: [...QF_MATCH_ORDER, ...SF_MATCH_ORDER, "M103", "M104"],
 };
 
+/** Finals list view sections (QF → SF → third-place → final). */
+export const KNOCKOUT_FINALS_LIST_SECTIONS = [
+  { round: "qf", label: "Quarter-finals", matchIds: QF_MATCH_ORDER },
+  { round: "sf", label: "Semi-finals", matchIds: SF_MATCH_ORDER },
+  { round: "third", label: "Third-place play-off", matchIds: ["M103"] },
+  { round: "final", label: "The Final", matchIds: ["M104"] },
+];
+
 /** Ordered match ids for a knockout round tab (R32, R16, or Finals). */
 export function getKnockoutMatchIdsForView(viewRound) {
   return KNOCKOUT_MATCHES_BY_VIEW[viewRound] ?? [];
