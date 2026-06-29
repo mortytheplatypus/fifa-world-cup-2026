@@ -581,6 +581,11 @@ export function getKnockoutSideOutcome(result, side) {
   return null;
 }
 
+/** Group seed tags (e.g. 2B) only apply in the round of 32. */
+export function shouldShowKnockoutSeedCode(round) {
+  return round === "r32";
+}
+
 /**
  * Resolve a knockout slot to a team or placeholder.
  * @returns {{ type: 'team', team: object, score?: number, thirdPlaceInfo?: { candidateGroups: string[] } } | { type: 'third', label: string } | { type: 'placeholder', label: string }}
@@ -634,13 +639,14 @@ export function resolveKnockoutSlot(slot, standingsByGroup, options = {}) {
     if (feederMatch && sideKey) {
       const resolvedSlot =
         sideKey === "A" ? feederMatch.resolvedA : feederMatch.resolvedB;
-      const score =
-        sideKey === "A"
-          ? knockoutResults[slot.matchId].homeScore
-          : knockoutResults[slot.matchId].awayScore;
 
       if (resolvedSlot.type === "team" && resolvedSlot.team) {
-        return withSlotScore(resolvedSlot, score);
+        const {
+          score: _feederScore,
+          code: _feederCode,
+          ...advancedSlot
+        } = resolvedSlot;
+        return advancedSlot;
       }
     }
 

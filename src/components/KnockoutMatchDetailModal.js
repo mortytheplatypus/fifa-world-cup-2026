@@ -11,6 +11,7 @@ import {
   KNOCKOUT_ROUND_LABELS,
   parseKnockoutMatchTag,
   resolveKnockoutMatch,
+  shouldShowKnockoutSeedCode,
 } from "../utils/knockout";
 import {
   getCardDisplay,
@@ -79,7 +80,7 @@ function CloseIcon() {
   );
 }
 
-function DetailTeamSide({ slot, goals, cards, side }) {
+function DetailTeamSide({ slot, goals, cards, side, showSeedCode = false }) {
   const isHome = side === "home";
 
   if (slot.type === "team" && slot.team) {
@@ -102,7 +103,7 @@ function DetailTeamSide({ slot, goals, cards, side }) {
             height={24}
           />
           <span className="knockout-detail-team-name">{name}</span>
-          {slot.code && (
+          {showSeedCode && slot.code && (
             <span className="knockout-detail-team-code">{slot.code}</span>
           )}
         </Link>
@@ -177,6 +178,7 @@ DetailTeamSide.propTypes = {
   goals: PropTypes.arrayOf(PropTypes.object).isRequired,
   cards: PropTypes.arrayOf(PropTypes.object).isRequired,
   side: PropTypes.oneOf(["home", "away"]).isRequired,
+  showSeedCode: PropTypes.bool,
 };
 
 function KnockoutMatchDetailModal({
@@ -238,6 +240,8 @@ function KnockoutMatchDetailModal({
     ? parseFixtureInstant(schedule).toISOString()
     : match.date;
 
+  const showSeedCode = shouldShowKnockoutSeedCode(match.round);
+
   return createPortal(
     <div className="knockout-detail-overlay" onClick={onClose}>
       <div
@@ -287,6 +291,7 @@ function KnockoutMatchDetailModal({
               goals={showMatchEvents ? homeGoals : []}
               cards={showMatchEvents ? homeCards : []}
               side="home"
+              showSeedCode={showSeedCode}
             />
             {hasScore ? (
               <span className="knockout-detail-score">
@@ -300,6 +305,7 @@ function KnockoutMatchDetailModal({
               goals={showMatchEvents ? awayGoals : []}
               cards={showMatchEvents ? awayCards : []}
               side="away"
+              showSeedCode={showSeedCode}
             />
           </div>
 

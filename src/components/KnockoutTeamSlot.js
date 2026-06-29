@@ -17,7 +17,7 @@ const resolvedSlotShape = PropTypes.shape({
   }),
 });
 
-function KnockoutTeamSlot({ slot, outcome = null }) {
+function KnockoutTeamSlot({ slot, outcome = null, showSeedCode = false }) {
   if (slot.type === 'team' && slot.team) {
     const outcomeClass =
       outcome === 'winner'
@@ -54,7 +54,9 @@ function KnockoutTeamSlot({ slot, outcome = null }) {
               {')'}
             </>
           ) : (
-            slot.code && <span className="knockout-slot-code"> {slot.code}</span>
+            slot.code && showSeedCode && (
+              <span className="knockout-slot-code"> {slot.code}</span>
+            )
           )}
         </span>
         {slot.thirdPlaceInfo?.candidateGroups?.length > 0 && (
@@ -77,6 +79,7 @@ function KnockoutTeamSlot({ slot, outcome = null }) {
 KnockoutTeamSlot.propTypes = {
   slot: resolvedSlotShape.isRequired,
   outcome: PropTypes.oneOf(['winner', 'eliminated']),
+  showSeedCode: PropTypes.bool,
 };
 
 export default KnockoutTeamSlot;
