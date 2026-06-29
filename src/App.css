@@ -3673,6 +3673,21 @@ textarea {
   white-space: nowrap;
 }
 
+.knockout-list-row-team--eliminated {
+  opacity: 0.55;
+}
+
+.knockout-list-row-team--eliminated .knockout-list-row-team-name,
+.knockout-list-row-team--eliminated .knockout-list-row-team-code {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.knockout-list-row-team--eliminated .knockout-list-row-flag {
+  filter: grayscale(0.65);
+  opacity: 0.85;
+}
+
 .knockout-list-row-team-code {
   flex-shrink: 0;
   color: var(--text-muted);
@@ -4375,6 +4390,33 @@ textarea {
   background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
+.knockout-slot--winner {
+  background: color-mix(in srgb, var(--accent) 34%, transparent);
+  box-shadow: inset 3px 0 0 var(--accent-hover);
+}
+
+.knockout-slot--winner .knockout-slot-name,
+.knockout-slot--winner .knockout-slot-score {
+  color: var(--highlight-text);
+  font-weight: 600;
+}
+
+.knockout-slot--eliminated {
+  background: color-mix(in srgb, var(--border) 16%, transparent);
+  opacity: 0.58;
+}
+
+.knockout-slot--eliminated .knockout-slot-name,
+.knockout-slot--eliminated .knockout-slot-score {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.knockout-slot--eliminated .knockout-slot-flag {
+  filter: grayscale(0.65);
+  opacity: 0.85;
+}
+
 .knockout-third-place-info {
   flex-shrink: 0;
 }
@@ -4417,7 +4459,10 @@ textarea {
 
 .knockout-slot-score {
   color: var(--text);
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 .knockout-slot-label {

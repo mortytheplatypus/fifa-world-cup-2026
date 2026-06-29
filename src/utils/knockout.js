@@ -572,6 +572,15 @@ function getKnockoutResultSides(result) {
   return null;
 }
 
+/** @returns {'winner' | 'eliminated' | null} */
+export function getKnockoutSideOutcome(result, side) {
+  const sides = getKnockoutResultSides(result);
+  if (!sides) return null;
+  if (sides.winner === side) return "winner";
+  if (sides.loser === side) return "eliminated";
+  return null;
+}
+
 /**
  * Resolve a knockout slot to a team or placeholder.
  * @returns {{ type: 'team', team: object, score?: number, thirdPlaceInfo?: { candidateGroups: string[] } } | { type: 'third', label: string } | { type: 'placeholder', label: string }}
