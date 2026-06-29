@@ -61,11 +61,9 @@ function FixtureCard({
           {!fixture.isKnockout && showGroup && fixture.group && (
             <span className="fixture-group">Group {fixture.group}</span>
           )}
-          {!fixture.isKnockout && (
-            <span className={`fixture-status fixture-status--${status}`}>
-              {STATUS_LABELS[status]}
-            </span>
-          )}
+          <span className={`fixture-status fixture-status--${status}`}>
+            {STATUS_LABELS[status]}
+          </span>
         </div>
         <time dateTime={isoDateTime}>
           {showDate && (

@@ -17,10 +17,27 @@ const resolvedSlotShape = PropTypes.shape({
   }),
 });
 
-function KnockoutTeamSlot({ slot }) {
+function KnockoutTeamSlot({ slot, outcome = null }) {
   if (slot.type === 'team' && slot.team) {
+    const outcomeClass =
+      outcome === 'winner'
+        ? ' knockout-slot--winner'
+        : outcome === 'eliminated'
+          ? ' knockout-slot--eliminated'
+          : '';
+    const teamName = getTeamDisplayName(slot.team.name);
+    const ariaLabel =
+      outcome === 'winner'
+        ? `${teamName}, winner`
+        : outcome === 'eliminated'
+          ? `${teamName}, eliminated`
+          : teamName;
+
     return (
-      <div className="knockout-slot knockout-slot--resolved">
+      <div
+        className={`knockout-slot knockout-slot--resolved${outcomeClass}`}
+        aria-label={ariaLabel}
+      >
         <img
           className="knockout-slot-flag"
           src={`https://flagcdn.com/w40/${slot.team.flagCode}.png`}
@@ -28,10 +45,14 @@ function KnockoutTeamSlot({ slot }) {
           width={22}
           height={16}
         />
-        <span className="knockout-slot-name">
-          {getTeamDisplayName(slot.team.name)}
+        <span className="knockout-slot-name" aria-hidden="true">
+          {teamName}
           {slot.score != null ? (
-            <span className="knockout-slot-score"> ({slot.score})</span>
+            <>
+              {' ('}
+              <span className="knockout-slot-score">{slot.score}</span>
+              {')'}
+            </>
           ) : (
             slot.code && <span className="knockout-slot-code"> {slot.code}</span>
           )}
@@ -55,6 +76,7 @@ function KnockoutTeamSlot({ slot }) {
 
 KnockoutTeamSlot.propTypes = {
   slot: resolvedSlotShape.isRequired,
+  outcome: PropTypes.oneOf(['winner', 'eliminated']),
 };
 
 export default KnockoutTeamSlot;

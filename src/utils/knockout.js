@@ -405,7 +405,7 @@ export function formatKnockoutMatchTag(tag, matchId) {
   return label;
 }
 
-/** Schedule fields from API / knockouts collection merged with static fallbacks. */
+/** Schedule and result fields from API / knockouts collection merged with static fallbacks. */
 export function getKnockoutSchedule(matchId, knockoutResults = {}) {
   const schedule = knockoutResults[matchId] ?? {};
 
@@ -415,6 +415,10 @@ export function getKnockoutSchedule(matchId, knockoutResults = {}) {
     city: schedule.city ?? null,
     venue: schedule.venue ?? null,
     tag: schedule.tag ?? getKnockoutMatchTag(matchId),
+    homeScore: schedule.homeScore ?? null,
+    awayScore: schedule.awayScore ?? null,
+    ...(schedule.goals?.length ? { goals: schedule.goals } : {}),
+    ...(schedule.cards?.length ? { cards: schedule.cards } : {}),
   };
 }
 
@@ -565,6 +569,15 @@ function getKnockoutResultSides(result) {
     return { winner: "B", loser: "A" };
   }
 
+  return null;
+}
+
+/** @returns {'winner' | 'eliminated' | null} */
+export function getKnockoutSideOutcome(result, side) {
+  const sides = getKnockoutResultSides(result);
+  if (!sides) return null;
+  if (sides.winner === side) return "winner";
+  if (sides.loser === side) return "eliminated";
   return null;
 }
 
