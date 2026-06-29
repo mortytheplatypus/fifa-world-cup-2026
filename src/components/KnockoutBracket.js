@@ -16,6 +16,7 @@ import {
   getKnockoutSideOutcome,
   hasKnockoutKickoffTime,
   resolveKnockoutMatch,
+  shouldShowKnockoutSeedCode,
 } from "../utils/knockout";
 import { formatFixtureTime, parseFixtureInstant } from "../utils/timezone";
 import { getTeamDisplayName } from "../utils/data";
@@ -128,9 +129,17 @@ function KnockoutMatchCard({
         )}
       </div>
       <div className="knockout-match-teams">
-        <KnockoutTeamSlot slot={match.resolvedA} outcome={homeOutcome} />
+        <KnockoutTeamSlot
+          slot={match.resolvedA}
+          outcome={homeOutcome}
+          showSeedCode={shouldShowKnockoutSeedCode(match.round)}
+        />
         <span className="knockout-match-vs">vs</span>
-        <KnockoutTeamSlot slot={match.resolvedB} outcome={awayOutcome} />
+        <KnockoutTeamSlot
+          slot={match.resolvedB}
+          outcome={awayOutcome}
+          showSeedCode={shouldShowKnockoutSeedCode(match.round)}
+        />
       </div>
     </div>
   );
@@ -156,7 +165,7 @@ const resolvedSlotShape = PropTypes.shape({
   score: PropTypes.number,
 });
 
-function KnockoutListTeam({ slot, side, outcome = null }) {
+function KnockoutListTeam({ slot, side, outcome = null, showSeedCode = false }) {
   const isHome = side === "home";
   const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
   const outcomeClass =
@@ -186,7 +195,7 @@ function KnockoutListTeam({ slot, side, outcome = null }) {
         {isHome ? (
           <>
             <span className="knockout-list-row-team-name">{name}</span>
-            {!isMobile && slot.code && (
+            {!isMobile && showSeedCode && slot.code && (
               <span className="knockout-list-row-team-code">{slot.code}</span>
             )}
             {flag}
@@ -195,7 +204,7 @@ function KnockoutListTeam({ slot, side, outcome = null }) {
           <>
             {flag}
             <span className="knockout-list-row-team-name">{name}</span>
-            {!isMobile && slot.code && (
+            {!isMobile && showSeedCode && slot.code && (
               <span className="knockout-list-row-team-code">{slot.code}</span>
             )}
           </>
@@ -219,6 +228,7 @@ KnockoutListTeam.propTypes = {
   slot: resolvedSlotShape.isRequired,
   side: PropTypes.oneOf(["home", "away"]).isRequired,
   outcome: PropTypes.oneOf(["winner", "eliminated"]),
+  showSeedCode: PropTypes.bool,
 };
 
 function KnockoutListRow({
@@ -279,7 +289,12 @@ function KnockoutListRow({
       )}
 
       <div className="knockout-list-row-teams">
-        <KnockoutListTeam slot={match.resolvedA} side="home" outcome={homeOutcome} />
+        <KnockoutListTeam
+          slot={match.resolvedA}
+          side="home"
+          outcome={homeOutcome}
+          showSeedCode={shouldShowKnockoutSeedCode(match.round)}
+        />
         {hasScore ? (
           <span className="knockout-list-row-score">
             {result.homeScore}–{result.awayScore}
@@ -287,7 +302,12 @@ function KnockoutListRow({
         ) : (
           <span className="knockout-list-row-vs">vs</span>
         )}
-        <KnockoutListTeam slot={match.resolvedB} side="away" outcome={awayOutcome} />
+        <KnockoutListTeam
+          slot={match.resolvedB}
+          side="away"
+          outcome={awayOutcome}
+          showSeedCode={shouldShowKnockoutSeedCode(match.round)}
+        />
       </div>
 
       {tag && (
