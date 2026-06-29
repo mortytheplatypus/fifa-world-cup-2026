@@ -18,7 +18,9 @@ import {
   getCardPlayerName,
   getCardsBySide,
   getGoalsBySide,
+  formatPlayerShortName,
 } from "../utils/results";
+import { useMediaQuery } from "../hooks/useMediaQuery";
 import {
   formatFixtureDate,
   formatFixtureTime,
@@ -26,6 +28,15 @@ import {
 } from "../utils/timezone";
 
 const GOAL_EMOJI = "⚽";
+const KNOCKOUT_DETAIL_MOBILE_QUERY = "(max-width: 720px)";
+
+function formatEventPlayerName(name, compact) {
+  if (!name) {
+    return name;
+  }
+
+  return compact ? formatPlayerShortName(name) : name;
+}
 
 const standingsByGroupShape = PropTypes.objectOf(
   PropTypes.arrayOf(
@@ -126,7 +137,7 @@ DetailTeamHeader.propTypes = {
   showSeedCode: PropTypes.bool,
 };
 
-function DetailTeamEvents({ goals, cards, side, teamName }) {
+function DetailTeamEvents({ goals, cards, side, teamName, compact = false }) {
   if (goals.length === 0 && cards.length === 0) {
     return (
       <div
@@ -155,11 +166,21 @@ function DetailTeamEvents({ goals, cards, side, teamName }) {
                     {GOAL_EMOJI}
                   </span>
                   <span className="knockout-detail-event-minute">{goal.minute}&apos;</span>
-                  <span className="knockout-detail-event-player">{goal.scorer}</span>
+                  <span
+                    className="knockout-detail-event-player"
+                    title={compact ? goal.scorer : undefined}
+                  >
+                    {formatEventPlayerName(goal.scorer, compact)}
+                  </span>
                 </>
               ) : (
                 <>
-                  <span className="knockout-detail-event-player">{goal.scorer}</span>
+                  <span
+                    className="knockout-detail-event-player"
+                    title={compact ? goal.scorer : undefined}
+                  >
+                    {formatEventPlayerName(goal.scorer, compact)}
+                  </span>
                   <span className="knockout-detail-event-minute">{goal.minute}&apos;</span>
                   <span className="knockout-detail-event-emoji" aria-hidden="true">
                     {GOAL_EMOJI}
@@ -178,6 +199,7 @@ function DetailTeamEvents({ goals, cards, side, teamName }) {
           {cards.map((card, index) => {
             const { emoji, label } = getCardDisplay(card);
             const player = getCardPlayerName(card);
+            const displayName = player ?? label;
 
             return (
               <li key={`${card.type}-${player ?? index}-${index}`}>
@@ -189,14 +211,20 @@ function DetailTeamEvents({ goals, cards, side, teamName }) {
                     {card.minute != null && (
                       <span className="knockout-detail-event-minute">{card.minute}&apos;</span>
                     )}
-                    <span className="knockout-detail-event-player">
-                      {player ?? label}
+                    <span
+                      className="knockout-detail-event-player"
+                      title={compact && player ? player : undefined}
+                    >
+                      {formatEventPlayerName(displayName, compact)}
                     </span>
                   </>
                 ) : (
                   <>
-                    <span className="knockout-detail-event-player">
-                      {player ?? label}
+                    <span
+                      className="knockout-detail-event-player"
+                      title={compact && player ? player : undefined}
+                    >
+                      {formatEventPlayerName(displayName, compact)}
                     </span>
                     {card.minute != null && (
                       <span className="knockout-detail-event-minute">{card.minute}&apos;</span>
@@ -220,6 +248,7 @@ DetailTeamEvents.propTypes = {
   cards: PropTypes.arrayOf(PropTypes.object).isRequired,
   side: PropTypes.oneOf(["home", "away"]).isRequired,
   teamName: PropTypes.string,
+  compact: PropTypes.bool,
 };
 
 function KnockoutMatchDetailModal({
@@ -229,6 +258,7 @@ function KnockoutMatchDetailModal({
   onClose,
 }) {
   const { timeZone } = useTimezone();
+  const isMobile = useMediaQuery(KNOCKOUT_DETAIL_MOBILE_QUERY);
   const closeButtonRef = useRef(null);
   const match = resolveKnockoutMatch(matchId, standingsByGroup, {
     knockoutResults,
@@ -281,12 +311,14 @@ function KnockoutMatchDetailModal({
     ? parseFixtureInstant(schedule).toISOString()
     : match.date;
 
-  const showSeedCode = shouldShowKnockoutSeedCode(match.round);
+  const showSeedCode = shouldShowKnockoutSeedCode(match.round) && !isMobile;
 
   return createPortal(
     <div className="knockout-detail-overlay" onClick={onClose}>
       <div
-        className={`knockout-detail-modal knockout-detail-modal--${match.round}`}
+        className={`knockout-detail-modal knockout-detail-modal--${match.round}${
+          isMobile ? " knockout-detail-modal--compact" : ""
+        }`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="knockout-detail-title"
@@ -358,12 +390,14 @@ function KnockoutMatchDetailModal({
                   cards={homeCards}
                   side="home"
                   teamName={match.resolvedA.team?.name}
+                  compact={isMobile}
                 />
                 <DetailTeamEvents
                   goals={awayGoals}
                   cards={awayCards}
                   side="away"
                   teamName={match.resolvedB.team?.name}
+                  compact={isMobile}
                 />
               </div>
             )}
