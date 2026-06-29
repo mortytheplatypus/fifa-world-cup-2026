@@ -33,6 +33,22 @@ export function getCardPlayerName(card) {
   return card.player ?? card.scorer ?? card.name ?? null;
 }
 
+/** "Foo Bar" → "F. Bar"; single names unchanged. */
+export function formatPlayerShortName(name) {
+  if (!name) {
+    return name;
+  }
+
+  const parts = name.trim().split(/\s+/);
+  if (parts.length <= 1) {
+    return name;
+  }
+
+  const surname = parts[parts.length - 1];
+  const firstInitial = parts[0].charAt(0).toUpperCase();
+  return `${firstInitial}. ${surname}`;
+}
+
 export function sortCards(cards = []) {
   return [...cards].sort((a, b) => {
     const aKey = a.minute != null ? goalMinuteSortKey(a.minute) : Number.MAX_SAFE_INTEGER;
