@@ -80,16 +80,14 @@ function CloseIcon() {
   );
 }
 
-function DetailTeamSide({ slot, goals, cards, side, showSeedCode = false }) {
-  const isHome = side === "home";
-
+function DetailTeamHeader({ slot, side, showSeedCode = false }) {
   if (slot.type === "team" && slot.team) {
     const team = slot.team;
     const name = getTeamDisplayName(team.name);
 
     return (
       <div
-        className={`knockout-detail-team-side knockout-detail-team-side--${side}`}
+        className={`knockout-detail-team-header knockout-detail-team-header--${side}`}
       >
         <Link
           to={getTeamPath(team)}
@@ -107,57 +105,6 @@ function DetailTeamSide({ slot, goals, cards, side, showSeedCode = false }) {
             <span className="knockout-detail-team-code">{slot.code}</span>
           )}
         </Link>
-        {goals.length > 0 && (
-          <ul
-            className={`knockout-detail-team-events knockout-detail-team-events--${side}`}
-            aria-label={`${team.name} goals`}
-          >
-            {goals.map((goal) => (
-              <li key={`${goal.scorer}-${goal.minute}`}>
-                {isHome ? (
-                  <>
-                    <span aria-hidden="true">{GOAL_EMOJI}</span> {goal.minute}
-                    &apos; {goal.scorer}
-                  </>
-                ) : (
-                  <>
-                    {goal.scorer} {goal.minute}&apos;{" "}
-                    <span aria-hidden="true">{GOAL_EMOJI}</span>
-                  </>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-        {cards.length > 0 && (
-          <ul
-            className={`knockout-detail-team-events knockout-detail-team-events--${side}`}
-            aria-label={`${team.name} cards`}
-          >
-            {cards.map((card, index) => {
-              const { emoji, label } = getCardDisplay(card);
-              const player = getCardPlayerName(card);
-
-              return (
-                <li key={`${card.type}-${player ?? index}-${index}`}>
-                  {isHome ? (
-                    <>
-                      <span aria-hidden="true">{emoji}</span>
-                      {card.minute != null && <> {card.minute}&apos;</>}
-                      {player ? <> {player}</> : <> {label}</>}
-                    </>
-                  ) : (
-                    <>
-                      {player ?? label}
-                      {card.minute != null && <> {card.minute}&apos;</>}{" "}
-                      <span aria-hidden="true">{emoji}</span>
-                    </>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
       </div>
     );
   }
@@ -166,19 +113,113 @@ function DetailTeamSide({ slot, goals, cards, side, showSeedCode = false }) {
 
   return (
     <div
-      className={`knockout-detail-team-side knockout-detail-team-side--${side} knockout-detail-team-side--placeholder`}
+      className={`knockout-detail-team-header knockout-detail-team-header--${side} knockout-detail-team-header--placeholder`}
     >
       <span className="knockout-detail-team-name">{label}</span>
     </div>
   );
 }
 
-DetailTeamSide.propTypes = {
+DetailTeamHeader.propTypes = {
   slot: resolvedSlotShape.isRequired,
+  side: PropTypes.oneOf(["home", "away"]).isRequired,
+  showSeedCode: PropTypes.bool,
+};
+
+function DetailTeamEvents({ goals, cards, side, teamName }) {
+  if (goals.length === 0 && cards.length === 0) {
+    return (
+      <div
+        className={`knockout-detail-team-events-col knockout-detail-team-events-col--${side}`}
+        aria-hidden="true"
+      />
+    );
+  }
+
+  const isHome = side === "home";
+
+  return (
+    <div
+      className={`knockout-detail-team-events-col knockout-detail-team-events-col--${side}`}
+    >
+      {goals.length > 0 && (
+        <ul
+          className="knockout-detail-team-events knockout-detail-team-events--goals"
+          aria-label={`${teamName} goals`}
+        >
+          {goals.map((goal) => (
+            <li key={`${goal.scorer}-${goal.minute}`}>
+              {isHome ? (
+                <>
+                  <span className="knockout-detail-event-emoji" aria-hidden="true">
+                    {GOAL_EMOJI}
+                  </span>
+                  <span className="knockout-detail-event-minute">{goal.minute}&apos;</span>
+                  <span className="knockout-detail-event-player">{goal.scorer}</span>
+                </>
+              ) : (
+                <>
+                  <span className="knockout-detail-event-player">{goal.scorer}</span>
+                  <span className="knockout-detail-event-minute">{goal.minute}&apos;</span>
+                  <span className="knockout-detail-event-emoji" aria-hidden="true">
+                    {GOAL_EMOJI}
+                  </span>
+                </>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+      {cards.length > 0 && (
+        <ul
+          className="knockout-detail-team-events knockout-detail-team-events--cards"
+          aria-label={`${teamName} cards`}
+        >
+          {cards.map((card, index) => {
+            const { emoji, label } = getCardDisplay(card);
+            const player = getCardPlayerName(card);
+
+            return (
+              <li key={`${card.type}-${player ?? index}-${index}`}>
+                {isHome ? (
+                  <>
+                    <span className="knockout-detail-event-emoji" aria-hidden="true">
+                      {emoji}
+                    </span>
+                    {card.minute != null && (
+                      <span className="knockout-detail-event-minute">{card.minute}&apos;</span>
+                    )}
+                    <span className="knockout-detail-event-player">
+                      {player ?? label}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="knockout-detail-event-player">
+                      {player ?? label}
+                    </span>
+                    {card.minute != null && (
+                      <span className="knockout-detail-event-minute">{card.minute}&apos;</span>
+                    )}
+                    <span className="knockout-detail-event-emoji" aria-hidden="true">
+                      {emoji}
+                    </span>
+                  </>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+DetailTeamEvents.propTypes = {
   goals: PropTypes.arrayOf(PropTypes.object).isRequired,
   cards: PropTypes.arrayOf(PropTypes.object).isRequired,
   side: PropTypes.oneOf(["home", "away"]).isRequired,
-  showSeedCode: PropTypes.bool,
+  teamName: PropTypes.string,
 };
 
 function KnockoutMatchDetailModal({
@@ -285,28 +326,47 @@ function KnockoutMatchDetailModal({
             </time>
           )}
 
-          <div className="knockout-detail-teams">
-            <DetailTeamSide
-              slot={match.resolvedA}
-              goals={showMatchEvents ? homeGoals : []}
-              cards={showMatchEvents ? homeCards : []}
-              side="home"
-              showSeedCode={showSeedCode}
-            />
-            {hasScore ? (
-              <span className="knockout-detail-score">
-                {result.homeScore} – {result.awayScore}
-              </span>
-            ) : (
-              <span className="knockout-detail-vs">vs</span>
+          <div
+            className={`knockout-detail-teams${
+              showMatchEvents ? " knockout-detail-teams--has-events" : ""
+            }`}
+          >
+            <div className="knockout-detail-team-row">
+              <DetailTeamHeader
+                slot={match.resolvedA}
+                side="home"
+                showSeedCode={showSeedCode}
+              />
+              {hasScore ? (
+                <span className="knockout-detail-score">
+                  {result.homeScore} – {result.awayScore}
+                </span>
+              ) : (
+                <span className="knockout-detail-vs">vs</span>
+              )}
+              <DetailTeamHeader
+                slot={match.resolvedB}
+                side="away"
+                showSeedCode={showSeedCode}
+              />
+            </div>
+
+            {showMatchEvents && (
+              <div className="knockout-detail-events-row">
+                <DetailTeamEvents
+                  goals={homeGoals}
+                  cards={homeCards}
+                  side="home"
+                  teamName={match.resolvedA.team?.name}
+                />
+                <DetailTeamEvents
+                  goals={awayGoals}
+                  cards={awayCards}
+                  side="away"
+                  teamName={match.resolvedB.team?.name}
+                />
+              </div>
             )}
-            <DetailTeamSide
-              slot={match.resolvedB}
-              goals={showMatchEvents ? awayGoals : []}
-              cards={showMatchEvents ? awayCards : []}
-              side="away"
-              showSeedCode={showSeedCode}
-            />
           </div>
 
           {match.venue && match.city && (

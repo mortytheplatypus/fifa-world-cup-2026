@@ -1,8 +1,25 @@
 const fs = require('fs');
 const path = require('path');
-const { flattenPlayers } = require('./lib/players-data');
 
 const DATA_DIR = path.join(__dirname, '..', 'public', 'data');
+
+function flattenPlayers(playersData) {
+  const root = playersData.players ?? playersData;
+  const first = Object.values(root ?? {})[0];
+  const nestedByTeam = Boolean(first && typeof first === 'object' && !first.id);
+
+  if (!nestedByTeam) {
+    return root;
+  }
+
+  const flat = {};
+  for (const teamPlayers of Object.values(root)) {
+    for (const [playerId, player] of Object.entries(teamPlayers ?? {})) {
+      flat[playerId] = player;
+    }
+  }
+  return flat;
+}
 
 const VALID_STAGES = new Set([
   'champion',
