@@ -169,7 +169,11 @@ function KnockoutListTeam({ slot, side, outcome = null, showSeedCode = false }) 
   const isHome = side === "home";
   const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
   const outcomeClass =
-    outcome === "eliminated" ? " knockout-list-row-team--eliminated" : "";
+    outcome === "eliminated"
+      ? " knockout-list-row-team--eliminated"
+      : outcome === "winner"
+        ? " knockout-list-row-team--winner"
+        : "";
 
   if (slot.type === "team" && slot.team) {
     const name = isMobile
@@ -264,7 +268,9 @@ function KnockoutListRow({
 
   return (
     <div
-      className={`knockout-list-row knockout-list-row--${match.round} knockout-list-row--clickable`}
+      className={`knockout-list-row knockout-list-row--${match.round} knockout-list-row--clickable${
+        hasScore ? " knockout-list-row--completed" : ""
+      }`}
       role="button"
       tabIndex={0}
       onClick={(event) => handleMatchOpen(event, match.id, onMatchClick)}
