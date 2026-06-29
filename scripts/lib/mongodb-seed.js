@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { flattenPlayers } = require('./players-data');
 
 function loadEnv() {
   const envPath = path.join(__dirname, '..', '..', '.env');
@@ -132,20 +133,6 @@ function buildResultDocs(data) {
 }
 
 function buildSquadDocs(data) {
-  if (Array.isArray(data)) {
-    return data.map((squad) => {
-      const { _id, coach, captain, playerIds } = squad;
-
-      return {
-        replaceOne: {
-          filter: { _id },
-          replacement: { _id, coach, captain, playerIds },
-          upsert: true,
-        },
-      };
-    });
-  }
-
   return Object.entries(data.squads ?? {}).map(([teamId, squad]) => {
     const { coach, captain, playerIds } = squad;
 
@@ -160,13 +147,10 @@ function buildSquadDocs(data) {
 }
 
 function buildPlayerDocs(data) {
-  const players = Array.isArray(data)
-    ? data
-    : Object.entries(data.players ?? {}).map(([id, player]) => ({ _id: id, ...player }));
+  const flatPlayers = flattenPlayers(data);
 
-  return players.map((player) => {
+  return Object.entries(flatPlayers).map(([id, player]) => {
     const {
-      _id: id,
       teamId,
       flagCode,
       name,
@@ -214,21 +198,7 @@ function buildPlayerDocs(data) {
 }
 
 function buildWcHistoryDocs(data) {
-  if (Array.isArray(data)) {
-    return data.map((history) => {
-      const { _id, championships, bestFinish, appearances, tournaments } = history;
-
-      return {
-        replaceOne: {
-          filter: { _id },
-          replacement: { _id, championships, bestFinish, appearances, tournaments },
-          upsert: true,
-        },
-      };
-    });
-  }
-
-  return Object.entries(data.wcHistory ?? {}).map(([teamId, history]) => {
+  return Object.entries(data.teams ?? {}).map(([teamId, history]) => {
     const { championships, bestFinish, appearances, tournaments } = history;
 
     return {

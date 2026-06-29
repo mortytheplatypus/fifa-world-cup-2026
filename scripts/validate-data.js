@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { flattenPlayers } = require('./lib/players-data');
 
 const DATA_DIR = path.join(__dirname, '..', 'public', 'data');
 
@@ -23,17 +24,18 @@ function validate() {
   const errors = [];
   const teams = readJson('teams.json');
   const squads = readJson('squads.json');
-  const players = readJson('players.json');
+  const playersData = readJson('players.json');
   const wcHistory = readJson('wcHistory.json');
+  const flatPlayers = flattenPlayers(playersData);
 
   const teamIds = new Set(teams.map((team) => team.id));
-  const playerIds = new Set(Object.keys(players.players ?? {}));
+  const playerIds = new Set(Object.keys(flatPlayers));
 
   if (!squads.squads) {
     errors.push('squads.json: missing squads object');
   }
 
-  if (!players.players) {
+  if (!playersData.players) {
     errors.push('players.json: missing players object');
   }
 
@@ -68,7 +70,7 @@ function validate() {
       if (!playerIds.has(pid)) {
         errors.push(`Squad ${teamId}: unknown playerId ${pid}`);
       }
-      const player = players.players[pid];
+      const player = flatPlayers[pid];
       if (player?.shirtNumber != null) {
         if (shirtNumbers.has(player.shirtNumber)) {
           errors.push(`Squad ${teamId}: duplicate shirt number ${player.shirtNumber}`);
@@ -82,7 +84,7 @@ function validate() {
     }
   }
 
-  for (const [pid, player] of Object.entries(players.players ?? {})) {
+  for (const [pid, player] of Object.entries(flatPlayers)) {
     if (!teamIds.has(player.teamId)) {
       errors.push(`Player ${pid}: unknown teamId ${player.teamId}`);
     }
@@ -142,7 +144,7 @@ function validate() {
   console.log('Validation passed.');
   console.log(`  Teams: ${teams.length}`);
   console.log(`  Squads: ${Object.keys(squads.squads).length}`);
-  console.log(`  Players: ${Object.keys(players.players).length}`);
+  console.log(`  Players: ${Object.keys(flatPlayers).length}`);
   console.log(
     `  WC tournaments: ${Object.values(wcHistory.wcHistory).reduce((sum, t) => sum + t.tournaments.length, 0)}`
   );
