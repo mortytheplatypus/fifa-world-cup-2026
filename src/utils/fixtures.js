@@ -315,7 +315,7 @@ export function isFixtureComplete(fixture, now = new Date()) {
   );
 }
 
-export const MATCH_DURATION_MS = 2 * 60 * 60 * 1000;
+export const MATCH_DURATION_MS = 2.5 * 60 * 60 * 1000;
 
 export function getFixtureEndInstant(fixture) {
   return new Date(parseFixtureInstant(fixture).getTime() + MATCH_DURATION_MS);
@@ -333,8 +333,8 @@ export function getFixtureStatus(fixture, now = new Date()) {
   const end = getFixtureEndInstant(fixture);
 
   if (now < kickoff) return 'upcoming';
-  if (now < end) return 'ongoing';
   if (fixture.homeScore != null && fixture.awayScore != null) return 'completed';
+  if (now < end) return 'ongoing';
 
   return 'past';
 }

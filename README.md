@@ -132,11 +132,11 @@ Status is derived from kickoff time and whether a score exists in `results.json`
 | Label | When |
 |-------|------|
 | **Upcoming** | Kickoff is in the future, no score |
-| **Live** | Between kickoff and kickoff + 2 hours, no score |
+| **Live** | Between kickoff and kickoff + 2.5 hours, no score |
 | **FT** | `homeScore` and `awayScore` are set in `results.json` |
-| **Awaiting result** | More than 2 hours after kickoff, no score yet |
+| **Awaiting result** | More than 2.5 hours after kickoff, no score yet |
 
-Once you add scores to `results.json`, the match shows as **FT** even if still inside the 2-hour window.
+Once you add scores to `results.json`, the match shows as **FT** even if still inside the 2.5-hour window.
 
 ## Example workflow
 
