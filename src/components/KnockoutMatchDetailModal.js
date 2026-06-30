@@ -21,6 +21,7 @@ import {
   formatPlayerShortName,
 } from "../utils/results";
 import { useMediaQuery } from "../hooks/useMediaQuery";
+import { KnockoutScoreLine } from "./KnockoutScore";
 import {
   formatFixtureDate,
   formatFixtureTime,
@@ -54,6 +55,10 @@ const knockoutResultsShape = PropTypes.objectOf(
   PropTypes.shape({
     homeScore: PropTypes.number,
     awayScore: PropTypes.number,
+    penalties: PropTypes.shape({
+      home: PropTypes.number,
+      away: PropTypes.number,
+    }),
     goals: PropTypes.array,
     cards: PropTypes.array,
   }),
@@ -370,9 +375,11 @@ function KnockoutMatchDetailModal({
                 showSeedCode={showSeedCode}
               />
               {hasScore ? (
-                <span className="knockout-detail-score">
-                  {result.homeScore} – {result.awayScore}
-                </span>
+                <KnockoutScoreLine
+                  result={result}
+                  separator=" – "
+                  className="knockout-detail-score"
+                />
               ) : (
                 <span className="knockout-detail-vs">vs</span>
               )}

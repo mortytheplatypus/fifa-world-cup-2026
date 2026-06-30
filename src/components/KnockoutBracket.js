@@ -15,6 +15,7 @@ import {
   formatKnockoutMatchTag,
   getKnockoutSideOutcome,
   hasKnockoutKickoffTime,
+  isKnockoutPenaltyDecided,
   resolveKnockoutMatch,
   shouldShowKnockoutSeedCode,
 } from "../utils/knockout";
@@ -23,6 +24,7 @@ import { getTeamDisplayName } from "../utils/data";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import KnockoutMatchDetailModal from "./KnockoutMatchDetailModal";
 import KnockoutMatchLabel from "./KnockoutMatchLabel";
+import { KnockoutScoreLine } from "./KnockoutScore";
 import KnockoutTeamSlot from "./KnockoutTeamSlot";
 
 function shouldIgnoreMatchClick(event) {
@@ -58,6 +60,10 @@ const knockoutResultsShape = PropTypes.objectOf(
   PropTypes.shape({
     homeScore: PropTypes.number,
     awayScore: PropTypes.number,
+    penalties: PropTypes.shape({
+      home: PropTypes.number,
+      away: PropTypes.number,
+    }),
   }),
 );
 
@@ -91,12 +97,15 @@ function KnockoutMatchCard({
   const result = knockoutResults[matchId];
   const homeOutcome = getKnockoutSideOutcome(result, "A");
   const awayOutcome = getKnockoutSideOutcome(result, "B");
+  const penaltyDecided = isKnockoutPenaltyDecided(result);
 
   return (
     <div
       className={`knockout-match knockout-match--${match.round}${
         compact ? " knockout-match--compact" : ""
-      } knockout-match--clickable`}
+      } knockout-match--clickable${
+        penaltyDecided ? " knockout-match--penalties" : ""
+      }`}
       role="button"
       tabIndex={0}
       onClick={(event) => handleMatchOpen(event, match.id, onMatchClick)}
@@ -163,6 +172,7 @@ const resolvedSlotShape = PropTypes.shape({
   label: PropTypes.string,
   code: PropTypes.string,
   score: PropTypes.number,
+  penaltyScore: PropTypes.number,
 });
 
 function KnockoutListTeam({ slot, side, outcome = null, showSeedCode = false }) {
@@ -302,9 +312,10 @@ function KnockoutListRow({
           showSeedCode={shouldShowKnockoutSeedCode(match.round)}
         />
         {hasScore ? (
-          <span className="knockout-list-row-score">
-            {result.homeScore}–{result.awayScore}
-          </span>
+          <KnockoutScoreLine
+            result={result}
+            className="knockout-list-row-score"
+          />
         ) : (
           <span className="knockout-list-row-vs">vs</span>
         )}

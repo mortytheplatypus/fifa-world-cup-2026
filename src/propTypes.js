@@ -92,6 +92,10 @@ export const fixtureShape = PropTypes.shape({
   round: PropTypes.string,
   homeScore: PropTypes.number,
   awayScore: PropTypes.number,
+  penalties: PropTypes.shape({
+    home: PropTypes.number,
+    away: PropTypes.number,
+  }),
   goals: PropTypes.arrayOf(goalShape),
   cards: PropTypes.arrayOf(cardShape),
 });

@@ -4,6 +4,7 @@ import { useTimezone } from '../context/TimezoneContext';
 import { useNow } from '../hooks/useNow';
 import { getTeamDisplayName, getTeamPath } from '../utils/data';
 import KnockoutMatchLabel from './KnockoutMatchLabel';
+import { KnockoutScoreLine } from './KnockoutScore';
 import { fixtureShape, teamShape } from '../propTypes';
 import { getFixtureStatus } from '../utils/fixtures';
 import { getCardDisplay, getCardPlayerName, getCardsBySide, getGoalsBySide } from '../utils/results';
@@ -128,9 +129,17 @@ function FixtureCard({
         </div>
 
         {fixture.homeScore != null && fixture.awayScore != null ? (
-          <span className="fixture-score">
-            {fixture.homeScore} – {fixture.awayScore}
-          </span>
+          fixture.isKnockout && fixture.penalties ? (
+            <KnockoutScoreLine
+              result={fixture}
+              separator=" – "
+              className="fixture-score"
+            />
+          ) : (
+            <span className="fixture-score">
+              {fixture.homeScore} – {fixture.awayScore}
+            </span>
+          )
         ) : (
           <span className="fixture-vs">vs</span>
         )}

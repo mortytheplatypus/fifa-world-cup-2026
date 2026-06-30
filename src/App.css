@@ -3749,6 +3749,20 @@ textarea {
   text-align: center;
 }
 
+.knockout-score-line--penalties .knockout-score-penalty {
+  font-size: 0.78em;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--highlight) 72%, var(--text));
+}
+
+.knockout-score-separator {
+  margin: 0 0.1em;
+}
+
+.knockout-match--penalties {
+  border-color: color-mix(in srgb, var(--highlight) 28%, var(--border));
+}
+
 .knockout-list-row-vs {
   flex-shrink: 0;
   min-width: 2.75rem;
@@ -4106,6 +4120,12 @@ textarea {
   font-variant-numeric: tabular-nums;
   line-height: 1;
   white-space: nowrap;
+}
+
+.knockout-detail-score.knockout-score-line--penalties .knockout-score-penalty {
+  font-size: 0.72em;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--highlight) 72%, var(--text));
 }
 
 .knockout-detail-vs {
@@ -4577,7 +4597,8 @@ textarea {
 }
 
 .knockout-slot--winner .knockout-slot-name,
-.knockout-slot--winner .knockout-slot-score {
+.knockout-slot--winner .knockout-slot-score,
+.knockout-slot--winner .knockout-score-penalty {
   color: var(--highlight-text);
   font-weight: 600;
 }
@@ -4588,7 +4609,8 @@ textarea {
 }
 
 .knockout-slot--eliminated .knockout-slot-name,
-.knockout-slot--eliminated .knockout-slot-score {
+.knockout-slot--eliminated .knockout-slot-score,
+.knockout-slot--eliminated .knockout-score-penalty {
   color: var(--text-muted);
   font-weight: 400;
 }
@@ -4644,6 +4666,14 @@ textarea {
   font-size: 0.68rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+.knockout-score-penalty {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--highlight) 65%, var(--text-muted));
 }
 
 .knockout-slot-label {
