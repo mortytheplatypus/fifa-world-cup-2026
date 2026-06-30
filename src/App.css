@@ -4299,12 +4299,13 @@ textarea {
 }
 
 .knockout-bracket {
-  min-width: 1100px;
+  --knockout-card-width: 16rem;
+  min-width: 1180px;
   padding: 0.5rem 0;
 }
 
 .knockout-bracket--from-r16 {
-  min-width: 820px;
+  min-width: 880px;
 }
 
 .knockout-bracket--from-qf {
@@ -4535,15 +4536,15 @@ textarea {
   border-radius: var(--radius);
   padding: 0.5rem 0.65rem;
   box-sizing: border-box;
-  width: 13rem;
-  min-width: 13rem;
-  max-width: 13rem;
+  width: var(--knockout-card-width, 16rem);
+  min-width: var(--knockout-card-width, 16rem);
+  max-width: var(--knockout-card-width, 16rem);
 }
 
 .knockout-match--compact {
-  width: 11rem;
-  min-width: 11rem;
-  max-width: 11rem;
+  width: var(--knockout-card-width, 16rem);
+  min-width: var(--knockout-card-width, 16rem);
+  max-width: var(--knockout-card-width, 16rem);
   padding: 0.4rem 0.55rem;
 }
 
@@ -4702,8 +4703,8 @@ textarea {
 }
 
 .knockout-slot--winner .knockout-slot-name,
+.knockout-slot--winner .knockout-slot-score-line,
 .knockout-slot--winner .knockout-slot-score,
-.knockout-slot--winner .knockout-slot-score-divider,
 .knockout-slot--winner .knockout-score-penalty {
   color: var(--highlight-text);
   font-weight: 600;
@@ -4715,8 +4716,8 @@ textarea {
 }
 
 .knockout-slot--eliminated .knockout-slot-name,
+.knockout-slot--eliminated .knockout-slot-score-line,
 .knockout-slot--eliminated .knockout-slot-score,
-.knockout-slot--eliminated .knockout-slot-score-divider,
 .knockout-slot--eliminated .knockout-score-penalty {
   color: var(--text-muted);
   font-weight: 400;
@@ -4750,13 +4751,30 @@ textarea {
   object-fit: cover;
 }
 
-.knockout-slot-name {
+.knockout-slot-name-group {
+  display: flex;
   flex: 1;
+  align-items: center;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.knockout-slot-name {
+  flex-shrink: 1;
   min-width: 0;
   overflow: hidden;
   font-size: 0.72rem;
   font-weight: 500;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.knockout-slot-score-line {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: baseline;
+  justify-content: flex-end;
+  min-width: 1.75rem;
   white-space: nowrap;
 }
 
@@ -4767,22 +4785,22 @@ textarea {
   font-size: 0.6rem;
 }
 
-.knockout-slot-score-divider {
-  color: var(--text-muted);
-  font-weight: 400;
-}
-
 .knockout-slot-score {
   color: var(--text);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
+.knockout-slot-score-line .knockout-score-penalty {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
 .knockout-score-penalty {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: color-mix(in srgb, var(--highlight) 65%, var(--text-muted));
@@ -5077,44 +5095,32 @@ textarea {
     letter-spacing: 0.03em;
   }
 
+  .knockout-bracket {
+    --knockout-card-width: 13.5rem;
+    min-width: 980px;
+  }
+
   .knockout-bracket--from-r16 {
-    min-width: 700px;
+    min-width: 760px;
   }
 
   .knockout-bracket--from-qf {
-    min-width: 480px;
+    min-width: 520px;
   }
 
   .knockout-bracket--from-sf {
-    min-width: 320px;
-  }
-
-  .knockout-bracket--semifinals-only {
-    min-width: 400px;
-  }
-
-  .knockout-bracket--final-stage {
     min-width: 360px;
   }
 
-  .knockout-bracket {
-    min-width: 900px;
+  .knockout-bracket--semifinals-only {
+    min-width: 440px;
   }
 
-  .knockout-match {
-    width: 10rem;
-    min-width: 10rem;
-    max-width: 10rem;
-  }
-
-  .knockout-match--compact {
-    width: 9rem;
-    min-width: 9rem;
-    max-width: 9rem;
+  .knockout-bracket--final-stage {
+    min-width: 400px;
   }
 
   .knockout-bracket--half {
-    --knockout-card-width: 10.5rem;
     width: fit-content;
     max-width: 100%;
   }

@@ -143,12 +143,14 @@ function KnockoutMatchCard({
           slot={match.resolvedA}
           outcome={homeOutcome}
           showSeedCode={shouldShowKnockoutSeedCode(match.round)}
+          showThirdPlaceInfo={shouldShowKnockoutSeedCode(match.round)}
         />
         <span className="knockout-match-vs">vs</span>
         <KnockoutTeamSlot
           slot={match.resolvedB}
           outcome={awayOutcome}
           showSeedCode={shouldShowKnockoutSeedCode(match.round)}
+          showThirdPlaceInfo={shouldShowKnockoutSeedCode(match.round)}
         />
       </div>
     </div>
