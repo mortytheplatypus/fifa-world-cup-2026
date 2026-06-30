@@ -48,25 +48,22 @@ function KnockoutTeamSlot({ slot, outcome = null, showSeedCode = false }) {
         />
         <span className="knockout-slot-name" aria-hidden="true">
           {teamName}
-          {slot.score != null ? (
-            <>
-              <span className="knockout-slot-score-divider" aria-hidden="true">
-                {' - '}
-              </span>
-              <span className="knockout-slot-score">{slot.score}</span>
-              {slot.penaltyScore != null && (
-                <span className="knockout-score-penalty">
-                  {' '}
-                  ({slot.penaltyScore})
-                </span>
-              )}
-            </>
-          ) : (
-            slot.code && showSeedCode && (
-              <span className="knockout-slot-code"> {slot.code}</span>
-            )
+          {slot.score == null && slot.code && showSeedCode && (
+            <span className="knockout-slot-code"> {slot.code}</span>
           )}
         </span>
+        {slot.score != null && (
+          <span className="knockout-slot-score-line" aria-hidden="true">
+            <span className="knockout-slot-score-divider"> - </span>
+            <span className="knockout-slot-score">{slot.score}</span>
+            {slot.penaltyScore != null && (
+              <span className="knockout-score-penalty">
+                {' '}
+                ({slot.penaltyScore})
+              </span>
+            )}
+          </span>
+        )}
         {slot.thirdPlaceInfo?.candidateGroups?.length > 0 && (
           <ThirdPlaceSlotInfo candidateGroups={slot.thirdPlaceInfo.candidateGroups} />
         )}
