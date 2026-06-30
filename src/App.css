@@ -4705,7 +4705,6 @@ textarea {
 .knockout-slot--winner .knockout-slot-name,
 .knockout-slot--winner .knockout-slot-score-line,
 .knockout-slot--winner .knockout-slot-score,
-.knockout-slot--winner .knockout-slot-score-divider,
 .knockout-slot--winner .knockout-score-penalty {
   color: var(--highlight-text);
   font-weight: 600;
@@ -4719,7 +4718,6 @@ textarea {
 .knockout-slot--eliminated .knockout-slot-name,
 .knockout-slot--eliminated .knockout-slot-score-line,
 .knockout-slot--eliminated .knockout-slot-score,
-.knockout-slot--eliminated .knockout-slot-score-divider,
 .knockout-slot--eliminated .knockout-score-penalty {
   color: var(--text-muted);
   font-weight: 400;
@@ -4753,8 +4751,16 @@ textarea {
   object-fit: cover;
 }
 
-.knockout-slot-name {
+.knockout-slot-name-group {
+  display: flex;
   flex: 1;
+  align-items: center;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.knockout-slot-name {
+  flex-shrink: 1;
   min-width: 0;
   overflow: hidden;
   font-size: 0.72rem;
@@ -4767,6 +4773,8 @@ textarea {
   display: inline-flex;
   flex-shrink: 0;
   align-items: baseline;
+  justify-content: flex-end;
+  min-width: 1.75rem;
   white-space: nowrap;
 }
 
@@ -4777,22 +4785,22 @@ textarea {
   font-size: 0.6rem;
 }
 
-.knockout-slot-score-divider {
-  color: var(--text-muted);
-  font-weight: 400;
-}
-
 .knockout-slot-score {
   color: var(--text);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
+.knockout-slot-score-line .knockout-score-penalty {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
 .knockout-score-penalty {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: color-mix(in srgb, var(--highlight) 65%, var(--text-muted));
