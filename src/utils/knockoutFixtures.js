@@ -43,6 +43,9 @@ function buildKnockoutFixture(matchId, resolvedMatch, schedule = {}) {
     isKnockout: true,
     homeScore: schedule.homeScore ?? null,
     awayScore: schedule.awayScore ?? null,
+    ...(schedule.penalties?.home != null && schedule.penalties?.away != null
+      ? { penalties: schedule.penalties }
+      : {}),
     ...(schedule.goals?.length ? { goals: schedule.goals } : {}),
     ...(schedule.cards?.length ? { cards: schedule.cards } : {}),
   };

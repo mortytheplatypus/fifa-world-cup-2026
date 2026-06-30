@@ -3725,6 +3725,47 @@ textarea {
   opacity: 0.85;
 }
 
+.knockout-list-row-team-score {
+  flex-shrink: 0;
+  color: var(--highlight-text);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.knockout-list-row-team-score .knockout-score-penalty {
+  font-size: 0.78em;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--highlight) 72%, var(--text));
+}
+
+.knockout-list-row-team-score--winner {
+  color: var(--highlight-text);
+}
+
+.knockout-list-row-team-score--eliminated {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.knockout-list-row-team-score--eliminated .knockout-score-penalty {
+  color: var(--text-muted);
+}
+
+.knockout-list-row-score-separator {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.knockout-list-row-teams--penalties {
+  gap: 0.45rem;
+}
+
 .knockout-list-row-team-code {
   flex-shrink: 0;
   color: var(--text-muted);
@@ -3747,6 +3788,20 @@ textarea {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   text-align: center;
+}
+
+.knockout-score-line--penalties .knockout-score-penalty {
+  font-size: 0.78em;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--highlight) 72%, var(--text));
+}
+
+.knockout-score-separator {
+  margin: 0 0.1em;
+}
+
+.knockout-match--penalties {
+  border-color: color-mix(in srgb, var(--highlight) 28%, var(--border));
 }
 
 .knockout-list-row-vs {
@@ -3958,6 +4013,65 @@ textarea {
   min-width: 0;
 }
 
+.knockout-detail-team-side {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.knockout-detail-team-side--home {
+  justify-content: flex-end;
+}
+
+.knockout-detail-team-side--away {
+  justify-content: flex-start;
+}
+
+.knockout-detail-team-score {
+  flex-shrink: 0;
+  color: var(--highlight-text);
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.knockout-detail-team-score .knockout-score-penalty {
+  font-size: 0.72em;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--highlight) 72%, var(--text));
+}
+
+.knockout-detail-team-score--winner {
+  color: var(--highlight-text);
+}
+
+.knockout-detail-team-score--eliminated {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.knockout-detail-team-score--eliminated .knockout-score-penalty {
+  color: var(--text-muted);
+}
+
+.knockout-detail-score-separator {
+  justify-self: center;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.knockout-detail-team-row--penalties {
+  column-gap: 0.75rem;
+}
+
 .knockout-detail-team-header--home {
   justify-content: flex-end;
 }
@@ -4108,6 +4222,12 @@ textarea {
   white-space: nowrap;
 }
 
+.knockout-detail-score.knockout-score-line--penalties .knockout-score-penalty {
+  font-size: 0.72em;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--highlight) 72%, var(--text));
+}
+
 .knockout-detail-vs {
   justify-self: center;
   color: var(--text-muted);
@@ -4155,6 +4275,11 @@ textarea {
 .knockout-detail-modal--compact .knockout-detail-team-row,
 .knockout-detail-modal--compact .knockout-detail-events-row {
   column-gap: 0.45rem;
+}
+
+.knockout-detail-modal--compact .knockout-detail-team-score,
+.knockout-detail-modal--compact .knockout-detail-score-separator {
+  font-size: 1.3rem;
 }
 
 .knockout-detail-modal--compact .knockout-detail-score {
@@ -4577,7 +4702,9 @@ textarea {
 }
 
 .knockout-slot--winner .knockout-slot-name,
-.knockout-slot--winner .knockout-slot-score {
+.knockout-slot--winner .knockout-slot-score,
+.knockout-slot--winner .knockout-slot-score-divider,
+.knockout-slot--winner .knockout-score-penalty {
   color: var(--highlight-text);
   font-weight: 600;
 }
@@ -4588,7 +4715,9 @@ textarea {
 }
 
 .knockout-slot--eliminated .knockout-slot-name,
-.knockout-slot--eliminated .knockout-slot-score {
+.knockout-slot--eliminated .knockout-slot-score,
+.knockout-slot--eliminated .knockout-slot-score-divider,
+.knockout-slot--eliminated .knockout-score-penalty {
   color: var(--text-muted);
   font-weight: 400;
 }
@@ -4638,12 +4767,25 @@ textarea {
   font-size: 0.6rem;
 }
 
+.knockout-slot-score-divider {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
 .knockout-slot-score {
   color: var(--text);
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+.knockout-score-penalty {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--highlight) 65%, var(--text-muted));
 }
 
 .knockout-slot-label {

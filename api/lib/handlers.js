@@ -85,6 +85,7 @@ function formatKnockoutDocument(doc) {
     tag,
     homeScore,
     awayScore,
+    penalties,
     goals,
     cards,
   } = doc;
@@ -99,6 +100,7 @@ function formatKnockoutDocument(doc) {
     tag: tag ?? null,
     homeScore: homeScore ?? null,
     awayScore: awayScore ?? null,
+    ...(penalties?.home != null && penalties?.away != null ? { penalties } : {}),
     ...(goals?.length ? { goals } : {}),
     ...(cards?.length ? { cards } : {}),
     ...(updatedAt ? { lastUpdated: new Date(updatedAt).toISOString() } : {}),

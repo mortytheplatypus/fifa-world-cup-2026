@@ -9,7 +9,10 @@ import {
   DISPLAY_TIMEZONE,
   parseFixtureInstant,
 } from "./timezone";
+import { getKnockoutPenalties } from "./knockoutPenalties";
 import { buildThirdPlaceByWinner } from "./thirdPlaceAssignment";
+
+export { getKnockoutPenalties, isKnockoutPenaltyDecided } from "./knockoutPenalties";
 
 export const KNOCKOUT_ROUND_LABELS = {
   r32: "R32",
@@ -408,6 +411,7 @@ export function formatKnockoutMatchTag(tag, matchId) {
 /** Schedule and result fields from API / knockouts collection merged with static fallbacks. */
 export function getKnockoutSchedule(matchId, knockoutResults = {}) {
   const schedule = knockoutResults[matchId] ?? {};
+  const penalties = schedule.penalties;
 
   return {
     date: schedule.date ?? KNOCKOUT_MATCH_DATES[matchId] ?? null,
@@ -417,6 +421,7 @@ export function getKnockoutSchedule(matchId, knockoutResults = {}) {
     tag: schedule.tag ?? getKnockoutMatchTag(matchId),
     homeScore: schedule.homeScore ?? null,
     awayScore: schedule.awayScore ?? null,
+    ...(penalties?.home != null && penalties?.away != null ? { penalties } : {}),
     ...(schedule.goals?.length ? { goals: schedule.goals } : {}),
     ...(schedule.cards?.length ? { cards: schedule.cards } : {}),
   };
@@ -533,12 +538,16 @@ export function formatThirdPlaceLabel(group) {
   return `3rd Group ${group}`;
 }
 
-function withSlotScore(resolved, score) {
-  if (score == null || resolved.type !== "team" || !resolved.team) {
+function withSlotScore(resolved, regulationScore, penaltyScore) {
+  if (regulationScore == null || resolved.type !== "team" || !resolved.team) {
     return resolved;
   }
 
-  return { ...resolved, score };
+  return {
+    ...resolved,
+    score: regulationScore,
+    ...(penaltyScore != null ? { penaltyScore } : {}),
+  };
 }
 
 function getFixedWinnerForThird(slot, opposingSlot) {
@@ -567,6 +576,13 @@ function getKnockoutResultSides(result) {
 
   if (result.awayScore > result.homeScore) {
     return { winner: "B", loser: "A" };
+  }
+
+  const penalties = getKnockoutPenalties(result);
+  if (penalties && penalties.home !== penalties.away) {
+    return penalties.home > penalties.away
+      ? { winner: "A", loser: "B" }
+      : { winner: "B", loser: "A" };
   }
 
   return null;
@@ -678,10 +694,24 @@ export function resolveKnockoutMatch(matchId, standingsByGroup, options = {}) {
     fixedWinnerForThird: getFixedWinnerForThird(match.teamB, match.teamA),
   });
 
+  const penalties = getKnockoutPenalties(result);
+  const showPenalties =
+    penalties != null &&
+    result?.homeScore != null &&
+    result.homeScore === result.awayScore;
+
   return {
     ...match,
     ...schedule,
-    resolvedA: withSlotScore(resolvedA, result?.homeScore),
-    resolvedB: withSlotScore(resolvedB, result?.awayScore),
+    resolvedA: withSlotScore(
+      resolvedA,
+      result?.homeScore,
+      showPenalties ? penalties.home : null,
+    ),
+    resolvedB: withSlotScore(
+      resolvedB,
+      result?.awayScore,
+      showPenalties ? penalties.away : null,
+    ),
   };
 }
