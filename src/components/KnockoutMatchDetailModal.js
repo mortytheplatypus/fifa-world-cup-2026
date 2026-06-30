@@ -7,7 +7,9 @@ import { getTeamDisplayName, getTeamPath } from "../utils/data";
 import {
   formatKnockoutMatchNumber,
   getKnockoutMatchTag,
+  getKnockoutSideOutcome,
   hasKnockoutKickoffTime,
+  isKnockoutPenaltyDecided,
   KNOCKOUT_ROUND_LABELS,
   parseKnockoutMatchTag,
   resolveKnockoutMatch,
@@ -21,7 +23,8 @@ import {
   formatPlayerShortName,
 } from "../utils/results";
 import { useMediaQuery } from "../hooks/useMediaQuery";
-import { KnockoutScoreLine } from "./KnockoutScore";
+import { KnockoutScoreLine, KnockoutSplitTeamScore } from "./KnockoutScore";
+import { getKnockoutScoreParts } from "../utils/knockoutPenalties";
 import {
   formatFixtureDate,
   formatFixtureTime,
@@ -317,6 +320,11 @@ function KnockoutMatchDetailModal({
     : match.date;
 
   const showSeedCode = shouldShowKnockoutSeedCode(match.round) && !isMobile;
+  const homeOutcome = getKnockoutSideOutcome(result, "A");
+  const awayOutcome = getKnockoutSideOutcome(result, "B");
+  const penaltyDisplay = isKnockoutPenaltyDecided(result);
+  const homeScoreParts = penaltyDisplay ? getKnockoutScoreParts(result, "home") : null;
+  const awayScoreParts = penaltyDisplay ? getKnockoutScoreParts(result, "away") : null;
 
   return createPortal(
     <div className="knockout-detail-overlay" onClick={onClose}>
@@ -368,26 +376,61 @@ function KnockoutMatchDetailModal({
               showMatchEvents ? " knockout-detail-teams--has-events" : ""
             }`}
           >
-            <div className="knockout-detail-team-row">
-              <DetailTeamHeader
-                slot={match.resolvedA}
-                side="home"
-                showSeedCode={showSeedCode}
-              />
-              {hasScore ? (
-                <KnockoutScoreLine
-                  result={result}
-                  separator=" – "
-                  className="knockout-detail-score"
+            <div
+              className={`knockout-detail-team-row${
+                penaltyDisplay ? " knockout-detail-team-row--penalties" : ""
+              }`}
+            >
+              <div className="knockout-detail-team-side knockout-detail-team-side--home">
+                <DetailTeamHeader
+                  slot={match.resolvedA}
+                  side="home"
+                  showSeedCode={showSeedCode}
                 />
+                {penaltyDisplay && homeScoreParts && (
+                  <KnockoutSplitTeamScore
+                    regulation={homeScoreParts.regulation}
+                    penalty={homeScoreParts.penalty}
+                    side="home"
+                    outcome={homeOutcome}
+                    variant="detail"
+                  />
+                )}
+              </div>
+              {hasScore ? (
+                penaltyDisplay ? (
+                  <span
+                    className="knockout-detail-score-separator"
+                    aria-hidden="true"
+                  >
+                    {" – "}
+                  </span>
+                ) : (
+                  <KnockoutScoreLine
+                    result={result}
+                    separator=" – "
+                    className="knockout-detail-score"
+                  />
+                )
               ) : (
                 <span className="knockout-detail-vs">vs</span>
               )}
-              <DetailTeamHeader
-                slot={match.resolvedB}
-                side="away"
-                showSeedCode={showSeedCode}
-              />
+              <div className="knockout-detail-team-side knockout-detail-team-side--away">
+                {penaltyDisplay && awayScoreParts && (
+                  <KnockoutSplitTeamScore
+                    regulation={awayScoreParts.regulation}
+                    penalty={awayScoreParts.penalty}
+                    side="away"
+                    outcome={awayOutcome}
+                    variant="detail"
+                  />
+                )}
+                <DetailTeamHeader
+                  slot={match.resolvedB}
+                  side="away"
+                  showSeedCode={showSeedCode}
+                />
+              </div>
             </div>
 
             {showMatchEvents && (

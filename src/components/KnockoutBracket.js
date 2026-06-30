@@ -24,8 +24,9 @@ import { getTeamDisplayName } from "../utils/data";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import KnockoutMatchDetailModal from "./KnockoutMatchDetailModal";
 import KnockoutMatchLabel from "./KnockoutMatchLabel";
-import { KnockoutScoreLine } from "./KnockoutScore";
+import { KnockoutScoreLine, KnockoutSplitTeamScore } from "./KnockoutScore";
 import KnockoutTeamSlot from "./KnockoutTeamSlot";
+import { getKnockoutScoreParts } from "../utils/knockoutPenalties";
 
 function shouldIgnoreMatchClick(event) {
   return (
@@ -175,7 +176,13 @@ const resolvedSlotShape = PropTypes.shape({
   penaltyScore: PropTypes.number,
 });
 
-function KnockoutListTeam({ slot, side, outcome = null, showSeedCode = false }) {
+function KnockoutListTeam({
+  slot,
+  side,
+  outcome = null,
+  showSeedCode = false,
+  scoreParts = null,
+}) {
   const isHome = side === "home";
   const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
   const outcomeClass =
@@ -213,9 +220,25 @@ function KnockoutListTeam({ slot, side, outcome = null, showSeedCode = false }) 
               <span className="knockout-list-row-team-code">{slot.code}</span>
             )}
             {flag}
+            {scoreParts?.penalty != null && (
+              <KnockoutSplitTeamScore
+                regulation={scoreParts.regulation}
+                penalty={scoreParts.penalty}
+                side="home"
+                outcome={outcome}
+              />
+            )}
           </>
         ) : (
           <>
+            {scoreParts?.penalty != null && (
+              <KnockoutSplitTeamScore
+                regulation={scoreParts.regulation}
+                penalty={scoreParts.penalty}
+                side="away"
+                outcome={outcome}
+              />
+            )}
             {flag}
             <span className="knockout-list-row-team-name">{name}</span>
             {!isMobile && showSeedCode && slot.code && (
@@ -243,6 +266,10 @@ KnockoutListTeam.propTypes = {
   side: PropTypes.oneOf(["home", "away"]).isRequired,
   outcome: PropTypes.oneOf(["winner", "eliminated"]),
   showSeedCode: PropTypes.bool,
+  scoreParts: PropTypes.shape({
+    regulation: PropTypes.number,
+    penalty: PropTypes.number,
+  }),
 };
 
 function KnockoutListRow({
@@ -275,6 +302,9 @@ function KnockoutListRow({
     result?.homeScore != null && result?.awayScore != null;
   const homeOutcome = getKnockoutSideOutcome(result, "A");
   const awayOutcome = getKnockoutSideOutcome(result, "B");
+  const penaltyDisplay = isKnockoutPenaltyDecided(result);
+  const homeScoreParts = penaltyDisplay ? getKnockoutScoreParts(result, "home") : null;
+  const awayScoreParts = penaltyDisplay ? getKnockoutScoreParts(result, "away") : null;
 
   return (
     <div
@@ -304,18 +334,32 @@ function KnockoutListRow({
         </time>
       )}
 
-      <div className="knockout-list-row-teams">
+      <div
+        className={`knockout-list-row-teams${
+          penaltyDisplay ? " knockout-list-row-teams--penalties" : ""
+        }`}
+      >
         <KnockoutListTeam
           slot={match.resolvedA}
           side="home"
           outcome={homeOutcome}
           showSeedCode={shouldShowKnockoutSeedCode(match.round)}
+          scoreParts={homeScoreParts}
         />
         {hasScore ? (
-          <KnockoutScoreLine
-            result={result}
-            className="knockout-list-row-score"
-          />
+          penaltyDisplay ? (
+            <span
+              className="knockout-list-row-score-separator"
+              aria-hidden="true"
+            >
+              {" - "}
+            </span>
+          ) : (
+            <KnockoutScoreLine
+              result={result}
+              className="knockout-list-row-score"
+            />
+          )
         ) : (
           <span className="knockout-list-row-vs">vs</span>
         )}
@@ -324,6 +368,7 @@ function KnockoutListRow({
           side="away"
           outcome={awayOutcome}
           showSeedCode={shouldShowKnockoutSeedCode(match.round)}
+          scoreParts={awayScoreParts}
         />
       </div>
 

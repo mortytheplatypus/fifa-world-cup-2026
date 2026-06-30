@@ -75,3 +75,50 @@ KnockoutScoreLine.propTypes = {
   className: PropTypes.string,
   valueClassName: PropTypes.string,
 };
+
+export function KnockoutSplitTeamScore({
+  regulation,
+  penalty,
+  side,
+  outcome,
+  variant = 'list',
+}) {
+  if (regulation == null || penalty == null) {
+    return null;
+  }
+
+  const baseClass =
+    variant === 'detail'
+      ? 'knockout-detail-team-score'
+      : 'knockout-list-row-team-score';
+  const outcomeClass =
+    outcome === 'eliminated'
+      ? ` ${baseClass}--eliminated`
+      : outcome === 'winner'
+        ? ` ${baseClass}--winner`
+        : '';
+
+  if (side === 'home') {
+    return (
+      <span className={`${baseClass}${outcomeClass}`} aria-hidden="true">
+        {regulation}
+        <span className="knockout-score-penalty">({penalty})</span>
+      </span>
+    );
+  }
+
+  return (
+    <span className={`${baseClass}${outcomeClass}`} aria-hidden="true">
+      <span className="knockout-score-penalty">({penalty})</span>
+      {regulation}
+    </span>
+  );
+}
+
+KnockoutSplitTeamScore.propTypes = {
+  regulation: PropTypes.number,
+  penalty: PropTypes.number,
+  side: PropTypes.oneOf(['home', 'away']).isRequired,
+  outcome: PropTypes.oneOf(['winner', 'eliminated']),
+  variant: PropTypes.oneOf(['list', 'detail']),
+};

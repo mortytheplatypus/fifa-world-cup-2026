@@ -49,22 +49,18 @@ function KnockoutTeamSlot({ slot, outcome = null, showSeedCode = false }) {
         <span className="knockout-slot-name" aria-hidden="true">
           {teamName}
           {slot.score != null ? (
-            slot.penaltyScore != null ? (
-              <>
-                {' '}
-                <span className="knockout-slot-score">{slot.score}</span>
+            <>
+              <span className="knockout-slot-score-divider" aria-hidden="true">
+                {' - '}
+              </span>
+              <span className="knockout-slot-score">{slot.score}</span>
+              {slot.penaltyScore != null && (
                 <span className="knockout-score-penalty">
                   {' '}
                   ({slot.penaltyScore})
                 </span>
-              </>
-            ) : (
-              <>
-                {' ('}
-                <span className="knockout-slot-score">{slot.score}</span>
-                {')'}
-              </>
-            )
+              )}
+            </>
           ) : (
             slot.code && showSeedCode && (
               <span className="knockout-slot-code"> {slot.code}</span>
