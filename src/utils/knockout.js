@@ -26,6 +26,25 @@ export const KNOCKOUT_ROUND_LABELS = {
 
 export const KNOCKOUT_ROUND_VIEWS = ["r32", "r16", "finals"];
 
+const KNOCKOUT_VIEW_ROUND_STORAGE_KEY = "knockout-view-round";
+
+export function readStoredKnockoutViewRound() {
+  try {
+    const value = localStorage.getItem(KNOCKOUT_VIEW_ROUND_STORAGE_KEY);
+    return KNOCKOUT_ROUND_VIEWS.includes(value) ? value : "r32";
+  } catch {
+    return "r32";
+  }
+}
+
+export function writeStoredKnockoutViewRound(round) {
+  try {
+    localStorage.setItem(KNOCKOUT_VIEW_ROUND_STORAGE_KEY, round);
+  } catch {
+    // Ignore storage failures
+  }
+}
+
 function runnerUp(group) {
   return { type: "runnerUp", group };
 }
