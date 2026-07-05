@@ -562,8 +562,10 @@ function withSlotScore(resolved, regulationScore, penaltyScore) {
     return resolved;
   }
 
+  const { penaltyScore: _previousPenalty, ...slotWithoutPenalty } = resolved;
+
   return {
-    ...resolved,
+    ...slotWithoutPenalty,
     score: regulationScore,
     ...(penaltyScore != null ? { penaltyScore } : {}),
   };
@@ -678,6 +680,7 @@ export function resolveKnockoutSlot(slot, standingsByGroup, options = {}) {
       if (resolvedSlot.type === "team" && resolvedSlot.team) {
         const {
           score: _feederScore,
+          penaltyScore: _feederPenalty,
           code: _feederCode,
           ...advancedSlot
         } = resolvedSlot;
