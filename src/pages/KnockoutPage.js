@@ -1,6 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import KnockoutBracket from '../components/KnockoutBracket';
+import KnockoutBracket, {
+  KnockoutViewModeToggle,
+  readStoredKnockoutViewMode,
+  writeStoredKnockoutViewMode,
+} from '../components/KnockoutBracket';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useGroupsData } from '../hooks/useGroupsData';
 import { useKnockoutResults } from '../hooks/useKnockoutResults';
@@ -13,9 +17,14 @@ import { computeGroupStandings } from '../utils/standings';
 
 function KnockoutPage() {
   const [viewRound, setViewRound] = useState(readStoredKnockoutViewRound);
+  const [viewMode, setViewMode] = useState(readStoredKnockoutViewMode);
   const handleViewRoundChange = useCallback((round) => {
     setViewRound(round);
     writeStoredKnockoutViewRound(round);
+  }, []);
+  const handleViewModeChange = useCallback((mode) => {
+    setViewMode(mode);
+    writeStoredKnockoutViewMode(mode);
   }, []);
   const { groupedTeams, fixtures, loading, error } = useGroupsData();
   const { knockoutResults } = useKnockoutResults();
@@ -43,8 +52,13 @@ function KnockoutPage() {
   return (
     <section className="page knockout-page">
       <header className="knockout-header">
-        <div>
+        <div className="knockout-header-title-row">
           <h1>Knockout</h1>
+          <KnockoutViewModeToggle
+            viewMode={viewMode}
+            onViewModeChange={handleViewModeChange}
+            className="knockout-view-mode--header"
+          />
         </div>
         {viewRound === 'r32' && (
           <Link to="/knockout/group-third-place" className="knockout-rules-link">
@@ -58,6 +72,8 @@ function KnockoutPage() {
         knockoutResults={knockoutResults}
         viewRound={viewRound}
         onViewRoundChange={handleViewRoundChange}
+        viewMode={viewMode}
+        onViewModeChange={handleViewModeChange}
       />
 
     </section>

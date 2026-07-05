@@ -17,25 +17,22 @@ export { getKnockoutPenalties, isKnockoutPenaltyDecided } from "./knockoutPenalt
 export const KNOCKOUT_ROUND_LABELS = {
   r32: "R32",
   r16: "R16",
-  finals: "Finals",
+  qf: "QF",
+  sf: "SF",
+  third: "3RD",
+  final: "FINAL",
+};
+
+export const KNOCKOUT_ROUND_LIST_LABELS = {
+  r32: "Round of 32",
+  r16: "Round of 16",
   qf: "Quarter-finals",
   sf: "Semi-finals",
   third: "Third-place play-off",
-  final: "Final",
+  final: "The Final",
 };
 
-export const KNOCKOUT_ROUND_VIEWS = ["r32", "r16", "finals"];
-
 const KNOCKOUT_VIEW_ROUND_STORAGE_KEY = "knockout-view-round";
-
-export function readStoredKnockoutViewRound() {
-  try {
-    const value = localStorage.getItem(KNOCKOUT_VIEW_ROUND_STORAGE_KEY);
-    return KNOCKOUT_ROUND_VIEWS.includes(value) ? value : "r32";
-  } catch {
-    return "r32";
-  }
-}
 
 export function writeStoredKnockoutViewRound(round) {
   try {
@@ -290,23 +287,49 @@ const R16_MATCH_ORDER = [
 const QF_MATCH_ORDER = ["M97", "M98", "M99", "M100"];
 const SF_MATCH_ORDER = ["M101", "M102"];
 
-const KNOCKOUT_MATCHES_BY_VIEW = {
-  r32: R32_MATCH_ORDER,
-  r16: R16_MATCH_ORDER,
-  finals: [...QF_MATCH_ORDER, ...SF_MATCH_ORDER, "M103", "M104"],
-};
+/** Bracket columns in knockout order (R32 → Final; third-place play-off omitted). */
+export const KNOCKOUT_ROUND_VIEWS = ["r32", "r16", "qf", "sf", "final"];
 
-/** Finals list view sections (QF → SF → third-place → final). */
-export const KNOCKOUT_FINALS_LIST_SECTIONS = [
-  { round: "qf", label: "Quarter-finals", matchIds: QF_MATCH_ORDER },
-  { round: "sf", label: "Semi-finals", matchIds: SF_MATCH_ORDER },
-  { round: "third", label: "Third-place play-off", matchIds: ["M103"] },
-  { round: "final", label: "The Final", matchIds: ["M104"] },
-];
+/** Bracket / list sections from the selected round through the final. */
+export function getKnockoutBracketRoundsFrom(startRound) {
+  const rounds = buildKnockoutBracketRounds();
+  const startIndex = rounds.findIndex(({ round }) => round === startRound);
 
-/** Ordered match ids for a knockout round tab (R32, R16, or Finals). */
+  if (startIndex === -1) {
+    return rounds;
+  }
+
+  return rounds.slice(startIndex);
+}
+
+export function getKnockoutListSectionsFromView(viewRound) {
+  return getKnockoutBracketRoundsFrom(viewRound).map(
+    ({ round, matchIds }) => ({
+      round,
+      label: KNOCKOUT_ROUND_LIST_LABELS[round] ?? round,
+      matchIds,
+    }),
+  );
+}
+
+export function readStoredKnockoutViewRound() {
+  try {
+    const value = localStorage.getItem(KNOCKOUT_VIEW_ROUND_STORAGE_KEY);
+    if (value === "finals") {
+      return "qf";
+    }
+    if (value === "third") {
+      return "final";
+    }
+    return KNOCKOUT_ROUND_VIEWS.includes(value) ? value : "r32";
+  } catch {
+    return "r32";
+  }
+}
+
+/** Ordered match ids for a single knockout round tab. */
 export function getKnockoutMatchIdsForView(viewRound) {
-  return KNOCKOUT_MATCHES_BY_VIEW[viewRound] ?? [];
+  return getKnockoutBracketMatchOrder()[viewRound] ?? [];
 }
 
 function getKnockoutMatchSortInstant(matchId, knockoutResults = {}) {
@@ -535,6 +558,67 @@ export const BRACKET_TREE = {
     third: "M103",
   },
 };
+
+function flattenPair(pair) {
+  return { r32: pair.r32, r16: [pair.r16] };
+}
+
+function flattenQuarter(quarter) {
+  const pair1 = flattenPair(quarter.pair1);
+  const pair2 = flattenPair(quarter.pair2);
+
+  return {
+    r32: [...pair1.r32, ...pair2.r32],
+    r16: [...pair1.r16, ...pair2.r16],
+    qf: [quarter.r16],
+  };
+}
+
+function flattenHalf(half) {
+  const quarter1 = flattenQuarter(half.quarter1);
+  const quarter2 = flattenQuarter(half.quarter2);
+
+  return {
+    r32: [...quarter1.r32, ...quarter2.r32],
+    r16: [...quarter1.r16, ...quarter2.r16],
+    qf: [...quarter1.qf, ...quarter2.qf],
+    sf: [half.sf],
+  };
+}
+
+function flattenBracket(tree) {
+  const left = flattenHalf(tree.left);
+  const right = flattenHalf(tree.right);
+
+  return {
+    r32: [...left.r32, ...right.r32],
+    r16: [...left.r16, ...right.r16],
+    qf: [...left.qf, ...right.qf],
+    sf: [...left.sf, ...right.sf],
+    final: [tree.center.final],
+  };
+}
+
+let knockoutBracketMatchOrderCache = null;
+
+/** Match ids per round in bracket-tree order (feeder pairs are adjacent). */
+export function getKnockoutBracketMatchOrder() {
+  if (!knockoutBracketMatchOrderCache) {
+    knockoutBracketMatchOrderCache = flattenBracket(BRACKET_TREE);
+  }
+
+  return knockoutBracketMatchOrderCache;
+}
+
+function buildKnockoutBracketRounds() {
+  const matchOrder = getKnockoutBracketMatchOrder();
+
+  return KNOCKOUT_ROUND_VIEWS.map((round) => ({
+    round,
+    label: KNOCKOUT_ROUND_LABELS[round],
+    matchIds: matchOrder[round] ?? [],
+  }));
+}
 
 function formatBestThirdLabel(groups) {
   return `Best 3rd (${groups.join(", ")})`;
