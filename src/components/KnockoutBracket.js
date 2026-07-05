@@ -736,58 +736,6 @@ BracketHalfTreeView.propTypes = {
   onMatchClick: PropTypes.func,
 };
 
-function BracketTreeView({ standingsByGroup, knockoutResults, onMatchClick }) {
-  const { left, right, center } = BRACKET_TREE;
-
-  return (
-    <div className="knockout-bracket knockout-bracket--from-qf knockout-bracket--semifinals-only">
-      <div className="knockout-bracket-tree">
-        <BracketHalf
-          half={left}
-          side="left"
-          standingsByGroup={standingsByGroup}
-          knockoutResults={knockoutResults}
-          startRound="qf"
-          includeSf
-          onMatchClick={onMatchClick}
-        />
-
-        <div className="knockout-bracket-center">
-          <KnockoutMatchCard
-            matchId={center.final}
-            standingsByGroup={standingsByGroup}
-            knockoutResults={knockoutResults}
-            onMatchClick={onMatchClick}
-          />
-          <KnockoutMatchCard
-            matchId={center.third}
-            standingsByGroup={standingsByGroup}
-            knockoutResults={knockoutResults}
-            compact
-            onMatchClick={onMatchClick}
-          />
-        </div>
-
-        <BracketHalf
-          half={right}
-          side="right"
-          standingsByGroup={standingsByGroup}
-          knockoutResults={knockoutResults}
-          startRound="qf"
-          includeSf
-          onMatchClick={onMatchClick}
-        />
-      </div>
-    </div>
-  );
-}
-
-BracketTreeView.propTypes = {
-  standingsByGroup: standingsByGroupShape.isRequired,
-  knockoutResults: knockoutResultsShape.isRequired,
-  onMatchClick: PropTypes.func,
-};
-
 const KNOCKOUT_VIEW_MODES = ["tree", "list"];
 
 const KNOCKOUT_VIEW_MODE_STORAGE_KEY = "knockout-view-mode";
@@ -984,22 +932,12 @@ function renderBracketContent({
     );
   }
 
-  if (showHalfBracket) {
-    return (
-      <BracketHalfTreeView
-        standingsByGroup={standingsByGroup}
-        knockoutResults={knockoutResults}
-        bracketPath={bracketPath}
-        startRound={halfBracketStartRound}
-        onMatchClick={onMatchClick}
-      />
-    );
-  }
-
   return (
-    <BracketTreeView
+    <BracketHalfTreeView
       standingsByGroup={standingsByGroup}
       knockoutResults={knockoutResults}
+      bracketPath={bracketPath}
+      startRound={halfBracketStartRound}
       onMatchClick={onMatchClick}
     />
   );
@@ -1014,13 +952,9 @@ function KnockoutBracket({
   const [bracketPath, setBracketPath] = useState("left");
   const [viewMode, setViewMode] = useState(readStoredKnockoutViewMode);
   const [selectedMatchId, setSelectedMatchId] = useState(null);
-  const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
 
   const isTreeView = viewMode === "tree";
-  const showHalfBracket =
-    isTreeView &&
-    (HALF_BRACKET_ROUNDS.includes(viewRound) ||
-      (isMobile && viewRound === "finals"));
+  const showHalfBracket = isTreeView;
   const halfBracketStartRound = viewRound === "finals" ? "qf" : viewRound;
 
   return (
