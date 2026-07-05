@@ -1,14 +1,22 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import KnockoutBracket from '../components/KnockoutBracket';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useGroupsData } from '../hooks/useGroupsData';
 import { useKnockoutResults } from '../hooks/useKnockoutResults';
 import { GROUP_LETTERS } from '../utils/data';
+import {
+  readStoredKnockoutViewRound,
+  writeStoredKnockoutViewRound,
+} from '../utils/knockout';
 import { computeGroupStandings } from '../utils/standings';
 
 function KnockoutPage() {
-  const [viewRound, setViewRound] = useState('r32');
+  const [viewRound, setViewRound] = useState(readStoredKnockoutViewRound);
+  const handleViewRoundChange = useCallback((round) => {
+    setViewRound(round);
+    writeStoredKnockoutViewRound(round);
+  }, []);
   const { groupedTeams, fixtures, loading, error } = useGroupsData();
   const { knockoutResults } = useKnockoutResults();
 
@@ -49,7 +57,7 @@ function KnockoutPage() {
         standingsByGroup={standingsByGroup}
         knockoutResults={knockoutResults}
         viewRound={viewRound}
-        onViewRoundChange={setViewRound}
+        onViewRoundChange={handleViewRoundChange}
       />
 
     </section>
