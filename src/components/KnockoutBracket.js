@@ -701,7 +701,7 @@ function BracketHalfTreeView({
   const layoutSide =
     isMobile ? "left" : bracketPath === "right" ? "right" : "left";
   const isRight = !isMobile && bracketPath === "right";
-  const includeSf = startRound === "qf";
+  const includeSf = startRound === "r16" || startRound === "qf";
 
   return (
     <div
