@@ -82,7 +82,6 @@ function KnockoutMatchCard({
   onMatchClick,
 }) {
   const { timeZone } = useTimezone();
-  const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
   const match = resolveKnockoutMatch(matchId, standingsByGroup, {
     knockoutResults,
   });
@@ -139,7 +138,7 @@ function KnockoutMatchCard({
           <KnockoutMatchLabel
             tag={tag}
             matchId={match.id}
-            variant={isMobile ? "compact" : "split"}
+            variant="split"
             className="fixture-knockout-label knockout-bracket-label"
           />
         )}
@@ -577,7 +576,7 @@ const KNOCKOUT_VIEW_MODE_LABELS = {
   list: "List",
 };
 
-function readStoredKnockoutViewMode() {
+export function readStoredKnockoutViewMode() {
   try {
     const value = localStorage.getItem(KNOCKOUT_VIEW_MODE_STORAGE_KEY);
     return KNOCKOUT_VIEW_MODES.includes(value) ? value : "tree";
@@ -586,13 +585,50 @@ function readStoredKnockoutViewMode() {
   }
 }
 
-function writeStoredKnockoutViewMode(mode) {
+export function writeStoredKnockoutViewMode(mode) {
   try {
     localStorage.setItem(KNOCKOUT_VIEW_MODE_STORAGE_KEY, mode);
   } catch {
     // Ignore storage failures
   }
 }
+
+export function KnockoutViewModeToggle({ viewMode, onViewModeChange, className = "" }) {
+  return (
+    <div
+      className={`knockout-bracket-tabs knockout-bracket-tabs--view-mode${className ? ` ${className}` : ""}`}
+      role="tablist"
+      aria-label="View mode"
+    >
+      {KNOCKOUT_VIEW_MODES.map((mode) => {
+        const Icon = KNOCKOUT_VIEW_MODE_ICONS[mode];
+
+        return (
+          <button
+            key={mode}
+            type="button"
+            role="tab"
+            className={`knockout-bracket-tab knockout-bracket-tab--icon${
+              viewMode === mode ? " active" : ""
+            }`}
+            aria-selected={viewMode === mode}
+            aria-label={KNOCKOUT_VIEW_MODE_LABELS[mode]}
+            title={KNOCKOUT_VIEW_MODE_LABELS[mode]}
+            onClick={() => onViewModeChange(mode)}
+          >
+            <Icon />
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+KnockoutViewModeToggle.propTypes = {
+  viewMode: PropTypes.oneOf(KNOCKOUT_VIEW_MODES).isRequired,
+  onViewModeChange: PropTypes.func.isRequired,
+  className: PropTypes.string,
+};
 
 function TreeViewIcon() {
   return (
@@ -778,8 +814,9 @@ function KnockoutBracket({
   knockoutResults,
   viewRound,
   onViewRoundChange,
+  viewMode,
+  onViewModeChange,
 }) {
-  const [viewMode, setViewMode] = useState(readStoredKnockoutViewMode);
   const [selectedMatchId, setSelectedMatchId] = useState(null);
 
   const isTreeView = viewMode === "tree";
@@ -810,35 +847,11 @@ function KnockoutBracket({
             ))}
           </div>
 
-          <div
-            className="knockout-bracket-tabs knockout-bracket-tabs--view-mode"
-            role="tablist"
-            aria-label="View mode"
-          >
-            {KNOCKOUT_VIEW_MODES.map((mode) => {
-              const Icon = KNOCKOUT_VIEW_MODE_ICONS[mode];
-
-              return (
-                <button
-                  key={mode}
-                  type="button"
-                  role="tab"
-                  className={`knockout-bracket-tab knockout-bracket-tab--icon${
-                    viewMode === mode ? " active" : ""
-                  }`}
-                  aria-selected={viewMode === mode}
-                  aria-label={KNOCKOUT_VIEW_MODE_LABELS[mode]}
-                  title={KNOCKOUT_VIEW_MODE_LABELS[mode]}
-                  onClick={() => {
-                    setViewMode(mode);
-                    writeStoredKnockoutViewMode(mode);
-                  }}
-                >
-                  <Icon />
-                </button>
-              );
-            })}
-          </div>
+          <KnockoutViewModeToggle
+            viewMode={viewMode}
+            onViewModeChange={onViewModeChange}
+            className="knockout-view-mode--bracket"
+          />
         </div>
 
       </div>
@@ -877,6 +890,8 @@ KnockoutBracket.propTypes = {
   knockoutResults: knockoutResultsShape.isRequired,
   viewRound: PropTypes.oneOf(KNOCKOUT_ROUND_VIEWS).isRequired,
   onViewRoundChange: PropTypes.func.isRequired,
+  viewMode: PropTypes.oneOf(KNOCKOUT_VIEW_MODES).isRequired,
+  onViewModeChange: PropTypes.func.isRequired,
 };
 
 export default KnockoutBracket;
