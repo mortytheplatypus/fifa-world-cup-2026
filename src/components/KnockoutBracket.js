@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useLayoutEffect, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useTimezone } from "../context/TimezoneContext";
 import {
@@ -25,6 +25,14 @@ import KnockoutMatchLabel from "./KnockoutMatchLabel";
 import { KnockoutScoreLine, KnockoutSplitTeamScore } from "./KnockoutScore";
 import KnockoutTeamSlot from "./KnockoutTeamSlot";
 import { getKnockoutScoreParts } from "../utils/knockoutPenalties";
+import {
+  buildBracketConnectorPaths,
+  getBracketGutterColumn,
+  getBracketGridRow,
+  getBracketMatchColumn,
+  getBracketTotalRows,
+  getMatchAnchor,
+} from "../utils/bracketLayout";
 
 function shouldIgnoreMatchClick(event) {
   return (
@@ -391,38 +399,162 @@ KnockoutListRow.propTypes = {
   onMatchClick: PropTypes.func,
 };
 
+function useBracketConnectorLines(containerRef, rounds, knockoutResults) {
+  const [paths, setPaths] = useState([]);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container || rounds.length < 2) {
+      setPaths([]);
+      return undefined;
+    }
+
+    const measure = () => {
+      const containerRect = container.getBoundingClientRect();
+      const nextPaths = [];
+
+      for (let roundIndex = 0; roundIndex < rounds.length - 1; roundIndex += 1) {
+        const fromIds = rounds[roundIndex].matchIds;
+        const toIds = rounds[roundIndex + 1].matchIds;
+
+        for (let matchIndex = 0; matchIndex < toIds.length; matchIndex += 1) {
+          const sourceAId = fromIds[matchIndex * 2];
+          const sourceBId = fromIds[matchIndex * 2 + 1];
+          const targetId = toIds[matchIndex];
+          const sourceA = container.querySelector(
+            `[data-bracket-match="${sourceAId}"]`,
+          );
+          const sourceB = container.querySelector(
+            `[data-bracket-match="${sourceBId}"]`,
+          );
+          const target = container.querySelector(
+            `[data-bracket-match="${targetId}"]`,
+          );
+
+          if (!sourceA || !sourceB || !target) {
+            continue;
+          }
+
+          nextPaths.push(
+            ...buildBracketConnectorPaths(
+              getMatchAnchor(sourceA, "right", containerRect),
+              getMatchAnchor(sourceB, "right", containerRect),
+              getMatchAnchor(target, "left", containerRect),
+            ),
+          );
+        }
+      }
+
+      setPaths(nextPaths);
+      setSize({
+        width: containerRect.width,
+        height: containerRect.height,
+      });
+    };
+
+    measure();
+
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(container);
+    window.addEventListener("resize", measure);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [containerRef, rounds, knockoutResults]);
+
+  return { paths, size };
+}
+
 function BracketColumnView({
   standingsByGroup,
   knockoutResults,
   startRound,
   onMatchClick,
 }) {
-  const rounds = getKnockoutBracketRoundsFrom(startRound);
+  const rounds = useMemo(
+    () => getKnockoutBracketRoundsFrom(startRound),
+    [startRound],
+  );
+  const containerRef = useRef(null);
+  const { paths, size } = useBracketConnectorLines(
+    containerRef,
+    rounds,
+    knockoutResults,
+  );
+  const firstRoundCount = rounds[0]?.matchIds.length ?? 1;
+  const totalRows = getBracketTotalRows(firstRoundCount);
+  const gridTemplateColumns = rounds
+    .map((_, roundIndex) =>
+      roundIndex === 0
+        ? "var(--knockout-card-width)"
+        : "var(--knockout-connector-width) var(--knockout-card-width)",
+    )
+    .join(" ");
 
   return (
     <div
-      className={`knockout-bracket knockout-bracket--columns knockout-bracket--from-${startRound}`}
+      className={`knockout-bracket knockout-bracket--lined knockout-bracket--from-${startRound}`}
       style={{ "--knockout-visible-columns": rounds.length }}
     >
-      <div className="knockout-bracket-columns">
-        {rounds.map(({ round, matchIds }) => (
-          <section
-            key={round}
-            className={`knockout-bracket-column knockout-bracket-column--${round}`}
-            aria-label={KNOCKOUT_ROUND_LABELS[round]}
+      <div
+        ref={containerRef}
+        className="knockout-bracket-lanes"
+        style={{
+          gridTemplateColumns,
+          gridTemplateRows: `repeat(${totalRows}, auto)`,
+        }}
+      >
+        {paths.length > 0 && (
+          <svg
+            className="knockout-bracket-lines"
+            width={size.width}
+            height={size.height}
+            aria-hidden="true"
           >
-            <div className="knockout-bracket-column-matches">
-              {matchIds.map((matchId) => (
+            {paths.map((path, index) => (
+              <path
+                key={`${path}-${index}`}
+                className="knockout-bracket-line"
+                d={path}
+                vectorEffect="non-scaling-stroke"
+              />
+            ))}
+          </svg>
+        )}
+
+        {rounds.map((round, roundIndex) => (
+          <Fragment key={round.round}>
+            {roundIndex > 0 && (
+              <div
+                className="knockout-bracket-gutter"
+                style={{
+                  gridColumn: getBracketGutterColumn(roundIndex - 1),
+                  gridRow: `1 / ${totalRows + 1}`,
+                }}
+              />
+            )}
+            {round.matchIds.map((matchId, matchIndex) => (
+              <div
+                key={matchId}
+                className="knockout-bracket-slot"
+                data-bracket-match={matchId}
+                style={{
+                  gridColumn: getBracketMatchColumn(roundIndex),
+                  gridRow: getBracketGridRow(roundIndex, matchIndex) + 1,
+                }}
+              >
                 <KnockoutMatchCard
-                  key={matchId}
                   matchId={matchId}
                   standingsByGroup={standingsByGroup}
                   knockoutResults={knockoutResults}
                   onMatchClick={onMatchClick}
                 />
-              ))}
-            </div>
-          </section>
+              </div>
+            ))}
+          </Fragment>
         ))}
       </div>
     </div>
