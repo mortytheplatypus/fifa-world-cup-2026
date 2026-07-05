@@ -17,25 +17,22 @@ export { getKnockoutPenalties, isKnockoutPenaltyDecided } from "./knockoutPenalt
 export const KNOCKOUT_ROUND_LABELS = {
   r32: "R32",
   r16: "R16",
-  finals: "Finals",
+  qf: "QF",
+  sf: "SF",
+  third: "3RD",
+  final: "FINAL",
+};
+
+export const KNOCKOUT_ROUND_LIST_LABELS = {
+  r32: "Round of 32",
+  r16: "Round of 16",
   qf: "Quarter-finals",
   sf: "Semi-finals",
   third: "Third-place play-off",
-  final: "Final",
+  final: "The Final",
 };
 
-export const KNOCKOUT_ROUND_VIEWS = ["r32", "r16", "finals"];
-
 const KNOCKOUT_VIEW_ROUND_STORAGE_KEY = "knockout-view-round";
-
-export function readStoredKnockoutViewRound() {
-  try {
-    const value = localStorage.getItem(KNOCKOUT_VIEW_ROUND_STORAGE_KEY);
-    return KNOCKOUT_ROUND_VIEWS.includes(value) ? value : "r32";
-  } catch {
-    return "r32";
-  }
-}
 
 export function writeStoredKnockoutViewRound(round) {
   try {
@@ -290,21 +287,62 @@ const R16_MATCH_ORDER = [
 const QF_MATCH_ORDER = ["M97", "M98", "M99", "M100"];
 const SF_MATCH_ORDER = ["M101", "M102"];
 
-const KNOCKOUT_MATCHES_BY_VIEW = {
-  r32: R32_MATCH_ORDER,
-  r16: R16_MATCH_ORDER,
-  finals: [...QF_MATCH_ORDER, ...SF_MATCH_ORDER, "M103", "M104"],
-};
-
-/** Finals list view sections (QF → SF → third-place → final). */
-export const KNOCKOUT_FINALS_LIST_SECTIONS = [
-  { round: "qf", label: "Quarter-finals", matchIds: QF_MATCH_ORDER },
-  { round: "sf", label: "Semi-finals", matchIds: SF_MATCH_ORDER },
-  { round: "third", label: "Third-place play-off", matchIds: ["M103"] },
-  { round: "final", label: "The Final", matchIds: ["M104"] },
+/** Bracket columns in knockout order (R32 → Final; third-place play-off omitted). */
+export const KNOCKOUT_BRACKET_ROUNDS = [
+  { round: "r32", label: KNOCKOUT_ROUND_LABELS.r32, matchIds: R32_MATCH_ORDER },
+  { round: "r16", label: KNOCKOUT_ROUND_LABELS.r16, matchIds: R16_MATCH_ORDER },
+  { round: "qf", label: KNOCKOUT_ROUND_LABELS.qf, matchIds: QF_MATCH_ORDER },
+  { round: "sf", label: KNOCKOUT_ROUND_LABELS.sf, matchIds: SF_MATCH_ORDER },
+  { round: "final", label: KNOCKOUT_ROUND_LABELS.final, matchIds: ["M104"] },
 ];
 
-/** Ordered match ids for a knockout round tab (R32, R16, or Finals). */
+export const KNOCKOUT_ROUND_VIEWS = KNOCKOUT_BRACKET_ROUNDS.map(
+  ({ round }) => round,
+);
+
+const KNOCKOUT_MATCHES_BY_VIEW = Object.fromEntries(
+  KNOCKOUT_BRACKET_ROUNDS.map(({ round, matchIds }) => [round, matchIds]),
+);
+
+/** Bracket / list sections from the selected round through the final. */
+export function getKnockoutBracketRoundsFrom(startRound) {
+  const startIndex = KNOCKOUT_BRACKET_ROUNDS.findIndex(
+    ({ round }) => round === startRound,
+  );
+
+  if (startIndex === -1) {
+    return KNOCKOUT_BRACKET_ROUNDS;
+  }
+
+  return KNOCKOUT_BRACKET_ROUNDS.slice(startIndex);
+}
+
+export function getKnockoutListSectionsFromView(viewRound) {
+  return getKnockoutBracketRoundsFrom(viewRound).map(
+    ({ round, matchIds }) => ({
+      round,
+      label: KNOCKOUT_ROUND_LIST_LABELS[round] ?? round,
+      matchIds,
+    }),
+  );
+}
+
+export function readStoredKnockoutViewRound() {
+  try {
+    const value = localStorage.getItem(KNOCKOUT_VIEW_ROUND_STORAGE_KEY);
+    if (value === "finals") {
+      return "qf";
+    }
+    if (value === "third") {
+      return "final";
+    }
+    return KNOCKOUT_ROUND_VIEWS.includes(value) ? value : "r32";
+  } catch {
+    return "r32";
+  }
+}
+
+/** Ordered match ids for a single knockout round tab. */
 export function getKnockoutMatchIdsForView(viewRound) {
   return KNOCKOUT_MATCHES_BY_VIEW[viewRound] ?? [];
 }

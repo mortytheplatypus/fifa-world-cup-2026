@@ -3510,6 +3510,43 @@ textarea {
   overflow-x: visible;
 }
 
+.knockout-bracket--columns {
+  --knockout-card-width: 16rem;
+  --knockout-column-gap: 1rem;
+  min-width: calc(
+    var(--knockout-visible-columns, 6) * var(--knockout-card-width) +
+      max(0, var(--knockout-visible-columns, 6) - 1) * var(--knockout-column-gap)
+  );
+  padding: 0.5rem 0;
+}
+
+.knockout-bracket-columns {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--knockout-column-gap);
+}
+
+.knockout-bracket-column {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: var(--knockout-card-width);
+  min-width: var(--knockout-card-width);
+}
+
+.knockout-bracket-column-matches {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.knockout-bracket-column .knockout-match {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+}
+
 .knockout-list-grouped {
   display: flex;
   flex-direction: column;
@@ -5093,6 +5130,15 @@ textarea {
   .knockout-list-row-team-name {
     font-family: var(--font-mono);
     letter-spacing: 0.03em;
+  }
+
+  .knockout-bracket--columns {
+    --knockout-card-width: 13.5rem;
+    --knockout-column-gap: 0.75rem;
+  }
+
+  .knockout-bracket-column-matches {
+    gap: 0.6rem;
   }
 
   .knockout-bracket {
