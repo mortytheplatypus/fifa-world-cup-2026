@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { useTimezone } from "../context/TimezoneContext";
 import {
   KNOCKOUT_ROUND_LABELS,
+  KNOCKOUT_ROUND_LIST_LABELS,
   KNOCKOUT_ROUND_VIEWS,
   getKnockoutBracketRoundsFrom,
   getKnockoutListSectionsFromView,
@@ -485,6 +486,7 @@ function BracketColumnView({
   );
   const firstRoundCount = rounds[0]?.matchIds.length ?? 1;
   const totalRows = getBracketTotalRows(firstRoundCount);
+  const isFinalOnly = startRound === "final";
   const gridTemplateColumns = rounds
     .map((_, roundIndex) =>
       roundIndex === 0
@@ -494,67 +496,76 @@ function BracketColumnView({
     .join(" ");
 
   return (
-    <div
-      className={`knockout-bracket knockout-bracket--lined knockout-bracket--from-${startRound}`}
-      style={{ "--knockout-visible-columns": rounds.length }}
-    >
+    <div className={isFinalOnly ? "knockout-finals-showcase" : undefined}>
+      {isFinalOnly && (
+        <p className="knockout-finals-showcase-label" aria-hidden="true">
+          {KNOCKOUT_ROUND_LIST_LABELS.final}
+        </p>
+      )}
       <div
-        ref={containerRef}
-        className="knockout-bracket-lanes"
-        style={{
-          gridTemplateColumns,
-          gridTemplateRows: `repeat(${totalRows}, auto)`,
-        }}
+        className={`knockout-bracket knockout-bracket--lined knockout-bracket--from-${startRound}${
+          isFinalOnly ? " knockout-bracket--final-only" : ""
+        }`}
+        style={{ "--knockout-visible-columns": rounds.length }}
       >
-        {paths.length > 0 && (
-          <svg
-            className="knockout-bracket-lines"
-            width={size.width}
-            height={size.height}
-            aria-hidden="true"
-          >
-            {paths.map((path, index) => (
-              <path
-                key={`${path}-${index}`}
-                className="knockout-bracket-line"
-                d={path}
-                vectorEffect="non-scaling-stroke"
-              />
-            ))}
-          </svg>
-        )}
-
-        {rounds.map((round, roundIndex) => (
-          <Fragment key={round.round}>
-            {roundIndex > 0 && (
-              <div
-                className="knockout-bracket-gutter"
-                style={{
-                  gridColumn: getBracketGutterColumn(roundIndex - 1),
-                  gridRow: `1 / ${totalRows + 1}`,
-                }}
-              />
-            )}
-            {round.matchIds.map((matchId, matchIndex) => (
-              <div
-                key={matchId}
-                className="knockout-bracket-slot"
-                data-bracket-match={matchId}
-                style={{
-                  gridColumn: getBracketMatchColumn(roundIndex),
-                  gridRow: getBracketGridRow(roundIndex, matchIndex) + 1,
-                }}
-              >
-                <KnockoutMatchCard
-                  matchId={matchId}
-                  standingsByGroup={standingsByGroup}
-                  knockoutResults={knockoutResults}
-                  onMatchClick={onMatchClick}
+        <div
+          ref={containerRef}
+          className="knockout-bracket-lanes"
+          style={{
+            gridTemplateColumns,
+            gridTemplateRows: `repeat(${totalRows}, auto)`,
+          }}
+        >
+          {paths.length > 0 && (
+            <svg
+              className="knockout-bracket-lines"
+              width={size.width}
+              height={size.height}
+              aria-hidden="true"
+            >
+              {paths.map((path, index) => (
+                <path
+                  key={`${path}-${index}`}
+                  className="knockout-bracket-line"
+                  d={path}
+                  vectorEffect="non-scaling-stroke"
                 />
-              </div>
-            ))}
-          </Fragment>
-        ))}
+              ))}
+            </svg>
+          )}
+
+          {rounds.map((round, roundIndex) => (
+            <Fragment key={round.round}>
+              {roundIndex > 0 && (
+                <div
+                  className="knockout-bracket-gutter"
+                  style={{
+                    gridColumn: getBracketGutterColumn(roundIndex - 1),
+                    gridRow: `1 / ${totalRows + 1}`,
+                  }}
+                />
+              )}
+              {round.matchIds.map((matchId, matchIndex) => (
+                <div
+                  key={matchId}
+                  className="knockout-bracket-slot"
+                  data-bracket-match={matchId}
+                  style={{
+                    gridColumn: getBracketMatchColumn(roundIndex),
+                    gridRow: getBracketGridRow(roundIndex, matchIndex) + 1,
+                  }}
+                >
+                  <KnockoutMatchCard
+                    matchId={matchId}
+                    standingsByGroup={standingsByGroup}
+                    knockoutResults={knockoutResults}
+                    onMatchClick={onMatchClick}
+                  />
+                </div>
+              ))}
+            </Fragment>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -852,7 +863,7 @@ function KnockoutBracket({
       <div
         className={`knockout-bracket-scroll${
           isTreeView ? "" : " knockout-bracket-scroll--list"
-        }`}
+        }${viewRound === "final" && isTreeView ? " knockout-bracket-scroll--final" : ""}`}
         role="tabpanel"
         id={`knockout-panel-${viewRound}`}
         aria-labelledby={`knockout-tab-${viewRound}`}

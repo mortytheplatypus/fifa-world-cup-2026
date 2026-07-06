@@ -3529,6 +3529,31 @@ textarea {
   overflow-x: visible;
 }
 
+.knockout-bracket-scroll--final {
+  overflow-x: visible;
+  display: flex;
+  justify-content: center;
+}
+
+.knockout-finals-showcase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 1.75rem 1rem 2.25rem;
+}
+
+.knockout-finals-showcase-label {
+  margin: 0 0 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--highlight) 78%, var(--text-muted));
+}
+
 .knockout-bracket--columns,
 .knockout-bracket--lined {
   --knockout-card-width: 16rem;
@@ -3571,6 +3596,71 @@ textarea {
   width: 100%;
   min-width: 0;
   max-width: none;
+}
+
+.knockout-bracket--lined.knockout-bracket--final-only {
+  --knockout-card-width: clamp(17rem, 88vw, 22rem);
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.knockout-bracket--final-only .knockout-bracket-lanes {
+  width: var(--knockout-card-width);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.knockout-bracket--final-only .knockout-bracket-slot {
+  width: 100%;
+}
+
+.knockout-bracket--final-only .knockout-match--final {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: clamp(0.9rem, 2.5vw, 1.15rem) clamp(1rem, 3.5vw, 1.4rem);
+  border-width: 2px;
+  border-color: color-mix(in srgb, var(--highlight) 82%, var(--border));
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--highlight) 32%, var(--surface)) 0%,
+    color-mix(in srgb, var(--highlight) 16%, var(--surface)) 100%
+  );
+  box-shadow:
+    0 10px 36px color-mix(in srgb, var(--highlight) 26%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--highlight) 38%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--highlight) 22%, transparent);
+}
+
+.knockout-bracket--final-only .knockout-match--final .knockout-match-header {
+  margin-bottom: 0.55rem;
+}
+
+.knockout-bracket--final-only .knockout-match--final .knockout-match-date {
+  font-size: clamp(0.72rem, 2.2vw, 0.78rem);
+  font-weight: 600;
+}
+
+.knockout-bracket--final-only .knockout-match--final .knockout-match-teams {
+  gap: 0.45rem;
+}
+
+.knockout-bracket--final-only .knockout-match--final .knockout-match-vs {
+  font-size: clamp(0.65rem, 2vw, 0.72rem);
+  letter-spacing: 0.14em;
+  color: color-mix(in srgb, var(--highlight) 72%, var(--text-muted));
+}
+
+.knockout-bracket--final-only .knockout-match--final .knockout-slot {
+  min-height: clamp(1.75rem, 5vw, 2rem);
+  padding: 0.25rem 0.35rem;
+}
+
+.knockout-bracket--final-only .knockout-match--final .knockout-slot-name {
+  font-size: clamp(0.85rem, 2.8vw, 0.95rem);
 }
 
 .knockout-bracket-gutter {
@@ -5281,6 +5371,21 @@ textarea {
 
   .knockout-bracket--final-stage {
     min-width: 400px;
+  }
+
+  .knockout-finals-showcase {
+    padding: 1rem 0.75rem 1.5rem;
+  }
+
+  .knockout-finals-showcase-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    margin-bottom: 0.65rem;
+  }
+
+  .knockout-bracket--lined.knockout-bracket--final-only {
+    --knockout-card-width: min(20rem, calc(100vw - 1.5rem));
+    min-width: 0;
   }
 
   .knockout-bracket--half {
