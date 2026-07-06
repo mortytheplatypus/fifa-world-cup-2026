@@ -15,6 +15,10 @@ export function getBracketGutterColumn(roundIndex) {
   return (roundIndex + 1) * 2;
 }
 
+export function buildHorizontalConnectorPath(from, to) {
+  return `M ${from.x} ${from.y} H ${to.x}`;
+}
+
 export function buildBracketConnectorPaths(sourceA, sourceB, target) {
   const midX = (sourceA.x + target.x) / 2;
   const midY = (sourceA.y + sourceB.y) / 2;
