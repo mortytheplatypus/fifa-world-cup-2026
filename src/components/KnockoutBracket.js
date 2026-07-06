@@ -28,6 +28,7 @@ import KnockoutTeamSlot from "./KnockoutTeamSlot";
 import { getKnockoutScoreParts } from "../utils/knockoutPenalties";
 import {
   buildBracketConnectorPaths,
+  buildHorizontalConnectorPath,
   getBracketGutterColumn,
   getBracketGridRow,
   getBracketMatchColumn,
@@ -468,6 +469,153 @@ function useBracketConnectorLines(containerRef, rounds, knockoutResults) {
   return { paths, size };
 }
 
+const SF_SHOWCASE_LEFT_MATCH_ID = "M101";
+const SF_SHOWCASE_RIGHT_MATCH_ID = "M102";
+const SF_SHOWCASE_FINAL_MATCH_ID = "M104";
+
+function useSemifinalsShowcaseConnectorLines(containerRef, knockoutResults) {
+  const [paths, setPaths] = useState([]);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) {
+      return undefined;
+    }
+
+    const measure = () => {
+      const containerRect = container.getBoundingClientRect();
+      const leftMatch = container.querySelector(
+        `[data-bracket-match="${SF_SHOWCASE_LEFT_MATCH_ID}"]`,
+      );
+      const rightMatch = container.querySelector(
+        `[data-bracket-match="${SF_SHOWCASE_RIGHT_MATCH_ID}"]`,
+      );
+      const finalMatch = container.querySelector(
+        `[data-bracket-match="${SF_SHOWCASE_FINAL_MATCH_ID}"]`,
+      );
+
+      if (!leftMatch || !rightMatch || !finalMatch) {
+        setPaths([]);
+        return;
+      }
+
+      setPaths([
+        buildHorizontalConnectorPath(
+          getMatchAnchor(leftMatch, "right", containerRect),
+          getMatchAnchor(finalMatch, "left", containerRect),
+        ),
+        buildHorizontalConnectorPath(
+          getMatchAnchor(rightMatch, "left", containerRect),
+          getMatchAnchor(finalMatch, "right", containerRect),
+        ),
+      ]);
+      setSize({
+        width: containerRect.width,
+        height: containerRect.height,
+      });
+    };
+
+    measure();
+
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(container);
+    window.addEventListener("resize", measure);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [containerRef, knockoutResults]);
+
+  return { paths, size };
+}
+
+function SemifinalsShowcaseView({
+  standingsByGroup,
+  knockoutResults,
+  onMatchClick,
+}) {
+  const containerRef = useRef(null);
+  const { paths, size } = useSemifinalsShowcaseConnectorLines(
+    containerRef,
+    knockoutResults,
+  );
+
+  return (
+    <div className="knockout-sf-showcase" ref={containerRef}>
+      {paths.length > 0 && (
+        <svg
+          className="knockout-sf-showcase-lines"
+          width={size.width}
+          height={size.height}
+          aria-hidden="true"
+        >
+          {paths.map((path, index) => (
+            <path
+              key={`${path}-${index}`}
+              className="knockout-bracket-line"
+              d={path}
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
+        </svg>
+      )}
+
+      <div className="knockout-sf-showcase-row">
+        <div
+          className="knockout-sf-showcase-side"
+          data-bracket-match={SF_SHOWCASE_LEFT_MATCH_ID}
+        >
+          <KnockoutMatchCard
+            matchId={SF_SHOWCASE_LEFT_MATCH_ID}
+            standingsByGroup={standingsByGroup}
+            knockoutResults={knockoutResults}
+            onMatchClick={onMatchClick}
+          />
+        </div>
+
+        <p
+          className="knockout-finals-showcase-label knockout-sf-showcase-final-label"
+          aria-hidden="true"
+        >
+          {KNOCKOUT_ROUND_LIST_LABELS.final}
+        </p>
+
+        <div
+          className="knockout-sf-showcase-center"
+          data-bracket-match={SF_SHOWCASE_FINAL_MATCH_ID}
+        >
+          <KnockoutMatchCard
+            matchId={SF_SHOWCASE_FINAL_MATCH_ID}
+            standingsByGroup={standingsByGroup}
+            knockoutResults={knockoutResults}
+            onMatchClick={onMatchClick}
+          />
+        </div>
+
+        <div
+          className="knockout-sf-showcase-side"
+          data-bracket-match={SF_SHOWCASE_RIGHT_MATCH_ID}
+        >
+          <KnockoutMatchCard
+            matchId={SF_SHOWCASE_RIGHT_MATCH_ID}
+            standingsByGroup={standingsByGroup}
+            knockoutResults={knockoutResults}
+            onMatchClick={onMatchClick}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+SemifinalsShowcaseView.propTypes = {
+  standingsByGroup: standingsByGroupShape.isRequired,
+  knockoutResults: knockoutResultsShape.isRequired,
+  onMatchClick: PropTypes.func,
+};
+
 function BracketColumnView({
   standingsByGroup,
   knockoutResults,
@@ -575,6 +723,41 @@ BracketColumnView.propTypes = {
   standingsByGroup: standingsByGroupShape.isRequired,
   knockoutResults: knockoutResultsShape.isRequired,
   startRound: PropTypes.oneOf(KNOCKOUT_ROUND_VIEWS).isRequired,
+  onMatchClick: PropTypes.func,
+};
+
+function BracketTreeView({
+  standingsByGroup,
+  knockoutResults,
+  viewRound,
+  onMatchClick,
+}) {
+  const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
+
+  if (viewRound === "sf" && !isMobile) {
+    return (
+      <SemifinalsShowcaseView
+        standingsByGroup={standingsByGroup}
+        knockoutResults={knockoutResults}
+        onMatchClick={onMatchClick}
+      />
+    );
+  }
+
+  return (
+    <BracketColumnView
+      standingsByGroup={standingsByGroup}
+      knockoutResults={knockoutResults}
+      startRound={viewRound}
+      onMatchClick={onMatchClick}
+    />
+  );
+}
+
+BracketTreeView.propTypes = {
+  standingsByGroup: standingsByGroupShape.isRequired,
+  knockoutResults: knockoutResultsShape.isRequired,
+  viewRound: PropTypes.oneOf(KNOCKOUT_ROUND_VIEWS).isRequired,
   onMatchClick: PropTypes.func,
 };
 
@@ -811,10 +994,10 @@ function renderBracketContent({
   }
 
   return (
-    <BracketColumnView
+    <BracketTreeView
       standingsByGroup={standingsByGroup}
       knockoutResults={knockoutResults}
-      startRound={viewRound}
+      viewRound={viewRound}
       onMatchClick={onMatchClick}
     />
   );
@@ -830,6 +1013,8 @@ function KnockoutBracket({
   const [selectedMatchId, setSelectedMatchId] = useState(null);
 
   const isTreeView = viewMode === "tree";
+  const isMobile = useMediaQuery(KNOCKOUT_MOBILE_MEDIA_QUERY);
+  const useSfShowcase = viewRound === "sf" && isTreeView && !isMobile;
 
   return (
     <div className="knockout-bracket-container">
@@ -863,7 +1048,9 @@ function KnockoutBracket({
       <div
         className={`knockout-bracket-scroll${
           isTreeView ? "" : " knockout-bracket-scroll--list"
-        }${viewRound === "final" && isTreeView ? " knockout-bracket-scroll--final" : ""}`}
+        }${viewRound === "final" && isTreeView ? " knockout-bracket-scroll--final" : ""}${
+          useSfShowcase ? " knockout-bracket-scroll--sf-showcase" : ""
+        }`}
         role="tabpanel"
         id={`knockout-panel-${viewRound}`}
         aria-labelledby={`knockout-tab-${viewRound}`}

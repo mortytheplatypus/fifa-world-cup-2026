@@ -3389,6 +3389,8 @@ textarea {
 }
 
 .knockout-bracket-container {
+  --knockout-final-featured-width: clamp(17rem, 88vw, 22rem);
+  --knockout-final-label-gap: 0.85rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -3529,10 +3531,79 @@ textarea {
   overflow-x: visible;
 }
 
-.knockout-bracket-scroll--final {
+.knockout-bracket-scroll--final,
+.knockout-bracket-scroll--sf-showcase {
   overflow-x: visible;
   display: flex;
   justify-content: center;
+}
+
+.knockout-sf-showcase {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  padding: 1.5rem 1rem 2rem;
+}
+
+.knockout-sf-showcase-lines {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.knockout-sf-showcase-row {
+  --knockout-sf-side-width: var(--knockout-card-width, 16rem);
+  --knockout-sf-center-width: var(--knockout-final-featured-width);
+  --knockout-sf-connector-width: 2.5rem;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns:
+    var(--knockout-sf-side-width)
+    var(--knockout-sf-connector-width)
+    var(--knockout-sf-center-width)
+    var(--knockout-sf-connector-width)
+    var(--knockout-sf-side-width);
+  grid-template-rows: auto auto;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.knockout-sf-showcase-side {
+  grid-row: 2;
+  width: 100%;
+  z-index: 1;
+}
+
+.knockout-sf-showcase-side:first-of-type {
+  grid-column: 1;
+}
+
+.knockout-sf-showcase-side:last-of-type {
+  grid-column: 5;
+}
+
+.knockout-sf-showcase-final-label {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: center;
+}
+
+.knockout-sf-showcase-center {
+  grid-column: 3;
+  grid-row: 2;
+  width: 100%;
+  z-index: 1;
+}
+
+.knockout-sf-showcase-side .knockout-match,
+.knockout-sf-showcase-center .knockout-match {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
 }
 
 .knockout-finals-showcase {
@@ -3546,7 +3617,7 @@ textarea {
 }
 
 .knockout-finals-showcase-label {
-  margin: 0 0 0.85rem;
+  margin: 0 0 var(--knockout-final-label-gap);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.24em;
@@ -3599,12 +3670,16 @@ textarea {
 }
 
 .knockout-bracket--lined.knockout-bracket--final-only {
-  --knockout-card-width: clamp(17rem, 88vw, 22rem);
+  --knockout-card-width: var(--knockout-final-featured-width);
   min-width: 0;
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 0.5rem 0;
+  padding: 0 0 0.5rem;
+}
+
+.knockout-finals-showcase .knockout-bracket--lined.knockout-bracket--final-only {
+  padding-top: 0;
 }
 
 .knockout-bracket--final-only .knockout-bracket-lanes {
@@ -3617,7 +3692,8 @@ textarea {
   width: 100%;
 }
 
-.knockout-bracket--final-only .knockout-match--final {
+.knockout-bracket--final-only .knockout-match--final,
+.knockout-sf-showcase-center .knockout-match--final {
   width: 100%;
   min-width: 0;
   max-width: none;
@@ -3635,31 +3711,37 @@ textarea {
     inset 0 1px 0 color-mix(in srgb, var(--highlight) 22%, transparent);
 }
 
-.knockout-bracket--final-only .knockout-match--final .knockout-match-header {
+.knockout-bracket--final-only .knockout-match--final .knockout-match-header,
+.knockout-sf-showcase-center .knockout-match--final .knockout-match-header {
   margin-bottom: 0.55rem;
 }
 
-.knockout-bracket--final-only .knockout-match--final .knockout-match-date {
+.knockout-bracket--final-only .knockout-match--final .knockout-match-date,
+.knockout-sf-showcase-center .knockout-match--final .knockout-match-date {
   font-size: clamp(0.72rem, 2.2vw, 0.78rem);
   font-weight: 600;
 }
 
-.knockout-bracket--final-only .knockout-match--final .knockout-match-teams {
+.knockout-bracket--final-only .knockout-match--final .knockout-match-teams,
+.knockout-sf-showcase-center .knockout-match--final .knockout-match-teams {
   gap: 0.45rem;
 }
 
-.knockout-bracket--final-only .knockout-match--final .knockout-match-vs {
+.knockout-bracket--final-only .knockout-match--final .knockout-match-vs,
+.knockout-sf-showcase-center .knockout-match--final .knockout-match-vs {
   font-size: clamp(0.65rem, 2vw, 0.72rem);
   letter-spacing: 0.14em;
   color: color-mix(in srgb, var(--highlight) 72%, var(--text-muted));
 }
 
-.knockout-bracket--final-only .knockout-match--final .knockout-slot {
+.knockout-bracket--final-only .knockout-match--final .knockout-slot,
+.knockout-sf-showcase-center .knockout-match--final .knockout-slot {
   min-height: clamp(1.75rem, 5vw, 2rem);
   padding: 0.25rem 0.35rem;
 }
 
-.knockout-bracket--final-only .knockout-match--final .knockout-slot-name {
+.knockout-bracket--final-only .knockout-match--final .knockout-slot-name,
+.knockout-sf-showcase-center .knockout-match--final .knockout-slot-name {
   font-size: clamp(0.85rem, 2.8vw, 0.95rem);
 }
 
@@ -5274,6 +5356,8 @@ textarea {
   }
 
   .knockout-bracket-container {
+    --knockout-final-featured-width: min(20rem, calc(100vw - 1.5rem));
+    --knockout-final-label-gap: 0.65rem;
     gap: 0.75rem;
   }
 
@@ -5380,11 +5464,9 @@ textarea {
   .knockout-finals-showcase-label {
     font-size: 0.65rem;
     letter-spacing: 0.18em;
-    margin-bottom: 0.65rem;
   }
 
   .knockout-bracket--lined.knockout-bracket--final-only {
-    --knockout-card-width: min(20rem, calc(100vw - 1.5rem));
     min-width: 0;
   }
 
