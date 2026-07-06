@@ -73,7 +73,6 @@ function KnockoutPage() {
         viewRound={viewRound}
         onViewRoundChange={handleViewRoundChange}
         viewMode={viewMode}
-        onViewModeChange={handleViewModeChange}
       />
 
     </section>

@@ -815,7 +815,6 @@ function KnockoutBracket({
   viewRound,
   onViewRoundChange,
   viewMode,
-  onViewModeChange,
 }) {
   const [selectedMatchId, setSelectedMatchId] = useState(null);
 
@@ -846,12 +845,6 @@ function KnockoutBracket({
               </button>
             ))}
           </div>
-
-          <KnockoutViewModeToggle
-            viewMode={viewMode}
-            onViewModeChange={onViewModeChange}
-            className="knockout-view-mode--bracket"
-          />
         </div>
 
       </div>
@@ -891,7 +884,6 @@ KnockoutBracket.propTypes = {
   viewRound: PropTypes.oneOf(KNOCKOUT_ROUND_VIEWS).isRequired,
   onViewRoundChange: PropTypes.func.isRequired,
   viewMode: PropTypes.oneOf(KNOCKOUT_VIEW_MODES).isRequired,
-  onViewModeChange: PropTypes.func.isRequired,
 };
 
 export default KnockoutBracket;

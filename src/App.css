@@ -3363,7 +3363,9 @@ textarea {
 }
 
 .knockout-view-mode--header {
-  display: none;
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 0.1rem;
 }
 
 .knockout-rules-link {
@@ -3442,7 +3444,7 @@ textarea {
   display: flex;
   flex: 1;
   min-width: 0;
-  width: auto;
+  width: 100%;
 }
 
 .knockout-bracket-tabs--rounds .knockout-bracket-tab {
@@ -5152,12 +5154,6 @@ textarea {
     width: 100%;
   }
 
-  .knockout-view-mode--header {
-    display: inline-flex;
-    flex-shrink: 0;
-    padding: 0.1rem;
-  }
-
   .knockout-view-mode--header .knockout-bracket-tab {
     min-width: 1.65rem;
     padding: 0.28rem 0.35rem;
@@ -5166,10 +5162,6 @@ textarea {
   .knockout-view-mode--header .knockout-view-mode-icon {
     width: 14px;
     height: 14px;
-  }
-
-  .knockout-view-mode--bracket {
-    display: none;
   }
 
   .knockout-bracket-nav {
