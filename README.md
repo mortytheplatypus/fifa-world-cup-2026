@@ -199,6 +199,7 @@ When the group stage ends, switch Home and Fixtures to knockout matches with a b
 | Variable | Purpose |
 |----------|---------|
 | `REACT_APP_KNOCKOUT_SCHEDULE=true` | Home upcoming/latest/hero and Fixtures default tab use knockout matches (M73–M104) |
+| `REACT_APP_FINALS_MODE_START=YYYY-MM-DD` | From this date (user timezone), Home switches to the finals layout: trophy hero for M104, no upcoming tab, latest results limited to the two semi-finals and third-place match |
 
 **Deploy-day checklist**
 

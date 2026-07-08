@@ -2,13 +2,23 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import FixtureCard from "../components/FixtureCard";
 import LoadingSpinner from "../components/LoadingSpinner";
+import FinalsHero from "../components/FinalsHero";
 import HomeMatchHero from "../components/HomeMatchHero";
 import { useTimezone } from "../context/TimezoneContext";
 import { useMatchSchedule } from "../hooks/useMatchSchedule";
 import { getTeamById } from "../utils/data";
+import {
+  FINALS_MATCH_IDS,
+  getFinalsHeroVariant,
+  getFinalsStageResults,
+  getFinalWinnerTeam,
+  getFixtureById,
+  isFinalsMode,
+} from "../utils/finalsMode";
 import { isKnockoutScheduleMode } from "../utils/knockoutConfig";
 import {
   formatDateHeading,
+  getFixtureStatus,
   getLatestResults,
   getNextUpcomingFixture,
   getOngoingFixtures,
@@ -32,6 +42,21 @@ function HomePage() {
   const todayKey = useMemo(
     () => getTodayDateKey(timeZone, now),
     [timeZone, now],
+  );
+
+  const finalsMode = useMemo(
+    () => isFinalsMode(timeZone, now),
+    [timeZone, now],
+  );
+
+  const finalFixture = useMemo(
+    () => (finalsMode ? getFixtureById(fixtures, FINALS_MATCH_IDS.FINAL) : null),
+    [finalsMode, fixtures],
+  );
+
+  const finalsStageResults = useMemo(
+    () => (finalsMode ? getFinalsStageResults(fixtures) : []),
+    [finalsMode, fixtures],
   );
 
   const latestResults = useMemo(
@@ -69,6 +94,22 @@ function HomePage() {
   if (error) {
     return <p className="status-message error">{error}</p>;
   }
+
+  const finalHomeTeam = finalFixture
+    ? getTeamById(teams, finalFixture.homeTeam)
+    : null;
+  const finalAwayTeam = finalFixture
+    ? getTeamById(teams, finalFixture.awayTeam)
+    : null;
+  const finalsHeroVariant = getFinalsHeroVariant(finalFixture, now);
+  const finalWinnerTeam =
+    finalsHeroVariant === "winner"
+      ? getFinalWinnerTeam(finalFixture, finalHomeTeam, finalAwayTeam)
+      : null;
+  const showFinalResultCard =
+    finalsMode &&
+    finalFixture &&
+    getFixtureStatus(finalFixture, now) === "completed";
 
   const heroHomeTeam = heroFixture
     ? getTeamById(teams, heroFixture.homeTeam)
@@ -108,94 +149,139 @@ function HomePage() {
         </div>
       </header>
 
-      {heroFixture && heroHomeTeam && heroAwayTeam && (
-        <HomeMatchHero
-          fixture={heroFixture}
-          homeTeam={heroHomeTeam}
-          awayTeam={heroAwayTeam}
-          timeZone={timeZone}
-          variant={heroVariant}
-        />
+      {finalsMode ? (
+        <>
+          <FinalsHero
+            fixture={finalFixture}
+            homeTeam={finalHomeTeam}
+            awayTeam={finalAwayTeam}
+            timeZone={timeZone}
+            variant={finalsHeroVariant ?? "countdown"}
+            winnerTeam={finalWinnerTeam}
+          />
+          {showFinalResultCard && (
+            <div className="home-finals-result">
+              {renderFixture(finalFixture, { showDate: true })}
+            </div>
+          )}
+        </>
+      ) : (
+        heroFixture &&
+        heroHomeTeam &&
+        heroAwayTeam && (
+          <HomeMatchHero
+            fixture={heroFixture}
+            homeTeam={heroHomeTeam}
+            awayTeam={heroAwayTeam}
+            timeZone={timeZone}
+            variant={heroVariant}
+          />
+        )
       )}
 
       <section className="home-section home-matches-section">
-        <div className="home-matches-header">
-          <div className="home-fixtures-tabs" role="tablist" aria-label="Matches">
-            <button
-              type="button"
-              role="tab"
-              id="home-matches-tab-upcoming"
-              className={`home-fixtures-tab${
-                activeMatchesTab === "upcoming" ? " active" : ""
-              }`}
-              aria-selected={activeMatchesTab === "upcoming"}
-              aria-controls="home-matches-panel-upcoming"
-              onClick={() => setActiveMatchesTab("upcoming")}
-            >
-              Upcoming matches
-            </button>
-            <button
-              type="button"
-              role="tab"
-              id="home-matches-tab-results"
-              className={`home-fixtures-tab${
-                activeMatchesTab === "results" ? " active" : ""
-              }`}
-              aria-selected={activeMatchesTab === "results"}
-              aria-controls="home-matches-panel-results"
-              onClick={() => setActiveMatchesTab("results")}
-            >
-              Latest results
-            </button>
-          </div>
-
-          {activeMatchesTab === "upcoming" && upcomingMatchesDay && (
-            <span className="home-section-date">
-              {formatDateHeading(upcomingMatchesDay.dateKey)}
-            </span>
-          )}
-          {activeMatchesTab === "results" && latestResults && (
-            <span className="home-section-date">
-              {formatDateHeading(latestResults.dateKey)}
-            </span>
-          )}
-        </div>
-
-        <div
-          role="tabpanel"
-          id="home-matches-panel-upcoming"
-          className="home-matches-panel"
-          aria-labelledby="home-matches-tab-upcoming"
-          hidden={activeMatchesTab !== "upcoming"}
-        >
-          {upcomingMatchesDay ? (
-            <div className="fixture-list home-matches-list">
-              {upcomingMatchesDay.fixtures.map((fixture) =>
-                renderFixture(fixture),
+        {finalsMode ? (
+          <>
+            <div className="home-matches-header">
+              <h2 className="home-finals-results-heading">Latest results</h2>
+            </div>
+            <div className="home-matches-panel">
+              {finalsStageResults.length > 0 ? (
+                <div className="fixture-list home-matches-list">
+                  {finalsStageResults.map((fixture) =>
+                    renderFixture(fixture, { showDate: true }),
+                  )}
+                </div>
+              ) : (
+                <p className="status-message home-empty">No results yet.</p>
               )}
             </div>
-          ) : (
-            <p className="status-message home-empty">No upcoming matches.</p>
-          )}
-        </div>
+          </>
+        ) : (
+          <>
+            <div className="home-matches-header">
+              <div
+                className="home-fixtures-tabs"
+                role="tablist"
+                aria-label="Matches"
+              >
+                <button
+                  type="button"
+                  role="tab"
+                  id="home-matches-tab-upcoming"
+                  className={`home-fixtures-tab${
+                    activeMatchesTab === "upcoming" ? " active" : ""
+                  }`}
+                  aria-selected={activeMatchesTab === "upcoming"}
+                  aria-controls="home-matches-panel-upcoming"
+                  onClick={() => setActiveMatchesTab("upcoming")}
+                >
+                  Upcoming matches
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  id="home-matches-tab-results"
+                  className={`home-fixtures-tab${
+                    activeMatchesTab === "results" ? " active" : ""
+                  }`}
+                  aria-selected={activeMatchesTab === "results"}
+                  aria-controls="home-matches-panel-results"
+                  onClick={() => setActiveMatchesTab("results")}
+                >
+                  Latest results
+                </button>
+              </div>
 
-        <div
-          role="tabpanel"
-          id="home-matches-panel-results"
-          className="home-matches-panel"
-          aria-labelledby="home-matches-tab-results"
-          hidden={activeMatchesTab !== "results"}
-        >
-          {latestResults ? (
-            <div className="fixture-list home-matches-list">
-              {latestResults.fixtures.map((fixture) =>
-                renderFixture(fixture, { showDate: true }),
+              {activeMatchesTab === "upcoming" && upcomingMatchesDay && (
+                <span className="home-section-date">
+                  {formatDateHeading(upcomingMatchesDay.dateKey)}
+                </span>
+              )}
+              {activeMatchesTab === "results" && latestResults && (
+                <span className="home-section-date">
+                  {formatDateHeading(latestResults.dateKey)}
+                </span>
               )}
             </div>
-          ) : (
-            <p className="status-message home-empty">No results yet.</p>
-          )}
-        </div>
+
+            <div
+              role="tabpanel"
+              id="home-matches-panel-upcoming"
+              className="home-matches-panel"
+              aria-labelledby="home-matches-tab-upcoming"
+              hidden={activeMatchesTab !== "upcoming"}
+            >
+              {upcomingMatchesDay ? (
+                <div className="fixture-list home-matches-list">
+                  {upcomingMatchesDay.fixtures.map((fixture) =>
+                    renderFixture(fixture),
+                  )}
+                </div>
+              ) : (
+                <p className="status-message home-empty">No upcoming matches.</p>
+              )}
+            </div>
+
+            <div
+              role="tabpanel"
+              id="home-matches-panel-results"
+              className="home-matches-panel"
+              aria-labelledby="home-matches-tab-results"
+              hidden={activeMatchesTab !== "results"}
+            >
+              {latestResults ? (
+                <div className="fixture-list home-matches-list">
+                  {latestResults.fixtures.map((fixture) =>
+                    renderFixture(fixture, { showDate: true }),
+                  )}
+                </div>
+              ) : (
+                <p className="status-message home-empty">No results yet.</p>
+              )}
+            </div>
+          </>
+        )}
       </section>
 
       <div className="home-quick-links">
