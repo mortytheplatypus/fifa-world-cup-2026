@@ -54,11 +54,13 @@ function KnockoutPage() {
       <header className="knockout-header">
         <div className="knockout-header-title-row">
           <h1>Knockout</h1>
-          <KnockoutViewModeToggle
-            viewMode={viewMode}
-            onViewModeChange={handleViewModeChange}
-            className="knockout-view-mode--header"
-          />
+          {viewRound !== 'final' && (
+            <KnockoutViewModeToggle
+              viewMode={viewMode}
+              onViewModeChange={handleViewModeChange}
+              className="knockout-view-mode--header"
+            />
+          )}
         </div>
         {viewRound === 'r32' && (
           <Link to="/knockout/group-third-place" className="knockout-rules-link">
@@ -72,7 +74,7 @@ function KnockoutPage() {
         knockoutResults={knockoutResults}
         viewRound={viewRound}
         onViewRoundChange={handleViewRoundChange}
-        viewMode={viewMode}
+        viewMode={viewRound === 'final' ? 'tree' : viewMode}
       />
 
     </section>
