@@ -303,13 +303,26 @@ export function getKnockoutBracketRoundsFrom(startRound) {
 }
 
 export function getKnockoutListSectionsFromView(viewRound) {
-  return getKnockoutBracketRoundsFrom(viewRound).map(
+  const sections = getKnockoutBracketRoundsFrom(viewRound).map(
     ({ round, matchIds }) => ({
       round,
       label: KNOCKOUT_ROUND_LIST_LABELS[round] ?? round,
       matchIds,
     }),
   );
+
+  // List view only — bracket omits the third-place play-off.
+  // Hidden on the Final tab so that view stays final-only.
+  const finalIndex = sections.findIndex(({ round }) => round === "final");
+  if (finalIndex !== -1 && viewRound !== "final") {
+    sections.splice(finalIndex, 0, {
+      round: "third",
+      label: KNOCKOUT_ROUND_LIST_LABELS.third,
+      matchIds: ["M103"],
+    });
+  }
+
+  return sections;
 }
 
 export function readStoredKnockoutViewRound() {
