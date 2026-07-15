@@ -926,7 +926,7 @@ textarea {
   align-items: center;
   justify-content: center;
   gap: 1rem 1.5rem;
-  margin: 0 0 0.75rem;
+  margin: 0 0 1.25rem;
 }
 
 .home-hero-team {
@@ -990,7 +990,7 @@ textarea {
   flex-direction: column;
   align-items: center;
   gap: 0.35rem;
-  margin: 0 0 1.25rem;
+  margin: 0;
   font-family: var(--font-mono);
   font-size: 0.875rem;
   line-height: 1.45;
@@ -1014,7 +1014,7 @@ textarea {
 .home-hero .countdown-timer {
   width: 100%;
   max-width: 24rem;
-  margin: 0 auto;
+  margin: 0 auto 1rem;
 }
 
 .countdown-timer {
@@ -1216,17 +1216,74 @@ textarea {
   hyphens: auto;
 }
 
+.finals-hero-trophy-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 0;
+}
+
+.finals-hero-trophy-glow {
+  position: absolute;
+  inset: 8% 12%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--highlight) 38%, transparent) 0%,
+    color-mix(in srgb, var(--highlight) 16%, transparent) 42%,
+    transparent 72%
+  );
+  filter: blur(14px);
+  pointer-events: none;
+  z-index: 0;
+  animation: finals-trophy-glow-breathe 4.8s ease-in-out infinite;
+}
+
 .finals-hero-trophy {
+  position: relative;
+  z-index: 1;
   flex-shrink: 0;
   width: auto;
   height: 10rem;
   object-fit: contain;
-  filter: drop-shadow(0 8px 24px color-mix(in srgb, var(--highlight) 30%, transparent));
+  filter: drop-shadow(0 8px 18px color-mix(in srgb, var(--highlight) 22%, transparent));
+  animation: finals-trophy-rim-glow 4.8s ease-in-out infinite;
 }
 
-.finals-hero-trophy--winner {
-  height: 7.5rem;
+.finals-hero-trophy-wrap--winner {
   margin-bottom: 0.75rem;
+}
+
+.finals-hero-trophy-wrap--winner .finals-hero-trophy {
+  height: 7.5rem;
+}
+
+@keyframes finals-trophy-glow-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes finals-trophy-rim-glow {
+  0%,
+  100% {
+    filter: drop-shadow(
+      0 6px 14px color-mix(in srgb, var(--highlight) 18%, transparent)
+    );
+  }
+  50% {
+    filter: drop-shadow(
+      0 8px 26px color-mix(in srgb, var(--highlight) 40%, transparent)
+    );
+  }
 }
 
 .finals-hero-meta {
@@ -1234,7 +1291,7 @@ textarea {
   flex-direction: column;
   align-items: center;
   gap: 0.35rem;
-  margin: 0 0 1.5rem;
+  margin: 0;
   font-family: var(--font-mono);
   font-size: 0.9rem;
   line-height: 1.45;
@@ -1254,7 +1311,7 @@ textarea {
 .finals-hero .countdown-timer {
   width: 100%;
   max-width: 32rem;
-  margin: 0 auto;
+  margin: 0 auto 1rem;
 }
 
 .finals-hero .countdown-unit {
@@ -2526,6 +2583,11 @@ textarea {
   .fixture-status--ongoing::before {
     animation: none;
   }
+
+  .finals-hero-trophy-glow,
+  .finals-hero-trophy {
+    animation: none;
+  }
 }
 
 .points-tables-page h1 {
@@ -3085,10 +3147,14 @@ textarea {
     gap: 1.25rem;
   }
 
-  .finals-hero-trophy {
+  .finals-hero-showcase .finals-hero-trophy-wrap {
     grid-row: 1;
-    height: 8rem;
     margin: 0 auto;
+  }
+
+  .finals-hero-trophy-wrap .finals-hero-trophy,
+  .finals-hero-trophy {
+    height: 8rem;
   }
 
   .finals-hero-team--home,
