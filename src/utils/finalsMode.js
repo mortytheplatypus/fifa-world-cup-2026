@@ -40,18 +40,16 @@ export function getFinalsStageResults(fixturesByGroup, now = new Date()) {
     .filter((fixture) => getFixtureStatus(fixture, now) !== 'upcoming');
 }
 
-/** Third-place play-off while still upcoming (final is reserved for the hero). */
+/** Semi-finals and third-place while still upcoming (final stays in the hero). */
+export function getFinalsUpcomingFixtures(fixturesByGroup, now = new Date()) {
+  return FINALS_STAGE_RESULT_IDS.map((id) => getFixtureById(fixturesByGroup, id))
+    .filter(Boolean)
+    .filter((fixture) => getFixtureStatus(fixture, now) === 'upcoming');
+}
+
+/** @deprecated Prefer getFinalsUpcomingFixtures */
 export function getFinalsUpcomingFixture(fixturesByGroup, now = new Date()) {
-  const thirdPlace = getFixtureById(fixturesByGroup, FINALS_MATCH_IDS.THIRD);
-  if (!thirdPlace) {
-    return null;
-  }
-
-  if (getFixtureStatus(thirdPlace, now) === 'upcoming') {
-    return thirdPlace;
-  }
-
-  return null;
+  return getFinalsUpcomingFixtures(fixturesByGroup, now)[0] ?? null;
 }
 
 export function getFinalWinnerTeam(finalFixture, homeTeam, awayTeam) {

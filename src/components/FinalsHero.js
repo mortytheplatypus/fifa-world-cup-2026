@@ -11,7 +11,22 @@ import {
   parseFixtureInstant,
 } from '../utils/timezone';
 
-function FinalsTeamSide({ team, className = '' }) {
+function FinalsTeamSide({ team, placeholder, className = '' }) {
+  const name = team
+    ? getTeamDisplayName(team.name)
+    : (placeholder ?? 'TBD');
+
+  if (!team) {
+    return (
+      <div
+        className={`finals-hero-team finals-hero-team--placeholder ${className}`.trim()}
+      >
+        <span className="finals-hero-flag finals-hero-flag--placeholder" aria-hidden="true" />
+        <span className="finals-hero-team-name">{name}</span>
+      </div>
+    );
+  }
+
   return (
     <Link
       to={getTeamPath(team)}
@@ -24,15 +39,14 @@ function FinalsTeamSide({ team, className = '' }) {
         width={80}
         height={60}
       />
-      <span className="finals-hero-team-name">
-        {getTeamDisplayName(team.name)}
-      </span>
+      <span className="finals-hero-team-name">{name}</span>
     </Link>
   );
 }
 
 FinalsTeamSide.propTypes = {
-  team: teamShape.isRequired,
+  team: teamShape,
+  placeholder: PropTypes.string,
   className: PropTypes.string,
 };
 
@@ -54,12 +68,10 @@ function FinalsHero({
   variant,
   winnerTeam = null,
 }) {
-  const kickoff = fixture ? parseFixtureInstant(fixture) : null;
-
-  if (!fixture || !homeTeam || !awayTeam) {
+  if (!fixture) {
     return (
       <section className="finals-hero finals-hero--pending">
-        <div className="finals-hero-eyebrow">The Final</div>
+        <p className="finals-hero-final-banner">The Final</p>
         <div className="finals-hero-showcase finals-hero-showcase--pending">
           <img
             className="finals-hero-trophy"
@@ -74,7 +86,9 @@ function FinalsHero({
     );
   }
 
+  const kickoff = parseFixtureInstant(fixture);
   const eyebrowLabel = getEyebrowLabel(variant);
+  const showWinner = variant === 'winner' && winnerTeam;
 
   return (
     <section className={`finals-hero finals-hero--${variant}`}>
@@ -96,7 +110,7 @@ function FinalsHero({
         )}
       </div>
 
-      {variant === 'winner' && winnerTeam ? (
+      {showWinner ? (
         <div className="finals-hero-winner">
           <img
             className="finals-hero-trophy finals-hero-trophy--winner"
@@ -127,36 +141,46 @@ function FinalsHero({
           />
         </div>
       ) : (
-        <div className="finals-hero-showcase">
-          <FinalsTeamSide team={homeTeam} className="finals-hero-team--home" />
-          <img
-            className="finals-hero-trophy"
-            src="/fifawctrophy.png"
-            alt=""
-            width={160}
-            height={240}
-          />
-          <FinalsTeamSide team={awayTeam} className="finals-hero-team--away" />
-        </div>
-      )}
+        <>
+          <div className="finals-hero-showcase">
+            <FinalsTeamSide
+              team={homeTeam}
+              placeholder={fixture.homePlaceholder}
+              className="finals-hero-team--home"
+            />
+            <img
+              className="finals-hero-trophy"
+              src="/fifawctrophy.png"
+              alt=""
+              width={160}
+              height={240}
+            />
+            <FinalsTeamSide
+              team={awayTeam}
+              placeholder={fixture.awayPlaceholder}
+              className="finals-hero-team--away"
+            />
+          </div>
 
-      {variant !== 'winner' && (
-        <div className="finals-hero-meta">
-          <span className="finals-hero-meta-line">
-            {formatFixtureDate(fixture, timeZone)}
-            <span className="finals-hero-meta-sep" aria-hidden="true">
-              {' · '}
+          <p className="finals-hero-final-banner">The Final</p>
+
+          <div className="finals-hero-meta">
+            <span className="finals-hero-meta-line">
+              {formatFixtureDate(fixture, timeZone)}
+              <span className="finals-hero-meta-sep" aria-hidden="true">
+                {' · '}
+              </span>
+              {formatFixtureTime(fixture, timeZone)}
             </span>
-            {formatFixtureTime(fixture, timeZone)}
-          </span>
-          <span className="finals-hero-meta-line finals-hero-meta-venue">
-            {fixture.venue}, {fixture.city}
-          </span>
-        </div>
-      )}
+            <span className="finals-hero-meta-line finals-hero-meta-venue">
+              {fixture.venue}, {fixture.city}
+            </span>
+          </div>
 
-      {variant === 'countdown' && kickoff && (
-        <CountdownTimer targetDate={kickoff} hideDaysWhenZero />
+          {variant === 'countdown' && (
+            <CountdownTimer targetDate={kickoff} hideDaysWhenZero />
+          )}
+        </>
       )}
     </section>
   );

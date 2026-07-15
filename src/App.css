@@ -1174,6 +1174,36 @@ textarea {
   box-shadow: 0 6px 24px color-mix(in srgb, var(--highlight) 20%, transparent);
 }
 
+.finals-hero-flag--placeholder {
+  display: block;
+  width: 72px;
+  height: 54px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--text-muted) 18%, var(--surface));
+  border: 1px dashed color-mix(in srgb, var(--text-muted) 40%, var(--border));
+  box-shadow: none;
+}
+
+.finals-hero-team--placeholder .finals-hero-team-name {
+  color: var(--text-muted);
+}
+
+.finals-hero-final-banner {
+  margin: 0.35rem 0 1rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--highlight);
+  text-indent: 0.28em;
+}
+
+.finals-hero--pending .finals-hero-final-banner {
+  margin-bottom: 1.25rem;
+}
+
 .finals-hero-team-name {
   font-family: var(--font-display);
   font-size: 1.15rem;
@@ -3075,6 +3105,11 @@ textarea {
   }
 
   .finals-hero-flag {
+    width: 64px;
+    height: 48px;
+  }
+
+  .finals-hero-flag--placeholder {
     width: 64px;
     height: 48px;
   }

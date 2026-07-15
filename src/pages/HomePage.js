@@ -11,7 +11,7 @@ import {
   FINALS_MATCH_IDS,
   getFinalsHeroVariant,
   getFinalsStageResults,
-  getFinalsUpcomingFixture,
+  getFinalsUpcomingFixtures,
   getFinalWinnerTeam,
   getFixtureById,
   isFinalsMode,
@@ -19,6 +19,7 @@ import {
 import { isKnockoutScheduleMode } from "../utils/knockoutConfig";
 import {
   formatDateHeading,
+  getFixtureDateKey,
   getFixtureStatus,
   getLatestResults,
   getNextUpcomingFixture,
@@ -60,10 +61,13 @@ function HomePage() {
     [finalsMode, fixtures, now],
   );
 
-  const finalsUpcomingFixture = useMemo(
-    () => (finalsMode ? getFinalsUpcomingFixture(fixtures, now) : null),
+  const finalsUpcomingFixtures = useMemo(
+    () => (finalsMode ? getFinalsUpcomingFixtures(fixtures, now) : []),
     [finalsMode, fixtures, now],
   );
+
+  const useFinalsTabs =
+    finalsMode && finalsUpcomingFixtures.length > 0;
 
   const latestResults = useMemo(
     () => getLatestResults(fixtures, timeZone, now),
@@ -86,10 +90,45 @@ function HomePage() {
   const upcomingMatchesDay = useMemo(
     () =>
       getUpcomingMatchesDay(fixtures, timeZone, now, {
-        excludeFixtureId: heroFixture?.id ?? null,
+        excludeFixtureId: finalsMode
+          ? FINALS_MATCH_IDS.FINAL
+          : (heroFixture?.id ?? null),
       }),
-    [fixtures, timeZone, now, heroFixture],
+    [fixtures, timeZone, now, heroFixture, finalsMode],
   );
+
+  const finalsUpcomingDay = useMemo(() => {
+    if (!useFinalsTabs || finalsUpcomingFixtures.length === 0) {
+      return null;
+    }
+
+    const dateKeys = [
+      ...new Set(
+        finalsUpcomingFixtures.map((fixture) =>
+          getFixtureDateKey(fixture, timeZone),
+        ),
+      ),
+    ].sort();
+
+    return {
+      dateKey: dateKeys[0],
+      fixtures: finalsUpcomingFixtures,
+      spansMultipleDays: dateKeys.length > 1,
+    };
+  }, [useFinalsTabs, finalsUpcomingFixtures, timeZone]);
+
+  const upcomingForTabs = finalsMode ? finalsUpcomingDay : upcomingMatchesDay;
+  const resultsForTabs = finalsMode
+    ? finalsStageResults.length > 0
+      ? { fixtures: finalsStageResults }
+      : null
+    : latestResults;
+
+  useEffect(() => {
+    if (finalsMode && !useFinalsTabs) {
+      setActiveMatchesTab("results");
+    }
+  }, [finalsMode, useFinalsTabs]);
 
   const timezoneLabel = getDisplayTimezoneLabel(timeZone);
 
@@ -135,6 +174,104 @@ function HomePage() {
         showDate={options.showDate ?? false}
         stackedLayout
       />
+    );
+  }
+
+  function renderMatchesTabs({
+    upcoming,
+    results,
+    showResultsDate = true,
+  }) {
+    return (
+      <>
+        <div className="home-matches-header">
+          <div
+            className="home-fixtures-tabs"
+            role="tablist"
+            aria-label="Matches"
+          >
+            <button
+              type="button"
+              role="tab"
+              id="home-matches-tab-upcoming"
+              className={`home-fixtures-tab${
+                activeMatchesTab === "upcoming" ? " active" : ""
+              }`}
+              aria-selected={activeMatchesTab === "upcoming"}
+              aria-controls="home-matches-panel-upcoming"
+              onClick={() => setActiveMatchesTab("upcoming")}
+            >
+              Upcoming matches
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="home-matches-tab-results"
+              className={`home-fixtures-tab${
+                activeMatchesTab === "results" ? " active" : ""
+              }`}
+              aria-selected={activeMatchesTab === "results"}
+              aria-controls="home-matches-panel-results"
+              onClick={() => setActiveMatchesTab("results")}
+            >
+              Latest results
+            </button>
+          </div>
+
+          {activeMatchesTab === "upcoming" &&
+            upcoming &&
+            !upcoming.spansMultipleDays && (
+              <span className="home-section-date">
+                {formatDateHeading(upcoming.dateKey)}
+              </span>
+            )}
+          {activeMatchesTab === "results" &&
+            showResultsDate &&
+            results?.dateKey && (
+              <span className="home-section-date">
+                {formatDateHeading(results.dateKey)}
+              </span>
+            )}
+        </div>
+
+        <div
+          role="tabpanel"
+          id="home-matches-panel-upcoming"
+          className="home-matches-panel"
+          aria-labelledby="home-matches-tab-upcoming"
+          hidden={activeMatchesTab !== "upcoming"}
+        >
+          {upcoming ? (
+            <div className="fixture-list home-matches-list">
+              {upcoming.fixtures.map((fixture) =>
+                renderFixture(fixture, {
+                  showDate: upcoming.spansMultipleDays,
+                }),
+              )}
+            </div>
+          ) : (
+            <p className="status-message home-empty">No upcoming matches.</p>
+          )}
+        </div>
+
+        <div
+          role="tabpanel"
+          id="home-matches-panel-results"
+          className="home-matches-panel"
+          aria-labelledby="home-matches-tab-results"
+          hidden={activeMatchesTab !== "results"}
+        >
+          {results?.fixtures?.length ? (
+            <div className="fixture-list home-matches-list">
+              {results.fixtures.map((fixture) =>
+                renderFixture(fixture, { showDate: true }),
+              )}
+            </div>
+          ) : (
+            <p className="status-message home-empty">No results yet.</p>
+          )}
+        </div>
+      </>
     );
   }
 
@@ -186,22 +323,8 @@ function HomePage() {
       )}
 
       <section className="home-section home-matches-section">
-        {finalsMode ? (
+        {finalsMode && !useFinalsTabs ? (
           <>
-            {finalsUpcomingFixture && (
-              <>
-                <div className="home-matches-header">
-                  <h2 className="home-finals-results-heading">
-                    Upcoming matches
-                  </h2>
-                </div>
-                <div className="home-matches-panel">
-                  <div className="fixture-list home-matches-list">
-                    {renderFixture(finalsUpcomingFixture, { showDate: true })}
-                  </div>
-                </div>
-              </>
-            )}
             <div className="home-matches-header">
               <h2 className="home-finals-results-heading">Latest results</h2>
             </div>
@@ -218,93 +341,11 @@ function HomePage() {
             </div>
           </>
         ) : (
-          <>
-            <div className="home-matches-header">
-              <div
-                className="home-fixtures-tabs"
-                role="tablist"
-                aria-label="Matches"
-              >
-                <button
-                  type="button"
-                  role="tab"
-                  id="home-matches-tab-upcoming"
-                  className={`home-fixtures-tab${
-                    activeMatchesTab === "upcoming" ? " active" : ""
-                  }`}
-                  aria-selected={activeMatchesTab === "upcoming"}
-                  aria-controls="home-matches-panel-upcoming"
-                  onClick={() => setActiveMatchesTab("upcoming")}
-                >
-                  Upcoming matches
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  id="home-matches-tab-results"
-                  className={`home-fixtures-tab${
-                    activeMatchesTab === "results" ? " active" : ""
-                  }`}
-                  aria-selected={activeMatchesTab === "results"}
-                  aria-controls="home-matches-panel-results"
-                  onClick={() => setActiveMatchesTab("results")}
-                >
-                  Latest results
-                </button>
-              </div>
-
-              {activeMatchesTab === "upcoming" &&
-                upcomingMatchesDay &&
-                !upcomingMatchesDay.spansMultipleDays && (
-                <span className="home-section-date">
-                  {formatDateHeading(upcomingMatchesDay.dateKey)}
-                </span>
-              )}
-              {activeMatchesTab === "results" && latestResults && (
-                <span className="home-section-date">
-                  {formatDateHeading(latestResults.dateKey)}
-                </span>
-              )}
-            </div>
-
-            <div
-              role="tabpanel"
-              id="home-matches-panel-upcoming"
-              className="home-matches-panel"
-              aria-labelledby="home-matches-tab-upcoming"
-              hidden={activeMatchesTab !== "upcoming"}
-            >
-              {upcomingMatchesDay ? (
-                <div className="fixture-list home-matches-list">
-                  {upcomingMatchesDay.fixtures.map((fixture) =>
-                    renderFixture(fixture, {
-                      showDate: upcomingMatchesDay.spansMultipleDays,
-                    }),
-                  )}
-                </div>
-              ) : (
-                <p className="status-message home-empty">No upcoming matches.</p>
-              )}
-            </div>
-
-            <div
-              role="tabpanel"
-              id="home-matches-panel-results"
-              className="home-matches-panel"
-              aria-labelledby="home-matches-tab-results"
-              hidden={activeMatchesTab !== "results"}
-            >
-              {latestResults ? (
-                <div className="fixture-list home-matches-list">
-                  {latestResults.fixtures.map((fixture) =>
-                    renderFixture(fixture, { showDate: true }),
-                  )}
-                </div>
-              ) : (
-                <p className="status-message home-empty">No results yet.</p>
-              )}
-            </div>
-          </>
+          renderMatchesTabs({
+            upcoming: upcomingForTabs,
+            results: resultsForTabs,
+            showResultsDate: !finalsMode,
+          })
         )}
       </section>
 
