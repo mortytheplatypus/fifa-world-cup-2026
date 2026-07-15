@@ -69,6 +69,10 @@ function HomeMatchHero({ fixture, homeTeam, awayTeam, timeZone, variant }) {
         </Link>
       </div>
 
+      {variant === "countdown" && (
+        <CountdownTimer targetDate={kickoff} hideDaysWhenZero />
+      )}
+
       <div className="home-hero-meta">
         <span className="home-hero-meta-line">
           {formatFixtureDate(fixture, timeZone)}
@@ -81,10 +85,6 @@ function HomeMatchHero({ fixture, homeTeam, awayTeam, timeZone, variant }) {
           {fixture.venue}, {fixture.city}
         </span>
       </div>
-
-      {variant === "countdown" && (
-        <CountdownTimer targetDate={kickoff} hideDaysWhenZero />
-      )}
     </section>
   );
 }

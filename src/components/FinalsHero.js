@@ -50,6 +50,27 @@ FinalsTeamSide.propTypes = {
   className: PropTypes.string,
 };
 
+function FinalsTrophy({ className = '', width = 160, height = 240 }) {
+  return (
+    <span className={`finals-hero-trophy-wrap ${className}`.trim()}>
+      <span className="finals-hero-trophy-glow" aria-hidden="true" />
+      <img
+        className="finals-hero-trophy"
+        src="/fifawctrophy.png"
+        alt=""
+        width={width}
+        height={height}
+      />
+    </span>
+  );
+}
+
+FinalsTrophy.propTypes = {
+  className: PropTypes.string,
+  width: PropTypes.number,
+  height: PropTypes.number,
+};
+
 function getEyebrowLabel(variant) {
   if (variant === 'winner') {
     return 'World Champions';
@@ -73,13 +94,7 @@ function FinalsHero({
       <section className="finals-hero finals-hero--pending">
         <p className="finals-hero-final-banner">The Final</p>
         <div className="finals-hero-showcase finals-hero-showcase--pending">
-          <img
-            className="finals-hero-trophy"
-            src="/fifawctrophy.png"
-            alt=""
-            width={160}
-            height={240}
-          />
+          <FinalsTrophy />
         </div>
         <p className="finals-hero-pending-message">Finalists to be confirmed</p>
       </section>
@@ -112,10 +127,8 @@ function FinalsHero({
 
       {showWinner ? (
         <div className="finals-hero-winner">
-          <img
-            className="finals-hero-trophy finals-hero-trophy--winner"
-            src="/fifawctrophy.png"
-            alt=""
+          <FinalsTrophy
+            className="finals-hero-trophy-wrap--winner"
             width={120}
             height={180}
           />
@@ -148,13 +161,7 @@ function FinalsHero({
               placeholder={fixture.homePlaceholder}
               className="finals-hero-team--home"
             />
-            <img
-              className="finals-hero-trophy"
-              src="/fifawctrophy.png"
-              alt=""
-              width={160}
-              height={240}
-            />
+            <FinalsTrophy />
             <FinalsTeamSide
               team={awayTeam}
               placeholder={fixture.awayPlaceholder}
@@ -163,6 +170,10 @@ function FinalsHero({
           </div>
 
           <p className="finals-hero-final-banner">The Final</p>
+
+          {variant === 'countdown' && (
+            <CountdownTimer targetDate={kickoff} hideDaysWhenZero />
+          )}
 
           <div className="finals-hero-meta">
             <span className="finals-hero-meta-line">
@@ -176,10 +187,6 @@ function FinalsHero({
               {fixture.venue}, {fixture.city}
             </span>
           </div>
-
-          {variant === 'countdown' && (
-            <CountdownTimer targetDate={kickoff} hideDaysWhenZero />
-          )}
         </>
       )}
     </section>
