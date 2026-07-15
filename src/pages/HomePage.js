@@ -2,13 +2,25 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import FixtureCard from "../components/FixtureCard";
 import LoadingSpinner from "../components/LoadingSpinner";
+import FinalsHero from "../components/FinalsHero";
 import HomeMatchHero from "../components/HomeMatchHero";
 import { useTimezone } from "../context/TimezoneContext";
 import { useMatchSchedule } from "../hooks/useMatchSchedule";
 import { getTeamById } from "../utils/data";
+import {
+  FINALS_MATCH_IDS,
+  getFinalsHeroVariant,
+  getFinalsStageResults,
+  getFinalsUpcomingFixtures,
+  getFinalWinnerTeam,
+  getFixtureById,
+  isFinalsMode,
+} from "../utils/finalsMode";
 import { isKnockoutScheduleMode } from "../utils/knockoutConfig";
 import {
   formatDateHeading,
+  getFixtureDateKey,
+  getFixtureStatus,
   getLatestResults,
   getNextUpcomingFixture,
   getOngoingFixtures,
@@ -34,6 +46,29 @@ function HomePage() {
     [timeZone, now],
   );
 
+  const finalsMode = useMemo(
+    () => isFinalsMode(timeZone, now),
+    [timeZone, now],
+  );
+
+  const finalFixture = useMemo(
+    () => (finalsMode ? getFixtureById(fixtures, FINALS_MATCH_IDS.FINAL) : null),
+    [finalsMode, fixtures],
+  );
+
+  const finalsStageResults = useMemo(
+    () => (finalsMode ? getFinalsStageResults(fixtures, now) : []),
+    [finalsMode, fixtures, now],
+  );
+
+  const finalsUpcomingFixtures = useMemo(
+    () => (finalsMode ? getFinalsUpcomingFixtures(fixtures, now) : []),
+    [finalsMode, fixtures, now],
+  );
+
+  const useFinalsTabs =
+    finalsMode && finalsUpcomingFixtures.length > 0;
+
   const latestResults = useMemo(
     () => getLatestResults(fixtures, timeZone, now),
     [fixtures, timeZone, now],
@@ -55,10 +90,45 @@ function HomePage() {
   const upcomingMatchesDay = useMemo(
     () =>
       getUpcomingMatchesDay(fixtures, timeZone, now, {
-        excludeFixtureId: heroFixture?.id ?? null,
+        excludeFixtureId: finalsMode
+          ? FINALS_MATCH_IDS.FINAL
+          : (heroFixture?.id ?? null),
       }),
-    [fixtures, timeZone, now, heroFixture],
+    [fixtures, timeZone, now, heroFixture, finalsMode],
   );
+
+  const finalsUpcomingDay = useMemo(() => {
+    if (!useFinalsTabs || finalsUpcomingFixtures.length === 0) {
+      return null;
+    }
+
+    const dateKeys = [
+      ...new Set(
+        finalsUpcomingFixtures.map((fixture) =>
+          getFixtureDateKey(fixture, timeZone),
+        ),
+      ),
+    ].sort();
+
+    return {
+      dateKey: dateKeys[0],
+      fixtures: finalsUpcomingFixtures,
+      spansMultipleDays: dateKeys.length > 1,
+    };
+  }, [useFinalsTabs, finalsUpcomingFixtures, timeZone]);
+
+  const upcomingForTabs = finalsMode ? finalsUpcomingDay : upcomingMatchesDay;
+  const resultsForTabs = finalsMode
+    ? finalsStageResults.length > 0
+      ? { fixtures: finalsStageResults }
+      : null
+    : latestResults;
+
+  useEffect(() => {
+    if (finalsMode && !useFinalsTabs) {
+      setActiveMatchesTab("results");
+    }
+  }, [finalsMode, useFinalsTabs]);
 
   const timezoneLabel = getDisplayTimezoneLabel(timeZone);
 
@@ -69,6 +139,22 @@ function HomePage() {
   if (error) {
     return <p className="status-message error">{error}</p>;
   }
+
+  const finalHomeTeam = finalFixture
+    ? getTeamById(teams, finalFixture.homeTeam)
+    : null;
+  const finalAwayTeam = finalFixture
+    ? getTeamById(teams, finalFixture.awayTeam)
+    : null;
+  const finalsHeroVariant = getFinalsHeroVariant(finalFixture, now);
+  const finalWinnerTeam =
+    finalsHeroVariant === "winner"
+      ? getFinalWinnerTeam(finalFixture, finalHomeTeam, finalAwayTeam)
+      : null;
+  const showFinalResultCard =
+    finalsMode &&
+    finalFixture &&
+    getFixtureStatus(finalFixture, now) === "completed";
 
   const heroHomeTeam = heroFixture
     ? getTeamById(teams, heroFixture.homeTeam)
@@ -91,36 +177,19 @@ function HomePage() {
     );
   }
 
-  return (
-    <section className="page home-page">
-      <header className="home-header">
-        <div className="home-meta">
-          <p className="home-timezone">
-            Times in{" "}
-            <span className="home-timezone-label">{timezoneLabel}</span>
-          </p>
-          <div className="home-today">
-            <span className="home-today-label">Today</span>
-            <time className="home-today-date" dateTime={todayKey}>
-              {formatDateHeading(todayKey)}
-            </time>
-          </div>
-        </div>
-      </header>
-
-      {heroFixture && heroHomeTeam && heroAwayTeam && (
-        <HomeMatchHero
-          fixture={heroFixture}
-          homeTeam={heroHomeTeam}
-          awayTeam={heroAwayTeam}
-          timeZone={timeZone}
-          variant={heroVariant}
-        />
-      )}
-
-      <section className="home-section home-matches-section">
+  function renderMatchesTabs({
+    upcoming,
+    results,
+    showResultsDate = true,
+  }) {
+    return (
+      <>
         <div className="home-matches-header">
-          <div className="home-fixtures-tabs" role="tablist" aria-label="Matches">
+          <div
+            className="home-fixtures-tabs"
+            role="tablist"
+            aria-label="Matches"
+          >
             <button
               type="button"
               role="tab"
@@ -149,16 +218,20 @@ function HomePage() {
             </button>
           </div>
 
-          {activeMatchesTab === "upcoming" && upcomingMatchesDay && (
-            <span className="home-section-date">
-              {formatDateHeading(upcomingMatchesDay.dateKey)}
-            </span>
-          )}
-          {activeMatchesTab === "results" && latestResults && (
-            <span className="home-section-date">
-              {formatDateHeading(latestResults.dateKey)}
-            </span>
-          )}
+          {activeMatchesTab === "upcoming" &&
+            upcoming &&
+            !upcoming.spansMultipleDays && (
+              <span className="home-section-date">
+                {formatDateHeading(upcoming.dateKey)}
+              </span>
+            )}
+          {activeMatchesTab === "results" &&
+            showResultsDate &&
+            results?.dateKey && (
+              <span className="home-section-date">
+                {formatDateHeading(results.dateKey)}
+              </span>
+            )}
         </div>
 
         <div
@@ -168,10 +241,12 @@ function HomePage() {
           aria-labelledby="home-matches-tab-upcoming"
           hidden={activeMatchesTab !== "upcoming"}
         >
-          {upcomingMatchesDay ? (
+          {upcoming ? (
             <div className="fixture-list home-matches-list">
-              {upcomingMatchesDay.fixtures.map((fixture) =>
-                renderFixture(fixture),
+              {upcoming.fixtures.map((fixture) =>
+                renderFixture(fixture, {
+                  showDate: upcoming.spansMultipleDays,
+                }),
               )}
             </div>
           ) : (
@@ -186,9 +261,9 @@ function HomePage() {
           aria-labelledby="home-matches-tab-results"
           hidden={activeMatchesTab !== "results"}
         >
-          {latestResults ? (
+          {results?.fixtures?.length ? (
             <div className="fixture-list home-matches-list">
-              {latestResults.fixtures.map((fixture) =>
+              {results.fixtures.map((fixture) =>
                 renderFixture(fixture, { showDate: true }),
               )}
             </div>
@@ -196,6 +271,82 @@ function HomePage() {
             <p className="status-message home-empty">No results yet.</p>
           )}
         </div>
+      </>
+    );
+  }
+
+  return (
+    <section className="page home-page">
+      <header className="home-header">
+        <div className="home-meta">
+          <p className="home-timezone">
+            Times in{" "}
+            <span className="home-timezone-label">{timezoneLabel}</span>
+          </p>
+          <div className="home-today">
+            <span className="home-today-label">Today</span>
+            <time className="home-today-date" dateTime={todayKey}>
+              {formatDateHeading(todayKey)}
+            </time>
+          </div>
+        </div>
+      </header>
+
+      {finalsMode ? (
+        <>
+          <FinalsHero
+            fixture={finalFixture}
+            homeTeam={finalHomeTeam}
+            awayTeam={finalAwayTeam}
+            timeZone={timeZone}
+            variant={finalsHeroVariant ?? "countdown"}
+            winnerTeam={finalWinnerTeam}
+          />
+          {showFinalResultCard && (
+            <div className="home-finals-result">
+              {renderFixture(finalFixture, { showDate: true })}
+            </div>
+          )}
+        </>
+      ) : (
+        heroFixture &&
+        heroHomeTeam &&
+        heroAwayTeam && (
+          <HomeMatchHero
+            fixture={heroFixture}
+            homeTeam={heroHomeTeam}
+            awayTeam={heroAwayTeam}
+            timeZone={timeZone}
+            variant={heroVariant}
+          />
+        )
+      )}
+
+      <section className="home-section home-matches-section">
+        {finalsMode && !useFinalsTabs ? (
+          <>
+            <div className="home-matches-header">
+              <h2 className="home-finals-results-heading">Latest results</h2>
+            </div>
+            <div className="home-matches-panel">
+              {finalsStageResults.length > 0 ? (
+                <div className="fixture-list home-matches-list">
+                  {finalsStageResults.map((fixture) =>
+                    renderFixture(fixture, { showDate: true }),
+                  )}
+                </div>
+              ) : (
+                <p className="status-message home-empty">No results yet.</p>
+              )}
+            </div>
+          </>
+        ) : (
+          renderMatchesTabs({
+            upcoming: upcomingForTabs,
+            results: resultsForTabs,
+            showResultsDate: !finalsMode,
+          })
+        )}
       </section>
 
       <div className="home-quick-links">

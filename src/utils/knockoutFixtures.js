@@ -10,30 +10,32 @@ const DEFAULT_KNOCKOUT_TIME = '12:00';
 const DEFAULT_KNOCKOUT_CITY = 'East Rutherford';
 const DEFAULT_KNOCKOUT_VENUE = 'TBD';
 
-function slotToTeamId(resolved) {
-  if (resolved.type === 'team' && resolved.team?.id) {
-    return resolved.team.id;
+function slotToSide(resolved) {
+  if (resolved?.type === 'team' && resolved.team?.id) {
+    return { teamId: resolved.team.id, placeholder: null };
   }
-  return null;
+
+  return {
+    teamId: null,
+    placeholder: resolved?.label ?? 'TBD',
+  };
 }
 
 function buildKnockoutFixture(matchId, resolvedMatch, schedule = {}) {
-  const homeTeamId = slotToTeamId(resolvedMatch.resolvedA);
-  const awayTeamId = slotToTeamId(resolvedMatch.resolvedB);
-
-  if (!homeTeamId || !awayTeamId) {
-    return null;
-  }
-
   if (!schedule.date) {
     return null;
   }
 
+  const home = slotToSide(resolvedMatch.resolvedA);
+  const away = slotToSide(resolvedMatch.resolvedB);
+
   return {
     id: matchId,
     matchday: 0,
-    homeTeam: homeTeamId,
-    awayTeam: awayTeamId,
+    homeTeam: home.teamId,
+    awayTeam: away.teamId,
+    ...(home.placeholder ? { homePlaceholder: home.placeholder } : {}),
+    ...(away.placeholder ? { awayPlaceholder: away.placeholder } : {}),
     date: schedule.date,
     time: schedule.time ?? DEFAULT_KNOCKOUT_TIME,
     venue: schedule.venue ?? DEFAULT_KNOCKOUT_VENUE,
@@ -63,7 +65,7 @@ export function buildStandingsByGroup(groupedTeams, fixturesByGroup) {
 
 /**
  * Build fixture-shaped knockout matches for Home/Fixtures schedule views.
- * Only includes matches where both sides resolve to a team.
+ * Includes matches with scheduled dates even when sides are still placeholders.
  */
 export function buildKnockoutFixtures(standingsByGroup, knockoutResults = {}) {
   const options = { knockoutResults };

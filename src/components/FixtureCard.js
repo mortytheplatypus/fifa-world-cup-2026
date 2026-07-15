@@ -23,6 +23,50 @@ const STATUS_LABELS = {
 
 const GOAL_EMOJI = "⚽";
 
+function FixtureTeamLabel({ team, placeholder, side }) {
+  const name = team
+    ? getTeamDisplayName(team.name)
+    : (placeholder ?? "TBD");
+
+  if (!team) {
+    return (
+      <span className={`fixture-team-label fixture-team-label--placeholder fixture-team-label--${side}`}>
+        <span
+          className={`fixture-team-flag fixture-team-flag--placeholder fixture-team-flag--${side}`}
+          aria-hidden="true"
+        />
+        <span className={`fixture-team-name fixture-team-name--${side}`}>
+          {name}
+        </span>
+      </span>
+    );
+  }
+
+  return (
+    <Link
+      to={getTeamPath(team)}
+      className="fixture-team-label fixture-team-label--link"
+    >
+      <img
+        className={`fixture-team-flag fixture-team-flag--${side}`}
+        src={`https://flagcdn.com/w40/${team.flagCode}.png`}
+        alt=""
+        width={32}
+        height={24}
+      />
+      <span className={`fixture-team-name fixture-team-name--${side}`}>
+        {name}
+      </span>
+    </Link>
+  );
+}
+
+FixtureTeamLabel.propTypes = {
+  team: teamShape,
+  placeholder: PropTypes.string,
+  side: PropTypes.oneOf(["home", "away"]).isRequired,
+};
+
 function FixtureCard({
   fixture,
   homeTeam,
@@ -43,12 +87,17 @@ function FixtureCard({
   const showMatchEvents = status === "completed" || status === "ongoing";
   const showScorers = showMatchEvents && goals.length > 0;
   const showCards = showMatchEvents && cards.length > 0;
+  const homeLabel = homeTeam?.name ?? fixture.homePlaceholder ?? "TBD";
+  const awayLabel = awayTeam?.name ?? fixture.awayPlaceholder ?? "TBD";
+  const isFinal = fixture.round === "final" || fixture.id === "M104";
 
   return (
     <article
       className={`fixture-card fixture-card--${status}${
         showDate ? " fixture-card--show-date" : ""
-      }${stackedLayout ? " fixture-card--stacked" : ""}`}
+      }${stackedLayout ? " fixture-card--stacked" : ""}${
+        isFinal ? " fixture-card--final" : ""
+      }`}
     >
       <div className="fixture-meta">
         <div className="fixture-meta-tags">
@@ -79,22 +128,15 @@ function FixtureCard({
 
       <div className="fixture-teams">
         <div className="fixture-team-side fixture-team-side--home">
-          <Link to={getTeamPath(homeTeam)} className="fixture-team-label fixture-team-label--link">
-            <img
-              className="fixture-team-flag fixture-team-flag--home"
-              src={`https://flagcdn.com/w40/${homeTeam.flagCode}.png`}
-              alt=""
-              width={32}
-              height={24}
-            />
-            <span className="fixture-team-name fixture-team-name--home">
-              {getTeamDisplayName(homeTeam.name)}
-            </span>
-          </Link>
+          <FixtureTeamLabel
+            team={homeTeam}
+            placeholder={fixture.homePlaceholder}
+            side="home"
+          />
           {showScorers && homeGoals.length > 0 && (
             <ul
               className="fixture-team-scorers fixture-team-scorers--home"
-              aria-label={`${homeTeam.name} goals`}
+              aria-label={`${homeLabel} goals`}
             >
               {homeGoals.map((goal) => (
                 <li key={`${goal.scorer}-${goal.minute}`}>
@@ -109,7 +151,7 @@ function FixtureCard({
           {showCards && homeCards.length > 0 && (
             <ul
               className="fixture-team-cards fixture-team-cards--home"
-              aria-label={`${homeTeam.name} cards`}
+              aria-label={`${homeLabel} cards`}
             >
               {homeCards.map((card, index) => {
                 const { emoji, label } = getCardDisplay(card);
@@ -145,22 +187,15 @@ function FixtureCard({
         )}
 
         <div className="fixture-team-side fixture-team-side--away">
-          <Link to={getTeamPath(awayTeam)} className="fixture-team-label fixture-team-label--link">
-            <img
-              className="fixture-team-flag fixture-team-flag--away"
-              src={`https://flagcdn.com/w40/${awayTeam.flagCode}.png`}
-              alt=""
-              width={32}
-              height={24}
-            />
-            <span className="fixture-team-name fixture-team-name--away">
-              {getTeamDisplayName(awayTeam.name)}
-            </span>
-          </Link>
+          <FixtureTeamLabel
+            team={awayTeam}
+            placeholder={fixture.awayPlaceholder}
+            side="away"
+          />
           {showScorers && awayGoals.length > 0 && (
             <ul
               className="fixture-team-scorers fixture-team-scorers--away"
-              aria-label={`${awayTeam.name} goals`}
+              aria-label={`${awayLabel} goals`}
             >
               {awayGoals.map((goal) => (
                 <li key={`${goal.scorer}-${goal.minute}`}>
@@ -175,7 +210,7 @@ function FixtureCard({
           {showCards && awayCards.length > 0 && (
             <ul
               className="fixture-team-cards fixture-team-cards--away"
-              aria-label={`${awayTeam.name} cards`}
+              aria-label={`${awayLabel} cards`}
             >
               {awayCards.map((card, index) => {
                 const { emoji, label } = getCardDisplay(card);
@@ -195,6 +230,12 @@ function FixtureCard({
         </div>
       </div>
 
+      {isFinal && (
+        <p className="fixture-final-banner" aria-hidden="true">
+          The Final
+        </p>
+      )}
+
       <div className="fixture-venue">
         {fixture.venue}, {fixture.city}
       </div>
@@ -204,8 +245,8 @@ function FixtureCard({
 
 FixtureCard.propTypes = {
   fixture: fixtureShape.isRequired,
-  homeTeam: teamShape.isRequired,
-  awayTeam: teamShape.isRequired,
+  homeTeam: teamShape,
+  awayTeam: teamShape,
   showGroup: PropTypes.bool,
   showDate: PropTypes.bool,
   stackedLayout: PropTypes.bool,

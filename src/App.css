@@ -1053,6 +1053,300 @@ textarea {
   color: var(--text-muted);
 }
 
+.finals-hero {
+  padding: 2.25rem 1.75rem;
+  margin-bottom: 2rem;
+  border: 1px solid color-mix(in srgb, var(--highlight) 35%, var(--border));
+  border-radius: var(--radius);
+  text-align: center;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--highlight) 18%, var(--surface)),
+    color-mix(in srgb, var(--highlight) 6%, var(--bg-deep))
+  );
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--highlight) 12%, var(--border)),
+    0 16px 40px color-mix(in srgb, var(--highlight) 8%, transparent);
+}
+
+.finals-hero--live {
+  border-color: color-mix(in srgb, var(--live) 35%, var(--border));
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--live) 16%, var(--surface)),
+    color-mix(in srgb, var(--highlight) 8%, var(--bg-deep))
+  );
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--live) 18%, var(--border)),
+    0 16px 40px color-mix(in srgb, var(--live) 10%, transparent);
+}
+
+.finals-hero--winner {
+  padding: 2.5rem 1.75rem;
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--highlight) 24%, var(--surface)),
+    color-mix(in srgb, var(--highlight) 10%, var(--bg-deep))
+  );
+}
+
+.finals-hero--pending {
+  padding: 2.5rem 1.75rem;
+}
+
+.finals-hero-eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem 1rem;
+  margin: 0 0 1.5rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--highlight);
+}
+
+.finals-hero-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  color: var(--live-text);
+  background: color-mix(in srgb, var(--live) 22%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--live) 30%, var(--border));
+}
+
+.finals-hero-live-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--live);
+  animation: fixture-live-pulse 1.4s ease-in-out infinite;
+}
+
+.finals-hero-showcase {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin: 0 0 1.25rem;
+}
+
+.finals-hero-showcase--pending {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.finals-hero-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.finals-hero-team--home {
+  justify-self: end;
+}
+
+.finals-hero-team--away {
+  justify-self: start;
+}
+
+.finals-hero-flag {
+  flex-shrink: 0;
+  width: 72px;
+  height: 54px;
+  border-radius: 5px;
+  object-fit: cover;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--text) 16%, transparent);
+}
+
+.finals-hero-flag--winner {
+  width: 96px;
+  height: 72px;
+  border-radius: 6px;
+  box-shadow: 0 6px 24px color-mix(in srgb, var(--highlight) 20%, transparent);
+}
+
+.finals-hero-flag--placeholder {
+  display: block;
+  width: 72px;
+  height: 54px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--text-muted) 18%, var(--surface));
+  border: 1px dashed color-mix(in srgb, var(--text-muted) 40%, var(--border));
+  box-shadow: none;
+}
+
+.finals-hero-team--placeholder .finals-hero-team-name {
+  color: var(--text-muted);
+}
+
+.finals-hero-final-banner {
+  margin: 0.35rem 0 1rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--highlight);
+  text-indent: 0.28em;
+}
+
+.finals-hero--pending .finals-hero-final-banner {
+  margin-bottom: 1.25rem;
+}
+
+.finals-hero-team-name {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-align: center;
+  hyphens: auto;
+}
+
+.finals-hero-trophy {
+  flex-shrink: 0;
+  width: auto;
+  height: 10rem;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 24px color-mix(in srgb, var(--highlight) 30%, transparent));
+}
+
+.finals-hero-trophy--winner {
+  height: 7.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.finals-hero-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.finals-hero-meta-line {
+  max-width: 100%;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.finals-hero-meta-sep {
+  white-space: pre;
+}
+
+.finals-hero .countdown-timer {
+  width: 100%;
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+.finals-hero .countdown-unit {
+  min-width: 5.5rem;
+  padding: 1rem 1.25rem;
+  border-color: color-mix(in srgb, var(--highlight) 25%, var(--border));
+  background: color-mix(in srgb, var(--highlight) 6%, var(--bg));
+}
+
+.finals-hero .countdown-value {
+  font-size: 2.25rem;
+  color: var(--highlight-text);
+}
+
+.finals-hero-winner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.finals-hero-winner-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.finals-hero-winner-name {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+  text-align: center;
+}
+
+.finals-hero-score {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.finals-hero-score-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.finals-hero-pending-message {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.finals-hero-knockout-label.knockout-match-label {
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.finals-hero-knockout-label .knockout-match-label-round,
+.finals-hero-knockout-label .knockout-match-label-slot {
+  display: inline-block;
+  padding: 0.12rem 0.4rem;
+  border-radius: 4px;
+  border: none;
+  background: color-mix(in srgb, var(--highlight) 14%, var(--surface));
+  color: var(--highlight);
+  font-family: inherit;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.home-finals-result {
+  margin: -1rem 0 2rem;
+}
+
+.home-finals-results-heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.home-matches-section .home-matches-header + .home-matches-panel {
+  margin-bottom: 1.5rem;
+}
+
 .home-section {
   margin-bottom: 2rem;
 }
@@ -1574,6 +1868,66 @@ textarea {
 .fixture-card--past {
   border-left-color: color-mix(in srgb, var(--text-muted) 50%, var(--border));
   background: color-mix(in srgb, var(--bg-deep) 18%, var(--surface));
+}
+
+.fixture-card--final {
+  padding: 1.5rem 1.35rem;
+  border-color: color-mix(in srgb, var(--highlight) 40%, var(--border));
+  border-left-width: 4px;
+  border-left-color: var(--highlight);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--highlight) 16%, var(--surface)),
+    color-mix(in srgb, var(--highlight) 5%, var(--bg-deep))
+  );
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--highlight) 14%, var(--border)),
+    0 12px 28px color-mix(in srgb, var(--highlight) 10%, transparent);
+}
+
+.fixture-card--final.fixture-card--upcoming {
+  border-left-color: var(--highlight);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--highlight) 16%, var(--surface)),
+    color-mix(in srgb, var(--highlight) 5%, var(--bg-deep))
+  );
+}
+
+.fixture-card--final .fixture-team-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.fixture-card--final .fixture-knockout-label .knockout-match-label-round,
+.fixture-card--final .fixture-knockout-label .knockout-match-label-slot {
+  background: color-mix(in srgb, var(--highlight) 18%, var(--surface));
+  color: var(--highlight);
+}
+
+.fixture-card--final .fixture-status--upcoming {
+  color: var(--highlight-text);
+  background: color-mix(in srgb, var(--highlight) 18%, var(--surface));
+  border-color: color-mix(in srgb, var(--highlight) 28%, var(--border));
+}
+
+.fixture-card--final.fixture-card--stacked .fixture-team-flag--home,
+.fixture-card--final.fixture-card--stacked .fixture-team-flag--away {
+  width: 40px;
+  height: 30px;
+}
+
+.fixture-final-banner {
+  margin: 0.75rem 0 0.35rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--highlight);
+  text-indent: 0.28em;
 }
 
 .fixtures-status {
@@ -2720,6 +3074,58 @@ textarea {
     font-size: 1.5rem;
   }
 
+  .finals-hero {
+    padding: 1.5rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .finals-hero-showcase {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 1.25rem;
+  }
+
+  .finals-hero-trophy {
+    grid-row: 1;
+    height: 8rem;
+    margin: 0 auto;
+  }
+
+  .finals-hero-team--home,
+  .finals-hero-team--away {
+    justify-self: center;
+  }
+
+  .finals-hero-showcase .finals-hero-team--home {
+    grid-row: 2;
+  }
+
+  .finals-hero-showcase .finals-hero-team--away {
+    grid-row: 3;
+  }
+
+  .finals-hero-flag {
+    width: 64px;
+    height: 48px;
+  }
+
+  .finals-hero-flag--placeholder {
+    width: 64px;
+    height: 48px;
+  }
+
+  .finals-hero-team-name {
+    font-size: 1rem;
+  }
+
+  .finals-hero .countdown-value {
+    font-size: 1.75rem;
+  }
+
+  .finals-hero-winner-name {
+    font-size: 1.35rem;
+  }
+
   .site-main,
   .site-main:has(.groups-page),
   .site-main:has(.points-tables-page),
@@ -3301,6 +3707,15 @@ textarea {
 
   .countdown-value {
     font-size: 1.2rem;
+  }
+
+  .finals-hero .countdown-value {
+    font-size: 1.35rem;
+  }
+
+  .finals-hero .countdown-unit {
+    min-width: 4rem;
+    padding: 0.65rem 0.85rem;
   }
 
   .site-brand {
@@ -6035,6 +6450,23 @@ textarea {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.fixture-team-label--placeholder {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+}
+
+.fixture-team-flag--placeholder {
+  display: inline-block;
+  width: 32px;
+  height: 24px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--text-muted) 18%, var(--surface));
+  border: 1px dashed color-mix(in srgb, var(--text-muted) 35%, var(--border));
+  flex-shrink: 0;
 }
 
 .home-hero-team--link {
