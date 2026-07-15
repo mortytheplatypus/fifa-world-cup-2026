@@ -11,6 +11,7 @@ import {
   FINALS_MATCH_IDS,
   getFinalsHeroVariant,
   getFinalsStageResults,
+  getFinalsUpcomingFixture,
   getFinalWinnerTeam,
   getFixtureById,
   isFinalsMode,
@@ -55,8 +56,13 @@ function HomePage() {
   );
 
   const finalsStageResults = useMemo(
-    () => (finalsMode ? getFinalsStageResults(fixtures) : []),
-    [finalsMode, fixtures],
+    () => (finalsMode ? getFinalsStageResults(fixtures, now) : []),
+    [finalsMode, fixtures, now],
+  );
+
+  const finalsUpcomingFixture = useMemo(
+    () => (finalsMode ? getFinalsUpcomingFixture(fixtures, now) : null),
+    [finalsMode, fixtures, now],
   );
 
   const latestResults = useMemo(
@@ -182,6 +188,20 @@ function HomePage() {
       <section className="home-section home-matches-section">
         {finalsMode ? (
           <>
+            {finalsUpcomingFixture && (
+              <>
+                <div className="home-matches-header">
+                  <h2 className="home-finals-results-heading">
+                    Upcoming matches
+                  </h2>
+                </div>
+                <div className="home-matches-panel">
+                  <div className="fixture-list home-matches-list">
+                    {renderFixture(finalsUpcomingFixture, { showDate: true })}
+                  </div>
+                </div>
+              </>
+            )}
             <div className="home-matches-header">
               <h2 className="home-finals-results-heading">Latest results</h2>
             </div>
@@ -233,7 +253,9 @@ function HomePage() {
                 </button>
               </div>
 
-              {activeMatchesTab === "upcoming" && upcomingMatchesDay && (
+              {activeMatchesTab === "upcoming" &&
+                upcomingMatchesDay &&
+                !upcomingMatchesDay.spansMultipleDays && (
                 <span className="home-section-date">
                   {formatDateHeading(upcomingMatchesDay.dateKey)}
                 </span>
@@ -255,7 +277,9 @@ function HomePage() {
               {upcomingMatchesDay ? (
                 <div className="fixture-list home-matches-list">
                   {upcomingMatchesDay.fixtures.map((fixture) =>
-                    renderFixture(fixture),
+                    renderFixture(fixture, {
+                      showDate: upcomingMatchesDay.spansMultipleDays,
+                    }),
                   )}
                 </div>
               ) : (

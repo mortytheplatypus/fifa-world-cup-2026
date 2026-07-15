@@ -1313,6 +1313,10 @@ textarea {
   color: var(--text);
 }
 
+.home-matches-section .home-matches-header + .home-matches-panel {
+  margin-bottom: 1.5rem;
+}
+
 .home-section {
   margin-bottom: 2rem;
 }
@@ -1834,6 +1838,66 @@ textarea {
 .fixture-card--past {
   border-left-color: color-mix(in srgb, var(--text-muted) 50%, var(--border));
   background: color-mix(in srgb, var(--bg-deep) 18%, var(--surface));
+}
+
+.fixture-card--final {
+  padding: 1.5rem 1.35rem;
+  border-color: color-mix(in srgb, var(--highlight) 40%, var(--border));
+  border-left-width: 4px;
+  border-left-color: var(--highlight);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--highlight) 16%, var(--surface)),
+    color-mix(in srgb, var(--highlight) 5%, var(--bg-deep))
+  );
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--highlight) 14%, var(--border)),
+    0 12px 28px color-mix(in srgb, var(--highlight) 10%, transparent);
+}
+
+.fixture-card--final.fixture-card--upcoming {
+  border-left-color: var(--highlight);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--highlight) 16%, var(--surface)),
+    color-mix(in srgb, var(--highlight) 5%, var(--bg-deep))
+  );
+}
+
+.fixture-card--final .fixture-team-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.fixture-card--final .fixture-knockout-label .knockout-match-label-round,
+.fixture-card--final .fixture-knockout-label .knockout-match-label-slot {
+  background: color-mix(in srgb, var(--highlight) 18%, var(--surface));
+  color: var(--highlight);
+}
+
+.fixture-card--final .fixture-status--upcoming {
+  color: var(--highlight-text);
+  background: color-mix(in srgb, var(--highlight) 18%, var(--surface));
+  border-color: color-mix(in srgb, var(--highlight) 28%, var(--border));
+}
+
+.fixture-card--final.fixture-card--stacked .fixture-team-flag--home,
+.fixture-card--final.fixture-card--stacked .fixture-team-flag--away {
+  width: 40px;
+  height: 30px;
+}
+
+.fixture-final-banner {
+  margin: 0.75rem 0 0.35rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--highlight);
+  text-indent: 0.28em;
 }
 
 .fixtures-status {
@@ -6351,6 +6415,23 @@ textarea {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.fixture-team-label--placeholder {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+}
+
+.fixture-team-flag--placeholder {
+  display: inline-block;
+  width: 32px;
+  height: 24px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--text-muted) 18%, var(--surface));
+  border: 1px dashed color-mix(in srgb, var(--text-muted) 35%, var(--border));
+  flex-shrink: 0;
 }
 
 .home-hero-team--link {

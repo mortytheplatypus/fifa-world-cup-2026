@@ -353,7 +353,10 @@ export function getOngoingFixtures(fixturesByGroup, now = new Date()) {
 export function getNextUpcomingFixture(fixturesByGroup, now = new Date()) {
   return (
     sortFixtures(flattenFixtures(fixturesByGroup)).find(
-      (fixture) => getFixtureStatus(fixture, now) === 'upcoming'
+      (fixture) =>
+        getFixtureStatus(fixture, now) === 'upcoming' &&
+        fixture.homeTeam &&
+        fixture.awayTeam
     ) ?? null
   );
 }
@@ -394,7 +397,30 @@ export function getUpcomingMatchesDay(
       continue;
     }
 
-    return { dateKey, fixtures: sortFixtures(fixtures) };
+    const includedIds = new Set(fixtures.map((fixture) => fixture.id));
+    const includeFinalExtras = fixtures.some(
+      (fixture) =>
+        fixture.round === 'sf' ||
+        fixture.round === 'third' ||
+        fixture.round === 'final'
+    );
+    const lateStageExtras = includeFinalExtras
+      ? sortFixtures(flattenFixtures(fixturesByGroup)).filter(
+          (fixture) =>
+            fixture.round === 'final' &&
+            getFixtureStatus(fixture, now) === 'upcoming' &&
+            fixture.id !== excludeFixtureId &&
+            !includedIds.has(fixture.id)
+        )
+      : [];
+
+    return {
+      dateKey,
+      fixtures: sortFixtures([...fixtures, ...lateStageExtras]),
+      spansMultipleDays: lateStageExtras.some(
+        (fixture) => getFixtureDateKey(fixture, timeZone) !== dateKey
+      ),
+    };
   }
 
   return null;

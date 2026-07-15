@@ -80,8 +80,10 @@ export const cardShape = PropTypes.shape({
 export const fixtureShape = PropTypes.shape({
   id: PropTypes.string.isRequired,
   matchday: PropTypes.number.isRequired,
-  homeTeam: PropTypes.string.isRequired,
-  awayTeam: PropTypes.string.isRequired,
+  homeTeam: PropTypes.string,
+  awayTeam: PropTypes.string,
+  homePlaceholder: PropTypes.string,
+  awayPlaceholder: PropTypes.string,
   date: PropTypes.string.isRequired,
   time: PropTypes.string.isRequired,
   venue: PropTypes.string.isRequired,
