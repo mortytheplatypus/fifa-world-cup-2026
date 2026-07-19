@@ -1,4 +1,9 @@
-import { flattenFixtures, getFixtureStatus, getTodayDateKey } from './fixtures';
+import {
+  flattenFixtures,
+  getFixtureStatus,
+  getTodayDateKey,
+  sortFixtures,
+} from './fixtures';
 import { getKnockoutSideOutcome } from './knockout';
 import { isKnockoutScheduleMode } from './knockoutConfig';
 
@@ -14,6 +19,8 @@ const FINALS_STAGE_RESULT_IDS = [
   FINALS_MATCH_IDS.SF2,
   FINALS_MATCH_IDS.THIRD,
 ];
+
+const FINALS_CONCLUDED_RESULT_IDS = [FINALS_MATCH_IDS.FINAL];
 
 const DEFAULT_FINALS_MODE_START = '2026-07-17';
 
@@ -35,9 +42,19 @@ export function getFixtureById(fixturesByGroup, id) {
 }
 
 export function getFinalsStageResults(fixturesByGroup, now = new Date()) {
-  return FINALS_STAGE_RESULT_IDS.map((id) => getFixtureById(fixturesByGroup, id))
+  const finalFixture = getFixtureById(fixturesByGroup, FINALS_MATCH_IDS.FINAL);
+  const finalConcluded =
+    finalFixture && getFixtureStatus(finalFixture, now) === 'completed';
+  const resultIds = finalConcluded
+    ? FINALS_CONCLUDED_RESULT_IDS
+    : FINALS_STAGE_RESULT_IDS;
+
+  const started = resultIds
+    .map((id) => getFixtureById(fixturesByGroup, id))
     .filter(Boolean)
     .filter((fixture) => getFixtureStatus(fixture, now) !== 'upcoming');
+
+  return sortFixtures(started).reverse();
 }
 
 /** Semi-finals and third-place while still upcoming (final stays in the hero). */

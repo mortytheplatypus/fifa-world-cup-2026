@@ -5,11 +5,14 @@ import KnockoutMatchLabel from './KnockoutMatchLabel';
 import CountdownTimer from './CountdownTimer';
 import { KnockoutScoreLine } from './KnockoutScore';
 import { fixtureShape, teamShape } from '../propTypes';
+import { getGoalsBySide, getCardsBySide, getCardDisplay, getCardPlayerName } from '../utils/results';
 import {
   formatFixtureDate,
   formatFixtureTime,
   parseFixtureInstant,
 } from '../utils/timezone';
+
+const GOAL_EMOJI = '⚽';
 
 function FinalsTeamSide({ team, placeholder, className = '' }) {
   const name = team
@@ -71,15 +74,117 @@ FinalsTrophy.propTypes = {
   height: PropTypes.number,
 };
 
-function getEyebrowLabel(variant) {
-  if (variant === 'winner') {
-    return 'World Champions';
+function FinalsScorers({ goals, side, teamLabel }) {
+  if (!goals.length) {
+    return null;
   }
-  if (variant === 'live') {
-    return 'The Final — Live';
-  }
-  return 'Countdown to the Final';
+
+  return (
+    <ul
+      className={`finals-hero-scorers finals-hero-scorers--${side}`}
+      aria-label={`${teamLabel} goals`}
+    >
+      {goals.map((goal) => (
+        <li key={`${goal.scorer}-${goal.minute}`}>
+          {side === 'home' ? (
+            <>
+              <span className="finals-hero-goal-emoji" aria-hidden="true">
+                {GOAL_EMOJI}
+              </span>{' '}
+              {goal.minute}&apos; {goal.scorer}
+            </>
+          ) : (
+            <>
+              {goal.scorer} {goal.minute}&apos;{' '}
+              <span className="finals-hero-goal-emoji" aria-hidden="true">
+                {GOAL_EMOJI}
+              </span>
+            </>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
 }
+
+FinalsScorers.propTypes = {
+  goals: PropTypes.arrayOf(
+    PropTypes.shape({
+      scorer: PropTypes.string.isRequired,
+      minute: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
+    }),
+  ).isRequired,
+  side: PropTypes.oneOf(['home', 'away']).isRequired,
+  teamLabel: PropTypes.string.isRequired,
+};
+
+function FinalsCards({ cards, side, teamLabel }) {
+  if (!cards.length) {
+    return null;
+  }
+
+  return (
+    <ul
+      className={`finals-hero-cards finals-hero-cards--${side}`}
+      aria-label={`${teamLabel} cards`}
+    >
+      {cards.map((card, index) => {
+        const { emoji, label } = getCardDisplay(card);
+        const player = getCardPlayerName(card);
+        return (
+          <li key={`${card.type}-${player ?? index}-${index}`}>
+            {side === 'home' ? (
+              <>
+                <span className="finals-hero-card-emoji" aria-hidden="true">
+                  {emoji}
+                </span>
+                {card.minute != null && <> {card.minute}&apos;</>}
+                {player ? <> {player}</> : <> {label}</>}
+              </>
+            ) : (
+              <>
+                {player ?? label}
+                {card.minute != null && <> {card.minute}&apos;</>}{' '}
+                <span className="finals-hero-card-emoji" aria-hidden="true">
+                  {emoji}
+                </span>
+              </>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+FinalsCards.propTypes = {
+  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
+  side: PropTypes.oneOf(['home', 'away']).isRequired,
+  teamLabel: PropTypes.string.isRequired,
+};
+
+function FinalsHeroMeta({ fixture, timeZone }) {
+  return (
+    <div className="finals-hero-meta">
+      <span className="finals-hero-meta-line">
+        {formatFixtureDate(fixture, timeZone)}
+        <span className="finals-hero-meta-sep" aria-hidden="true">
+          {' · '}
+        </span>
+        {formatFixtureTime(fixture, timeZone)}
+      </span>
+      <span className="finals-hero-meta-line finals-hero-meta-venue">
+        {fixture.venue}, {fixture.city}
+      </span>
+    </div>
+  );
+}
+
+FinalsHeroMeta.propTypes = {
+  fixture: fixtureShape.isRequired,
+  timeZone: PropTypes.string.isRequired,
+};
 
 function FinalsHero({
   fixture,
@@ -102,35 +207,24 @@ function FinalsHero({
   }
 
   const kickoff = parseFixtureInstant(fixture);
-  const eyebrowLabel = getEyebrowLabel(variant);
-  const showWinner = variant === 'winner' && winnerTeam;
+  const goals = fixture.goals ?? [];
+  const cards = fixture.cards ?? [];
+  const { home: homeGoals, away: awayGoals } = getGoalsBySide(goals);
+  const { home: homeCards, away: awayCards } = getCardsBySide(cards);
+  const homeLabel = homeTeam?.name ?? fixture.homePlaceholder ?? 'TBD';
+  const awayLabel = awayTeam?.name ?? fixture.awayPlaceholder ?? 'TBD';
+  const hasScore = fixture.homeScore != null && fixture.awayScore != null;
 
-  return (
-    <section className={`finals-hero finals-hero--${variant}`}>
-      <div className="finals-hero-eyebrow">
-        {variant === 'live' ? (
-          <span className="finals-hero-live-badge">
-            <span className="finals-hero-live-dot" aria-hidden="true" />
-            Live now
-          </span>
-        ) : (
-          eyebrowLabel
-        )}
-        {fixture.knockoutTag && (
-          <KnockoutMatchLabel
-            tag={fixture.knockoutTag}
-            matchId={fixture.id}
-            className="finals-hero-knockout-label"
-          />
-        )}
-      </div>
+  if (variant === 'winner' && winnerTeam) {
+    return (
+      <section className="finals-hero finals-hero--winner">
+        <div className="finals-hero-eyebrow">FIFA World Champions</div>
 
-      {showWinner ? (
         <div className="finals-hero-winner">
           <FinalsTrophy
             className="finals-hero-trophy-wrap--winner"
-            width={120}
-            height={180}
+            width={140}
+            height={210}
           />
           <Link
             to={getTeamPath(winnerTeam)}
@@ -140,55 +234,126 @@ function FinalsHero({
               className="finals-hero-flag finals-hero-flag--winner"
               src={`https://flagcdn.com/w160/${winnerTeam.flagCode}.png`}
               alt=""
-              width={96}
-              height={72}
+              width={112}
+              height={84}
             />
             <span className="finals-hero-winner-name">
               {getTeamDisplayName(winnerTeam.name)}
             </span>
           </Link>
-          <KnockoutScoreLine
-            result={fixture}
-            className="finals-hero-score"
-            valueClassName="finals-hero-score-value"
-          />
         </div>
-      ) : (
-        <>
-          <div className="finals-hero-showcase">
+
+        <FinalsHeroMeta fixture={fixture} timeZone={timeZone} />
+      </section>
+    );
+  }
+
+  if (variant === 'live') {
+    return (
+      <section className="finals-hero finals-hero--live">
+        <div className="finals-hero-eyebrow">
+          <span className="finals-hero-live-badge">
+            <span className="finals-hero-live-dot" aria-hidden="true" />
+            Live now
+          </span>
+          {fixture.knockoutTag && (
+            <KnockoutMatchLabel
+              tag={fixture.knockoutTag}
+              matchId={fixture.id}
+              className="finals-hero-knockout-label"
+            />
+          )}
+        </div>
+
+        <div className="finals-hero-live-matchup">
+          <div className="finals-hero-live-side finals-hero-live-side--home">
             <FinalsTeamSide
               team={homeTeam}
               placeholder={fixture.homePlaceholder}
-              className="finals-hero-team--home"
+              className="finals-hero-team--live"
             />
-            <FinalsTrophy />
+            <FinalsScorers
+              goals={homeGoals}
+              side="home"
+              teamLabel={homeLabel}
+            />
+            <FinalsCards
+              cards={homeCards}
+              side="home"
+              teamLabel={homeLabel}
+            />
+          </div>
+
+          {hasScore ? (
+            <KnockoutScoreLine
+              result={fixture}
+              separator=" – "
+              className="finals-hero-live-score"
+              valueClassName="finals-hero-live-score-value"
+            />
+          ) : (
+            <span className="finals-hero-live-vs" aria-hidden="true">
+              vs
+            </span>
+          )}
+
+          <div className="finals-hero-live-side finals-hero-live-side--away">
             <FinalsTeamSide
               team={awayTeam}
               placeholder={fixture.awayPlaceholder}
-              className="finals-hero-team--away"
+              className="finals-hero-team--live"
+            />
+            <FinalsScorers
+              goals={awayGoals}
+              side="away"
+              teamLabel={awayLabel}
+            />
+            <FinalsCards
+              cards={awayCards}
+              side="away"
+              teamLabel={awayLabel}
             />
           </div>
+        </div>
 
-          <p className="finals-hero-final-banner">The Final</p>
+        <p className="finals-hero-final-banner">The Final</p>
+        <FinalsHeroMeta fixture={fixture} timeZone={timeZone} />
+      </section>
+    );
+  }
 
-          {variant === 'countdown' && (
-            <CountdownTimer targetDate={kickoff} hideDaysWhenZero />
-          )}
+  return (
+    <section className="finals-hero finals-hero--countdown">
+      <div className="finals-hero-eyebrow">
+        Countdown to the Final
+        {fixture.knockoutTag && (
+          <KnockoutMatchLabel
+            tag={fixture.knockoutTag}
+            matchId={fixture.id}
+            className="finals-hero-knockout-label"
+          />
+        )}
+      </div>
 
-          <div className="finals-hero-meta">
-            <span className="finals-hero-meta-line">
-              {formatFixtureDate(fixture, timeZone)}
-              <span className="finals-hero-meta-sep" aria-hidden="true">
-                {' · '}
-              </span>
-              {formatFixtureTime(fixture, timeZone)}
-            </span>
-            <span className="finals-hero-meta-line finals-hero-meta-venue">
-              {fixture.venue}, {fixture.city}
-            </span>
-          </div>
-        </>
-      )}
+      <div className="finals-hero-showcase">
+        <FinalsTeamSide
+          team={homeTeam}
+          placeholder={fixture.homePlaceholder}
+          className="finals-hero-team--home"
+        />
+        <FinalsTrophy />
+        <FinalsTeamSide
+          team={awayTeam}
+          placeholder={fixture.awayPlaceholder}
+          className="finals-hero-team--away"
+        />
+      </div>
+
+      <p className="finals-hero-final-banner">The Final</p>
+
+      <CountdownTimer targetDate={kickoff} hideDaysWhenZero />
+
+      <FinalsHeroMeta fixture={fixture} timeZone={timeZone} />
     </section>
   );
 }
