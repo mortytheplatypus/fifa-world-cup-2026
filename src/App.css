@@ -2043,6 +2043,8 @@ textarea {
   border-left-color: var(--border);
   border-radius: var(--radius);
   background: var(--surface);
+  min-width: 0;
+  max-width: 100%;
   transition:
     border-color 0.15s,
     background 0.15s;
@@ -2703,6 +2705,24 @@ textarea {
 .fixture-card--stacked .fixture-team-cards li {
   white-space: normal;
   overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+  .fixture-card--stacked .fixture-teams {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    column-gap: 0.75rem;
+    justify-content: stretch;
+  }
+
+  .fixture-card--stacked .fixture-team-side {
+    max-width: none;
+  }
+
+  .fixture-card--stacked .fixture-vs,
+  .fixture-card--stacked .fixture-score {
+    padding-top: 0.85rem;
+    white-space: nowrap;
+  }
 }
 
 .fixture-venue {
@@ -3764,6 +3784,93 @@ textarea {
   .fixture-team-side,
   .fixture-team-label {
     display: contents;
+  }
+
+  /* Homepage stacked cards: keep column layout; mobile display:contents overflows. */
+  .fixture-card--stacked .fixture-teams {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-rows: none;
+    column-gap: 0.5rem;
+    row-gap: 0;
+    justify-content: stretch;
+    align-items: start;
+  }
+
+  .fixture-card--stacked .fixture-team-side {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .fixture-card--stacked .fixture-team-side--home {
+    align-items: flex-start;
+  }
+
+  .fixture-card--stacked .fixture-team-side--away {
+    align-items: flex-end;
+  }
+
+  .fixture-card--stacked .fixture-team-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    margin-bottom: 0.45rem;
+    max-width: 100%;
+  }
+
+  .fixture-card--stacked .fixture-team-flag--home,
+  .fixture-card--stacked .fixture-team-flag--away,
+  .fixture-card--stacked .fixture-team-name--home,
+  .fixture-card--stacked .fixture-team-name--away {
+    grid-column: unset;
+    grid-row: unset;
+    justify-self: unset;
+  }
+
+  .fixture-card--stacked .fixture-vs,
+  .fixture-card--stacked .fixture-score {
+    grid-column: unset;
+    grid-row: unset;
+    justify-self: center;
+    align-self: start;
+    padding-top: 0.7rem;
+    white-space: nowrap;
+  }
+
+  .fixture-card--stacked .fixture-team-scorers--home,
+  .fixture-card--stacked .fixture-team-cards--home,
+  .fixture-card--stacked .fixture-team-scorers--away,
+  .fixture-card--stacked .fixture-team-cards--away {
+    grid-column: unset;
+    grid-row: unset;
+    justify-self: unset;
+    align-self: unset;
+    margin-top: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .fixture-card--stacked .fixture-team-scorers--home,
+  .fixture-card--stacked .fixture-team-cards--home {
+    text-align: left;
+  }
+
+  .fixture-card--stacked .fixture-team-scorers--away,
+  .fixture-card--stacked .fixture-team-cards--away {
+    text-align: right;
+  }
+
+  .fixture-card--stacked .fixture-team-name {
+    font-size: 0.9rem;
+  }
+
+  .fixture-card--stacked .fixture-team-scorers,
+  .fixture-card--stacked .fixture-team-cards {
+    font-size: 0.65rem;
   }
 
   .fixture-team-flag--home {
