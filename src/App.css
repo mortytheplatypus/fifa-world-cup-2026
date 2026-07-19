@@ -2117,6 +2117,11 @@ textarea {
   height: 30px;
 }
 
+.fixture-card--final.fixture-card--stacked .fixture-vs,
+.fixture-card--final.fixture-card--stacked .fixture-score {
+  padding-top: 1.35rem;
+}
+
 .fixture-final-banner {
   margin: 0.75rem 0 0.35rem;
   text-align: center;
@@ -3370,12 +3375,12 @@ textarea {
 
   .finals-hero-live-score {
     font-size: 1.4rem;
-    padding-top: 0.55rem;
+    padding-top: 1rem;
   }
 
   .finals-hero-live-vs {
     font-size: 0.8rem;
-    padding-top: 0.55rem;
+    padding-top: 1rem;
   }
 
   .finals-hero-scorers,
