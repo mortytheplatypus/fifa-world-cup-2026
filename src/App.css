@@ -1329,9 +1329,9 @@ textarea {
 
 .finals-hero-live-score,
 .finals-hero-live-vs {
-  align-self: center;
+  align-self: start;
   flex-shrink: 0;
-  padding-top: 0.85rem;
+  padding-top: 1.35rem;
   font-family: var(--font-mono);
   font-size: 1.75rem;
   font-weight: 700;
@@ -2645,8 +2645,8 @@ textarea {
   grid-column: unset;
   grid-row: unset;
   justify-self: center;
-  align-self: center;
-  padding-top: 0.35rem;
+  align-self: start;
+  padding-top: 1.15rem;
 }
 
 .fixture-card--stacked .fixture-team-scorers--home,
