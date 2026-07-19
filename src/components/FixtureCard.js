@@ -79,7 +79,10 @@ function FixtureCard({
   const now = useNow();
   const instant = parseFixtureInstant(fixture);
   const isoDateTime = instant.toISOString();
-  const status = getFixtureStatus(fixture, now);
+  const timeStatus = getFixtureStatus(fixture, now);
+  const hasResult = fixture.homeScore != null && fixture.awayScore != null;
+  const status =
+    hasResult && timeStatus === "upcoming" ? "completed" : timeStatus;
   const goals = fixture.goals ?? [];
   const cards = fixture.cards ?? [];
   const { home: homeGoals, away: awayGoals } = getGoalsBySide(goals);

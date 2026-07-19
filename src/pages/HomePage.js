@@ -20,7 +20,6 @@ import { isKnockoutScheduleMode } from "../utils/knockoutConfig";
 import {
   formatDateHeading,
   getFixtureDateKey,
-  getFixtureStatus,
   getLatestResults,
   getNextUpcomingFixture,
   getOngoingFixtures,
@@ -151,10 +150,15 @@ function HomePage() {
     finalsHeroVariant === "winner"
       ? getFinalWinnerTeam(finalFixture, finalHomeTeam, finalAwayTeam)
       : null;
-  const showFinalResultCard =
-    finalsMode &&
-    finalFixture &&
-    getFixtureStatus(finalFixture, now) === "completed";
+  const finalConcluded = finalsHeroVariant === "winner";
+  const finalsListFixtures = finalConcluded
+    ? finalFixture
+      ? [finalFixture]
+      : []
+    : finalsStageResults;
+  const finalsListHeading = finalConcluded
+    ? "The Final Summary"
+    : "Latest results";
 
   const heroHomeTeam = heroFixture
     ? getTeamById(teams, heroFixture.homeTeam)
@@ -302,11 +306,6 @@ function HomePage() {
             variant={finalsHeroVariant ?? "countdown"}
             winnerTeam={finalWinnerTeam}
           />
-          {showFinalResultCard && (
-            <div className="home-finals-result">
-              {renderFixture(finalFixture, { showDate: true })}
-            </div>
-          )}
         </>
       ) : (
         heroFixture &&
@@ -326,12 +325,14 @@ function HomePage() {
         {finalsMode && !useFinalsTabs ? (
           <>
             <div className="home-matches-header">
-              <h2 className="home-finals-results-heading">Latest results</h2>
+              <h2 className="home-finals-results-heading">
+                {finalsListHeading}
+              </h2>
             </div>
             <div className="home-matches-panel">
-              {finalsStageResults.length > 0 ? (
+              {finalsListFixtures.length > 0 ? (
                 <div className="fixture-list home-matches-list">
-                  {finalsStageResults.map((fixture) =>
+                  {finalsListFixtures.map((fixture) =>
                     renderFixture(fixture, { showDate: true }),
                   )}
                 </div>

@@ -5,7 +5,7 @@ import KnockoutMatchLabel from './KnockoutMatchLabel';
 import CountdownTimer from './CountdownTimer';
 import { KnockoutScoreLine } from './KnockoutScore';
 import { fixtureShape, teamShape } from '../propTypes';
-import { getGoalsBySide } from '../utils/results';
+import { getGoalsBySide, getCardsBySide, getCardDisplay, getCardPlayerName } from '../utils/results';
 import {
   formatFixtureDate,
   formatFixtureTime,
@@ -119,6 +119,51 @@ FinalsScorers.propTypes = {
   teamLabel: PropTypes.string.isRequired,
 };
 
+function FinalsCards({ cards, side, teamLabel }) {
+  if (!cards.length) {
+    return null;
+  }
+
+  return (
+    <ul
+      className={`finals-hero-cards finals-hero-cards--${side}`}
+      aria-label={`${teamLabel} cards`}
+    >
+      {cards.map((card, index) => {
+        const { emoji, label } = getCardDisplay(card);
+        const player = getCardPlayerName(card);
+        return (
+          <li key={`${card.type}-${player ?? index}-${index}`}>
+            {side === 'home' ? (
+              <>
+                <span className="finals-hero-card-emoji" aria-hidden="true">
+                  {emoji}
+                </span>
+                {card.minute != null && <> {card.minute}&apos;</>}
+                {player ? <> {player}</> : <> {label}</>}
+              </>
+            ) : (
+              <>
+                {player ?? label}
+                {card.minute != null && <> {card.minute}&apos;</>}{' '}
+                <span className="finals-hero-card-emoji" aria-hidden="true">
+                  {emoji}
+                </span>
+              </>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+FinalsCards.propTypes = {
+  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
+  side: PropTypes.oneOf(['home', 'away']).isRequired,
+  teamLabel: PropTypes.string.isRequired,
+};
+
 function FinalsHeroMeta({ fixture, timeZone }) {
   return (
     <div className="finals-hero-meta">
@@ -163,7 +208,9 @@ function FinalsHero({
 
   const kickoff = parseFixtureInstant(fixture);
   const goals = fixture.goals ?? [];
+  const cards = fixture.cards ?? [];
   const { home: homeGoals, away: awayGoals } = getGoalsBySide(goals);
+  const { home: homeCards, away: awayCards } = getCardsBySide(cards);
   const homeLabel = homeTeam?.name ?? fixture.homePlaceholder ?? 'TBD';
   const awayLabel = awayTeam?.name ?? fixture.awayPlaceholder ?? 'TBD';
   const hasScore = fixture.homeScore != null && fixture.awayScore != null;
@@ -171,7 +218,7 @@ function FinalsHero({
   if (variant === 'winner' && winnerTeam) {
     return (
       <section className="finals-hero finals-hero--winner">
-        <div className="finals-hero-eyebrow">World Champions</div>
+        <div className="finals-hero-eyebrow">FIFA World Champions</div>
 
         <div className="finals-hero-winner">
           <FinalsTrophy
@@ -194,14 +241,6 @@ function FinalsHero({
               {getTeamDisplayName(winnerTeam.name)}
             </span>
           </Link>
-          <p className="finals-hero-winner-subtitle">FIFA World Cup Champions</p>
-          {hasScore && (
-            <KnockoutScoreLine
-              result={fixture}
-              className="finals-hero-score"
-              valueClassName="finals-hero-score-value"
-            />
-          )}
         </div>
 
         <FinalsHeroMeta fixture={fixture} timeZone={timeZone} />
@@ -238,6 +277,11 @@ function FinalsHero({
               side="home"
               teamLabel={homeLabel}
             />
+            <FinalsCards
+              cards={homeCards}
+              side="home"
+              teamLabel={homeLabel}
+            />
           </div>
 
           {hasScore ? (
@@ -261,6 +305,11 @@ function FinalsHero({
             />
             <FinalsScorers
               goals={awayGoals}
+              side="away"
+              teamLabel={awayLabel}
+            />
+            <FinalsCards
+              cards={awayCards}
               side="away"
               teamLabel={awayLabel}
             />
