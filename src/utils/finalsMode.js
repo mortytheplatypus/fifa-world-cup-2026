@@ -1,4 +1,9 @@
-import { flattenFixtures, getFixtureStatus, getTodayDateKey } from './fixtures';
+import {
+  flattenFixtures,
+  getFixtureStatus,
+  getTodayDateKey,
+  sortFixtures,
+} from './fixtures';
 import { getKnockoutSideOutcome } from './knockout';
 import { isKnockoutScheduleMode } from './knockoutConfig';
 
@@ -35,9 +40,13 @@ export function getFixtureById(fixturesByGroup, id) {
 }
 
 export function getFinalsStageResults(fixturesByGroup, now = new Date()) {
-  return FINALS_STAGE_RESULT_IDS.map((id) => getFixtureById(fixturesByGroup, id))
+  const started = FINALS_STAGE_RESULT_IDS.map((id) =>
+    getFixtureById(fixturesByGroup, id),
+  )
     .filter(Boolean)
     .filter((fixture) => getFixtureStatus(fixture, now) !== 'upcoming');
+
+  return sortFixtures(started).reverse();
 }
 
 /** Semi-finals and third-place while still upcoming (final stays in the hero). */
