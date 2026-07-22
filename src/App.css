@@ -2454,25 +2454,67 @@ textarea {
 }
 
 .fixture-teams {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  column-gap: 1rem;
+  row-gap: 0.35rem;
 }
 
 .fixture-team-side {
   display: flex;
-  flex: 1;
   flex-direction: column;
   gap: 0.3rem;
   min-width: 0;
 }
 
 .fixture-team-side--home {
+  grid-column: 1;
   align-items: flex-start;
 }
 
 .fixture-team-side--away {
+  grid-column: 3;
   align-items: flex-end;
+}
+
+.fixture-vs,
+.fixture-score {
+  grid-column: 2;
+  justify-self: center;
+  align-self: start;
+}
+
+.fixture-events-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  column-gap: inherit;
+  align-items: start;
+}
+
+.fixture-events-row--cards {
+  margin-top: 0.85rem;
+}
+
+.fixture-events-side {
+  min-width: 0;
+}
+
+.fixture-events-side--home {
+  grid-column: 1;
+  justify-self: stretch;
+}
+
+.fixture-events-side--away {
+  grid-column: 3;
+  justify-self: stretch;
+}
+
+.fixture-events-gap {
+  grid-column: 2;
+  width: 0;
+  justify-self: center;
 }
 
 .fixture-team-label {
@@ -2506,7 +2548,6 @@ textarea {
 }
 
 .fixture-vs {
-  flex-shrink: 0;
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-muted);
