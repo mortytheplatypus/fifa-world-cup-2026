@@ -1,13 +1,16 @@
 import { KNOCKOUT_MATCH_IDS } from './knockout';
+import {
+  appendCacheBust,
+  DATA_CACHE_TTL_MS,
+  getCachedData,
+  setCachedData,
+} from './dataCache';
 
 const API_BASE = process.env.REACT_APP_API_URL ?? '';
-const KNOCKOUT_RESULTS_CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
-
-let cachedResultsPromise = null;
-let cachedResultsExpiresAt = 0;
+const KNOCKOUT_RESULTS_CACHE_KEY = 'knockoutResults';
 
 async function fetchKnockoutResult(matchId) {
-  const path = `${API_BASE}/api/knockouts/${matchId}`;
+  const path = appendCacheBust(`${API_BASE}/api/knockouts/${matchId}`);
   const response = await fetch(path);
 
   if (response.status === 404) {
@@ -22,7 +25,7 @@ async function fetchKnockoutResult(matchId) {
 }
 
 async function fetchKnockoutResultsBulk() {
-  const path = `${API_BASE}/api/knockouts`;
+  const path = appendCacheBust(`${API_BASE}/api/knockouts`);
   const response = await fetch(path);
 
   if (!response.ok) {
@@ -57,17 +60,13 @@ async function loadKnockoutResults() {
 }
 
 export async function fetchKnockoutResults() {
-  if (cachedResultsPromise && Date.now() < cachedResultsExpiresAt) {
-    return cachedResultsPromise;
+  const cached = getCachedData(KNOCKOUT_RESULTS_CACHE_KEY);
+  if (cached) {
+    return cached;
   }
 
-  cachedResultsPromise = loadKnockoutResults();
-  cachedResultsExpiresAt = Date.now() + KNOCKOUT_RESULTS_CACHE_TTL_MS;
+  const promise = loadKnockoutResults();
+  setCachedData(KNOCKOUT_RESULTS_CACHE_KEY, promise, DATA_CACHE_TTL_MS);
 
-  cachedResultsPromise.catch(() => {
-    cachedResultsPromise = null;
-    cachedResultsExpiresAt = 0;
-  });
-
-  return cachedResultsPromise;
+  return promise;
 }

@@ -1,33 +1,13 @@
+import {
+  appendCacheBust,
+  DATA_CACHE_TTL_MS,
+  getCachedData,
+  setCachedData,
+} from './dataCache';
+
 export const GROUP_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
 const API_BASE = process.env.REACT_APP_API_URL ?? '';
-
-const STATIC_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // teams & fixtures
-const DEFAULT_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
-
-const CACHE_TTL_BY_KEY = {
-  teams: STATIC_CACHE_TTL_MS,
-  fixtures: STATIC_CACHE_TTL_MS,
-  squads: STATIC_CACHE_TTL_MS,
-  players: STATIC_CACHE_TTL_MS,
-  wcHistory: STATIC_CACHE_TTL_MS,
-};
-
-const cache = new Map();
-
-function getCacheTtl(key) {
-  return CACHE_TTL_BY_KEY[key] ?? DEFAULT_CACHE_TTL_MS;
-}
-
-function getCached(key) {
-  const entry = cache.get(key);
-  if (!entry) return null;
-  if (Date.now() >= entry.expiresAt) {
-    cache.delete(key);
-    return null;
-  }
-  return entry.promise;
-}
 
 const COLLECTION_KEYS = {
   results: 'matches',
@@ -53,19 +33,18 @@ async function fetchData(key, { id, notFoundValue = null } = {}) {
     return record;
   }
 
-  const cached = getCached(key);
+  const cached = getCachedData(key);
   if (cached) {
     return cached;
   }
 
-  const path = `${API_BASE}/api/${key}`;
+  const path = appendCacheBust(`${API_BASE}/api/${key}`);
   const promise = fetch(path).then((response) => {
     if (!response.ok) throw new Error(`Failed to load ${path}`);
     return response.json();
   });
 
-  cache.set(key, { promise, expiresAt: Date.now() + getCacheTtl(key) });
-  promise.catch(() => cache.delete(key));
+  setCachedData(key, promise, DATA_CACHE_TTL_MS);
 
   return promise;
 }
@@ -99,7 +78,7 @@ export function getTeamIdFromPlayerId(playerId) {
 }
 
 async function fetchJson(path) {
-  const response = await fetch(path);
+  const response = await fetch(appendCacheBust(path));
   if (!response.ok) {
     throw new Error(`Failed to load ${path}`);
   }
@@ -107,15 +86,14 @@ async function fetchJson(path) {
 }
 
 async function loadPlayersData() {
-  const cached = getCached('players');
+  const cached = getCachedData('players');
   if (cached) {
     return cached;
   }
 
   const path = API_BASE ? `${API_BASE}/api/players` : `/data/players.json`;
   const promise = fetchJson(path);
-  cache.set('players', { promise, expiresAt: Date.now() + getCacheTtl('players') });
-  promise.catch(() => cache.delete('players'));
+  setCachedData('players', promise, DATA_CACHE_TTL_MS);
 
   return promise;
 }
@@ -294,3 +272,10 @@ export function getTeamDisplayName(name) {
 export function isValidGroup(groupId) {
   return GROUP_LETTERS.includes(groupId?.toUpperCase());
 }
+
+export {
+  DATA_CACHE_TTL_MS,
+  evictAllDataCache,
+  isForceRefreshCacheEnabled,
+  setForceRefreshCache,
+} from './dataCache';
