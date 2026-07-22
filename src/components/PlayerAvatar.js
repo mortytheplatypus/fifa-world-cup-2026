@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { playerShape, teamShape } from '../propTypes';
 import { fetchPlayerPhoto, getPlayerInitials } from '../utils/playerImage';
 
-function PlayerAvatar({ player, team, size = 'large' }) {
+function PlayerAvatar({ player, team, size = 'large', showNumber = true }) {
   const [photoUrl, setPhotoUrl] = useState(player.imageUrl ?? null);
   const [imageFailed, setImageFailed] = useState(false);
   const [loadingPhoto, setLoadingPhoto] = useState(!player.imageUrl);
@@ -79,7 +79,7 @@ function PlayerAvatar({ player, team, size = 'large' }) {
         )
       )}
 
-      {player.shirtNumber != null && (
+      {showNumber && player.shirtNumber != null && (
         <span className="player-avatar-number" aria-label={`Shirt number ${player.shirtNumber}`}>
           {player.shirtNumber}
         </span>
@@ -92,6 +92,7 @@ PlayerAvatar.propTypes = {
   player: playerShape.isRequired,
   team: teamShape,
   size: PropTypes.oneOf(['large', 'card', 'small']),
+  showNumber: PropTypes.bool,
 };
 
 export default PlayerAvatar;

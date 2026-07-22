@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { playerShape, teamShape } from '../propTypes';
 import PlayerCard from './PlayerCard';
+import PlayerProfileModal from './PlayerProfileModal';
 
 const POSITION_ORDER = ['GK', 'DEF', 'MID', 'FWD'];
 
@@ -42,6 +44,8 @@ function groupPlayersByPosition(players) {
 }
 
 function SquadGrid({ players, team }) {
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+
   if (!players?.length) {
     return <p className="status-message">No squad data available.</p>;
   }
@@ -49,22 +53,37 @@ function SquadGrid({ players, team }) {
   const groups = groupPlayersByPosition(players);
 
   return (
-    <div className="squad-sections">
-      {groups.map(({ position, label, players: groupPlayers }) => (
-        <section key={position} className="squad-section" aria-labelledby={`squad-${position}`}>
-          <h2 id={`squad-${position}`} className="squad-section-title">
-            <span className="squad-section-code">{position}</span>
-            <span className="squad-section-label">{label}</span>
-            <span className="squad-section-count">{groupPlayers.length}</span>
-          </h2>
-          <div className="squad-grid">
-            {groupPlayers.map((player) => (
-              <PlayerCard key={player.id} player={player} team={team} />
-            ))}
-          </div>
-        </section>
-      ))}
-    </div>
+    <>
+      <div className="squad-sections">
+        {groups.map(({ position, label, players: groupPlayers }) => (
+          <section key={position} className="squad-section" aria-labelledby={`squad-${position}`}>
+            <h2 id={`squad-${position}`} className="squad-section-title">
+              <span className="squad-section-code">{position}</span>
+              <span className="squad-section-label">{label}</span>
+              <span className="squad-section-count">{groupPlayers.length}</span>
+            </h2>
+            <div className="squad-grid">
+              {groupPlayers.map((player) => (
+                <PlayerCard
+                  key={player.id}
+                  player={player}
+                  team={team}
+                  onSelect={setSelectedPlayer}
+                />
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+
+      {selectedPlayer && (
+        <PlayerProfileModal
+          player={selectedPlayer}
+          team={team}
+          onClose={() => setSelectedPlayer(null)}
+        />
+      )}
+    </>
   );
 }
 
