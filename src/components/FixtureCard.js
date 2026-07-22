@@ -67,6 +67,82 @@ FixtureTeamLabel.propTypes = {
   side: PropTypes.oneOf(["home", "away"]).isRequired,
 };
 
+function GoalList({ goals, side, teamLabel }) {
+  return (
+    <ul
+      className={`fixture-team-scorers fixture-team-scorers--${side}`}
+      aria-label={`${teamLabel} goals`}
+    >
+      {goals.map((goal) => (
+        <li key={`${goal.scorer}-${goal.minute}`}>
+          {side === "home" ? (
+            <>
+              <span className="fixture-goal-emoji" aria-hidden="true">
+                {GOAL_EMOJI}
+              </span>{" "}
+              {goal.minute}&apos; {goal.scorer}
+            </>
+          ) : (
+            <>
+              {goal.scorer} {goal.minute}&apos;{" "}
+              <span className="fixture-goal-emoji" aria-hidden="true">
+                {GOAL_EMOJI}
+              </span>
+            </>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+GoalList.propTypes = {
+  goals: PropTypes.arrayOf(PropTypes.object).isRequired,
+  side: PropTypes.oneOf(["home", "away"]).isRequired,
+  teamLabel: PropTypes.string.isRequired,
+};
+
+function CardList({ cards, side, teamLabel }) {
+  return (
+    <ul
+      className={`fixture-team-cards fixture-team-cards--${side}`}
+      aria-label={`${teamLabel} cards`}
+    >
+      {cards.map((card, index) => {
+        const { emoji, label } = getCardDisplay(card);
+        const player = getCardPlayerName(card);
+        return (
+          <li key={`${card.type}-${player ?? index}-${index}`}>
+            {side === "home" ? (
+              <>
+                <span className="fixture-card-emoji" aria-hidden="true">
+                  {emoji}
+                </span>
+                {card.minute != null && <> {card.minute}&apos;</>}
+                {player ? <> {player}</> : <> {label}</>}
+              </>
+            ) : (
+              <>
+                {player ?? label}
+                {card.minute != null && <> {card.minute}&apos;</>}{" "}
+                <span className="fixture-card-emoji" aria-hidden="true">
+                  {emoji}
+                </span>
+              </>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+CardList.propTypes = {
+  cards: PropTypes.arrayOf(PropTypes.object).isRequired,
+  side: PropTypes.oneOf(["home", "away"]).isRequired,
+  teamLabel: PropTypes.string.isRequired,
+};
+
 function FixtureCard({
   fixture,
   homeTeam,
@@ -136,41 +212,6 @@ function FixtureCard({
             placeholder={fixture.homePlaceholder}
             side="home"
           />
-          {showScorers && homeGoals.length > 0 && (
-            <ul
-              className="fixture-team-scorers fixture-team-scorers--home"
-              aria-label={`${homeLabel} goals`}
-            >
-              {homeGoals.map((goal) => (
-                <li key={`${goal.scorer}-${goal.minute}`}>
-                  <span className="fixture-goal-emoji" aria-hidden="true">
-                    {GOAL_EMOJI}
-                  </span>{" "}
-                  {goal.minute}&apos; {goal.scorer}
-                </li>
-              ))}
-            </ul>
-          )}
-          {showCards && homeCards.length > 0 && (
-            <ul
-              className="fixture-team-cards fixture-team-cards--home"
-              aria-label={`${homeLabel} cards`}
-            >
-              {homeCards.map((card, index) => {
-                const { emoji, label } = getCardDisplay(card);
-                const player = getCardPlayerName(card);
-                return (
-                  <li key={`${card.type}-${player ?? index}-${index}`}>
-                    <span className="fixture-card-emoji" aria-hidden="true">
-                      {emoji}
-                    </span>
-                    {card.minute != null && <> {card.minute}&apos;</>}
-                    {player ? <> {player}</> : <> {label}</>}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
         </div>
 
         {fixture.homeScore != null && fixture.awayScore != null ? (
@@ -195,42 +236,39 @@ function FixtureCard({
             placeholder={fixture.awayPlaceholder}
             side="away"
           />
-          {showScorers && awayGoals.length > 0 && (
-            <ul
-              className="fixture-team-scorers fixture-team-scorers--away"
-              aria-label={`${awayLabel} goals`}
-            >
-              {awayGoals.map((goal) => (
-                <li key={`${goal.scorer}-${goal.minute}`}>
-                  {goal.scorer} {goal.minute}&apos;{" "}
-                  <span className="fixture-goal-emoji" aria-hidden="true">
-                    {GOAL_EMOJI}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-          {showCards && awayCards.length > 0 && (
-            <ul
-              className="fixture-team-cards fixture-team-cards--away"
-              aria-label={`${awayLabel} cards`}
-            >
-              {awayCards.map((card, index) => {
-                const { emoji, label } = getCardDisplay(card);
-                const player = getCardPlayerName(card);
-                return (
-                  <li key={`${card.type}-${player ?? index}-${index}`}>
-                    {player ?? label}
-                    {card.minute != null && <> {card.minute}&apos;</>}{" "}
-                    <span className="fixture-card-emoji" aria-hidden="true">
-                      {emoji}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
         </div>
+
+        {showScorers && (
+          <div className="fixture-events-row fixture-events-row--goals">
+            <div className="fixture-events-side fixture-events-side--home">
+              {homeGoals.length > 0 && (
+                <GoalList goals={homeGoals} side="home" teamLabel={homeLabel} />
+              )}
+            </div>
+            <span className="fixture-events-gap" aria-hidden="true" />
+            <div className="fixture-events-side fixture-events-side--away">
+              {awayGoals.length > 0 && (
+                <GoalList goals={awayGoals} side="away" teamLabel={awayLabel} />
+              )}
+            </div>
+          </div>
+        )}
+
+        {showCards && (
+          <div className="fixture-events-row fixture-events-row--cards">
+            <div className="fixture-events-side fixture-events-side--home">
+              {homeCards.length > 0 && (
+                <CardList cards={homeCards} side="home" teamLabel={homeLabel} />
+              )}
+            </div>
+            <span className="fixture-events-gap" aria-hidden="true" />
+            <div className="fixture-events-side fixture-events-side--away">
+              {awayCards.length > 0 && (
+                <CardList cards={awayCards} side="away" teamLabel={awayLabel} />
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {isFinal && (

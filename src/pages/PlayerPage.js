@@ -3,7 +3,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import PlayerAvatar from '../components/PlayerAvatar';
 import PlayerStats from '../components/PlayerStats';
 import { usePlayerPageData } from '../hooks/useTeamPageData';
-import { getTeamDisplayName, getTeamPath, getWcRoleLabel } from '../utils/data';
+import { getTeamDisplayName, getTeamPath } from '../utils/data';
 
 function PlayerPage() {
   const { playerId } = useParams();
@@ -66,36 +66,6 @@ function PlayerPage() {
           <PlayerStats player={player} />
         </div>
       </div>
-
-      {player.worldCups?.length > 0 && (
-        <section className="player-wc-history">
-          <h2 className="player-section-title">World Cup record</h2>
-          <div className="player-wc-table-wrap">
-            <table className="player-wc-table">
-              <thead>
-                <tr>
-                  <th scope="col">Year</th>
-                  <th scope="col">Role</th>
-                  <th scope="col">Goals</th>
-                  <th scope="col">Assists</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[...player.worldCups]
-                  .sort((a, b) => b.year - a.year)
-                  .map((entry) => (
-                    <tr key={entry.year}>
-                      <td>{entry.year}</td>
-                      <td>{getWcRoleLabel(entry.role)}</td>
-                      <td>{entry.goals ?? 0}</td>
-                      <td>{entry.assists ?? 0}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      )}
     </section>
   );
 }

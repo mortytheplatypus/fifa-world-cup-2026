@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { playerShape, teamShape } from '../propTypes';
 import { fetchPlayerPhoto, getPlayerInitials } from '../utils/playerImage';
 
-function PlayerAvatar({ player, team, size = 'large' }) {
+function PlayerAvatar({ player, team, size = 'large', showNumber = true }) {
   const [photoUrl, setPhotoUrl] = useState(player.imageUrl ?? null);
   const [imageFailed, setImageFailed] = useState(false);
   const [loadingPhoto, setLoadingPhoto] = useState(!player.imageUrl);
@@ -42,44 +42,43 @@ function PlayerAvatar({ player, team, size = 'large' }) {
 
   return (
     <div className={`player-avatar player-avatar--${size}`}>
-      {loadingPhoto && !showPhoto && (
-        <div className="player-avatar-loading" aria-hidden="true" />
-      )}
+      <div className="player-avatar-media" aria-hidden={!showPhoto && !loadingPhoto}>
+        {loadingPhoto && !showPhoto && (
+          <div className="player-avatar-loading" />
+        )}
 
-      {showPhoto ? (
-        <img
-          className="player-avatar-image"
-          src={photoUrl}
-          alt=""
-          width={size === 'large' ? 200 : 48}
-          height={size === 'large' ? 200 : 48}
-          onError={() => setImageFailed(true)}
-        />
-      ) : (
-        !loadingPhoto && (
-          <div
-            className="player-avatar-fallback"
-            style={{
-              background: `linear-gradient(145deg, ${accent} 0%, color-mix(in srgb, ${accent} 65%, #000) 100%)`,
-              color: highlight,
-            }}
-            aria-hidden="true"
-          >
-            <span className="player-avatar-initials">{getPlayerInitials(player.name)}</span>
-            {team && (
-              <img
-                className="player-avatar-flag"
-                src={`https://flagcdn.com/w40/${team.flagCode}.png`}
-                alt=""
-                width={28}
-                height={21}
-              />
-            )}
-          </div>
-        )
-      )}
+        {showPhoto ? (
+          <img
+            className="player-avatar-image"
+            src={photoUrl}
+            alt=""
+            onError={() => setImageFailed(true)}
+          />
+        ) : (
+          !loadingPhoto && (
+            <div
+              className="player-avatar-fallback"
+              style={{
+                background: `linear-gradient(145deg, ${accent} 0%, color-mix(in srgb, ${accent} 65%, #000) 100%)`,
+                color: highlight,
+              }}
+            >
+              <span className="player-avatar-initials">{getPlayerInitials(player.name)}</span>
+              {team && (
+                <img
+                  className="player-avatar-flag"
+                  src={`https://flagcdn.com/w40/${team.flagCode}.png`}
+                  alt=""
+                  width={28}
+                  height={21}
+                />
+              )}
+            </div>
+          )
+        )}
+      </div>
 
-      {player.shirtNumber != null && (
+      {showNumber && player.shirtNumber != null && (
         <span className="player-avatar-number" aria-label={`Shirt number ${player.shirtNumber}`}>
           {player.shirtNumber}
         </span>
@@ -91,7 +90,8 @@ function PlayerAvatar({ player, team, size = 'large' }) {
 PlayerAvatar.propTypes = {
   player: playerShape.isRequired,
   team: teamShape,
-  size: PropTypes.oneOf(['large', 'small']),
+  size: PropTypes.oneOf(['large', 'card', 'small']),
+  showNumber: PropTypes.bool,
 };
 
 export default PlayerAvatar;
