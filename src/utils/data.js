@@ -77,25 +77,8 @@ export function getTeamIdFromPlayerId(playerId) {
   return playerId.split('-')[0].toUpperCase();
 }
 
-async function fetchJson(path) {
-  const response = await fetch(appendCacheBust(path));
-  if (!response.ok) {
-    throw new Error(`Failed to load ${path}`);
-  }
-  return response.json();
-}
-
 async function loadPlayersData() {
-  const cached = getCachedData('players');
-  if (cached) {
-    return cached;
-  }
-
-  const path = API_BASE ? `${API_BASE}/api/players` : `/data/players.json`;
-  const promise = fetchJson(path);
-  setCachedData('players', promise, DATA_CACHE_TTL_MS);
-
-  return promise;
+  return fetchData('players');
 }
 
 function getTeamPlayersFromData(data, teamId) {
