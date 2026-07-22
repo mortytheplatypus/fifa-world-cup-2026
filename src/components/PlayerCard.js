@@ -1,15 +1,11 @@
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { playerShape } from '../propTypes';
-import { getPlayerPath } from '../utils/data';
+import { playerShape, teamShape } from '../propTypes';
+import PlayerAvatar from './PlayerAvatar';
 
-function PlayerCard({ player, compact = false }) {
+function PlayerCard({ player, team, compact = false }) {
   return (
-    <Link
-      to={getPlayerPath(player)}
-      className={`player-card${compact ? ' player-card--compact' : ''}`}
-    >
-      <span className="player-card-number">{player.shirtNumber ?? '–'}</span>
+    <article className={`player-card${compact ? ' player-card--compact' : ''}`}>
+      <PlayerAvatar player={player} team={team} size={compact ? 'small' : 'card'} />
       <div className="player-card-body">
         <span className="player-card-name">{player.name}</span>
         <span className="player-card-meta">
@@ -22,12 +18,13 @@ function PlayerCard({ player, compact = false }) {
           )}
         </span>
       </div>
-    </Link>
+    </article>
   );
 }
 
 PlayerCard.propTypes = {
   player: playerShape.isRequired,
+  team: teamShape,
   compact: PropTypes.bool,
 };
 

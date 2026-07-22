@@ -51,8 +51,8 @@ function PlayerAvatar({ player, team, size = 'large' }) {
           className="player-avatar-image"
           src={photoUrl}
           alt=""
-          width={size === 'large' ? 200 : 48}
-          height={size === 'large' ? 200 : 48}
+          width={size === 'large' ? 200 : size === 'card' ? 72 : 48}
+          height={size === 'large' ? 200 : size === 'card' ? 72 : 48}
           onError={() => setImageFailed(true)}
         />
       ) : (
@@ -91,7 +91,7 @@ function PlayerAvatar({ player, team, size = 'large' }) {
 PlayerAvatar.propTypes = {
   player: playerShape.isRequired,
   team: teamShape,
-  size: PropTypes.oneOf(['large', 'small']),
+  size: PropTypes.oneOf(['large', 'card', 'small']),
 };
 
 export default PlayerAvatar;

@@ -21,23 +21,7 @@ export const playerShape = PropTypes.shape({
   position: PropTypes.oneOf(['GK', 'DEF', 'MID', 'FWD']).isRequired,
   shirtNumber: PropTypes.number,
   club: PropTypes.string,
-  age: PropTypes.number,
-  heightCm: PropTypes.number,
-  foot: PropTypes.string,
-  caps: PropTypes.number,
-  internationalGoals: PropTypes.number,
-  wcAppearances: PropTypes.number,
-  wcGoals: PropTypes.number,
   imageUrl: PropTypes.string,
-  worldCups: PropTypes.arrayOf(
-    PropTypes.shape({
-      year: PropTypes.number.isRequired,
-      role: PropTypes.string,
-      goals: PropTypes.number,
-      assists: PropTypes.number,
-      minutesPlayed: PropTypes.number,
-    })
-  ),
 });
 
 export const squadShape = PropTypes.shape({

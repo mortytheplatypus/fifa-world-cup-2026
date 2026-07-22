@@ -6428,6 +6428,10 @@ textarea {
   width: 200px;
 }
 
+.player-avatar--card {
+  width: 72px;
+}
+
 .player-avatar--small {
   width: 48px;
 }
@@ -6483,8 +6487,28 @@ textarea {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+.player-avatar--card .player-avatar-initials {
+  font-size: 1.35rem;
+}
+
 .player-avatar--small .player-avatar-initials {
   font-size: 1rem;
+}
+
+.player-avatar--card .player-avatar-flag,
+.player-avatar--small .player-avatar-flag {
+  width: 18px;
+  height: auto;
+}
+
+.player-avatar--card .player-avatar-number,
+.player-avatar--small .player-avatar-number {
+  min-width: 1.55rem;
+  height: 1.55rem;
+  padding: 0 0.3rem;
+  font-size: 0.78rem;
+  bottom: -0.35rem;
+  right: -0.35rem;
 }
 
 .player-avatar-flag {
@@ -6535,24 +6559,56 @@ textarea {
 
 .team-page-header {
   display: flex;
-  align-items: flex-start;
-  gap: 1.25rem;
+  align-items: center;
+  gap: 1.35rem;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.35rem;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--team-accent, var(--highlight)) 18%, var(--surface)) 0%,
+      var(--surface) 55%
+    );
+  border: 1px solid color-mix(in srgb, var(--team-accent, var(--highlight)) 28%, var(--border));
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--bg-deep) 35%, transparent);
+}
+
+.team-page-flag-wrap {
+  flex-shrink: 0;
+  padding: 0.35rem;
+  background: color-mix(in srgb, var(--bg-deep) 35%, transparent);
+  border-radius: 10px;
+  border: 1px solid var(--border);
 }
 
 .team-page-flag,
 .player-page-flag {
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  display: block;
+}
+
+.team-page-eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--team-accent, var(--highlight)) 75%, var(--text-muted));
 }
 
 .team-page-header h1,
 .player-page-header h1 {
   margin: 0 0 0.35rem;
   font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  line-height: 1.15;
 }
 
 .team-page-meta,
 .player-page-subtitle {
+  margin: 0;
   color: var(--text-muted);
   font-size: 0.95rem;
 }
@@ -6590,33 +6646,38 @@ textarea {
 .team-page-staff {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
+  gap: 0.85rem;
+  margin-bottom: 1.75rem;
 }
 
 .team-page-staff-card {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.35rem;
-  padding: 0.75rem 1rem;
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.95rem 1.1rem;
   background: var(--surface);
   border: 1px solid var(--border);
+  border-left: 3px solid color-mix(in srgb, var(--team-accent, var(--highlight)) 70%, var(--border));
   border-radius: var(--radius);
   font-size: 0.9rem;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 .team-page-staff-label {
   color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .team-page-staff-name {
-  font-weight: 600;
+  font-weight: 650;
+  font-size: 1.05rem;
 }
 
 .team-page-staff-meta {
   color: var(--text-muted);
+  font-size: 0.85rem;
 }
 
 .team-page-tabs {
@@ -6646,10 +6707,45 @@ textarea {
   color: var(--text);
 }
 
+.squad-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.squad-section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.squad-section-code {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--highlight);
+}
+
+.squad-section-label {
+  color: var(--text);
+}
+
+.squad-section-count {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
 .squad-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.85rem;
 }
 
 .squad-grid--compact {
@@ -6659,19 +6755,23 @@ textarea {
 .player-card {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  background: var(--surface);
+  gap: 0.9rem;
+  padding: 0.85rem 1rem;
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--surface-hover) 55%, var(--surface)) 0%,
+      var(--surface) 100%
+    );
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: calc(var(--radius) + 2px);
   color: inherit;
-  text-decoration: none;
-  transition: background 0.15s, border-color 0.15s;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--bg-deep) 22%, transparent);
 }
 
-.player-card:hover {
-  background: var(--surface-hover);
-  border-color: color-mix(in srgb, var(--highlight) 40%, var(--border));
+.player-card--compact {
+  padding: 0.65rem 0.8rem;
+  gap: 0.7rem;
 }
 
 .player-card-number {
@@ -6689,7 +6789,9 @@ textarea {
 
 .player-card-name {
   display: block;
-  font-weight: 600;
+  font-weight: 650;
+  font-size: 0.98rem;
+  line-height: 1.3;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -6697,11 +6799,19 @@ textarea {
 
 .player-card-meta {
   display: block;
+  margin-top: 0.2rem;
   font-size: 0.8rem;
   color: var(--text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.player-card-position {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--highlight) 70%, var(--text-muted));
 }
 
 .wc-history-list {
