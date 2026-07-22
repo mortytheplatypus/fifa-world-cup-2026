@@ -42,42 +42,41 @@ function PlayerAvatar({ player, team, size = 'large', showNumber = true }) {
 
   return (
     <div className={`player-avatar player-avatar--${size}`}>
-      {loadingPhoto && !showPhoto && (
-        <div className="player-avatar-loading" aria-hidden="true" />
-      )}
+      <div className="player-avatar-media" aria-hidden={!showPhoto && !loadingPhoto}>
+        {loadingPhoto && !showPhoto && (
+          <div className="player-avatar-loading" />
+        )}
 
-      {showPhoto ? (
-        <img
-          className="player-avatar-image"
-          src={photoUrl}
-          alt=""
-          width={size === 'large' ? 200 : size === 'card' ? 72 : 48}
-          height={size === 'large' ? 200 : size === 'card' ? 72 : 48}
-          onError={() => setImageFailed(true)}
-        />
-      ) : (
-        !loadingPhoto && (
-          <div
-            className="player-avatar-fallback"
-            style={{
-              background: `linear-gradient(145deg, ${accent} 0%, color-mix(in srgb, ${accent} 65%, #000) 100%)`,
-              color: highlight,
-            }}
-            aria-hidden="true"
-          >
-            <span className="player-avatar-initials">{getPlayerInitials(player.name)}</span>
-            {team && (
-              <img
-                className="player-avatar-flag"
-                src={`https://flagcdn.com/w40/${team.flagCode}.png`}
-                alt=""
-                width={28}
-                height={21}
-              />
-            )}
-          </div>
-        )
-      )}
+        {showPhoto ? (
+          <img
+            className="player-avatar-image"
+            src={photoUrl}
+            alt=""
+            onError={() => setImageFailed(true)}
+          />
+        ) : (
+          !loadingPhoto && (
+            <div
+              className="player-avatar-fallback"
+              style={{
+                background: `linear-gradient(145deg, ${accent} 0%, color-mix(in srgb, ${accent} 65%, #000) 100%)`,
+                color: highlight,
+              }}
+            >
+              <span className="player-avatar-initials">{getPlayerInitials(player.name)}</span>
+              {team && (
+                <img
+                  className="player-avatar-flag"
+                  src={`https://flagcdn.com/w40/${team.flagCode}.png`}
+                  alt=""
+                  width={28}
+                  height={21}
+                />
+              )}
+            </div>
+          )
+        )}
+      </div>
 
       {showNumber && player.shirtNumber != null && (
         <span className="player-avatar-number" aria-label={`Shirt number ${player.shirtNumber}`}>
